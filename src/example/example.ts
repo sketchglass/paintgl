@@ -12,9 +12,9 @@ const context = new Context(document.getElementById("canvas") as HTMLCanvasEleme
 const drawTarget = new CanvasDrawTarget(context)
 drawTarget.clear(new Color(0.9, 0.9, 0.9, 1))
 const shape = new RectShape(context)
-shape.rect = new Rect(new Vec2(100, 200), new Vec2(200, 300))
+shape.rect = new Rect(new Vec2(50, 50), new Vec2(200, 300))
 const fill = new ColorFill(context)
-fill.color = new Color(0.5, 0.4, 0.3, 0.5)
+fill.color = new Color(0.9, 0.1, 0.2, 1)
 
 const model = new Model(context, shape, fill)
 

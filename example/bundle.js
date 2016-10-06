@@ -20,16 +20,21 @@ exports.Color = Color;
 },{}],2:[function(require,module,exports){
 "use strict";
 var Context = (function () {
-    function Context(canvas) {
+    function Context(canvas, opts) {
         this.canvas = canvas;
         var glOpts = {
-            preserveDrawingBuffer: true,
-            alpha: false,
+            preserveDrawingBuffer: false,
+            alpha: true,
+            antialias: true,
             depth: false,
             stencil: false,
-            antialias: true,
             premultipliedAlpha: true,
         };
+        if (opts) {
+            for (var key in opts) {
+                glOpts[key] = opts[key];
+            }
+        }
         var gl = this.gl = canvas.getContext("webgl", glOpts);
         this.halfFloatExt = gl.getExtension("OES_texture_half_float");
         gl.getExtension("OES_texture_half_float_linear");
@@ -549,9 +554,9 @@ var context = new Context_1.Context(document.getElementById("canvas"));
 var drawTarget = new DrawTarget_1.CanvasDrawTarget(context);
 drawTarget.clear(new Color_1.Color(0.9, 0.9, 0.9, 1));
 var shape = new Shape_1.RectShape(context);
-shape.rect = new paintvec_1.Rect(new paintvec_1.Vec2(100, 200), new paintvec_1.Vec2(200, 300));
+shape.rect = new paintvec_1.Rect(new paintvec_1.Vec2(50, 50), new paintvec_1.Vec2(200, 300));
 var fill = new Fill_1.ColorFill(context);
-fill.color = new Color_1.Color(0.5, 0.4, 0.3, 0.5);
+fill.color = new Color_1.Color(0.9, 0.1, 0.2, 1);
 var model = new Model_1.Model(context, shape, fill);
 drawTarget.draw(model);
 drawTarget.transform = paintvec_1.Transform.scale(new paintvec_1.Vec2(0.5));
