@@ -554,12 +554,12 @@ var context = new Context_1.Context(document.getElementById("canvas"));
 var drawTarget = new DrawTarget_1.CanvasDrawTarget(context);
 drawTarget.clear(new Color_1.Color(0.9, 0.9, 0.9, 1));
 var shape = new Shape_1.RectShape(context);
-shape.rect = new paintvec_1.Rect(new paintvec_1.Vec2(50, 50), new paintvec_1.Vec2(200, 300));
+shape.rect = new paintvec_1.Rect(new paintvec_1.Vec2(100, 100), new paintvec_1.Vec2(200, 300));
 var fill = new Fill_1.ColorFill(context);
 fill.color = new Color_1.Color(0.9, 0.1, 0.2, 1);
 var model = new Model_1.Model(context, shape, fill);
 drawTarget.draw(model);
-drawTarget.transform = paintvec_1.Transform.scale(new paintvec_1.Vec2(0.5));
+drawTarget.transform = paintvec_1.Transform.rotate(0.1 * Math.PI);
 drawTarget.blendMode = "dst-out";
 drawTarget.draw(model);
 
