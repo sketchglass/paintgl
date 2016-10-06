@@ -5,16 +5,16 @@ import {Pixmap} from "../Pixmap"
 import {RectShape} from "../Shape"
 import {ColorFill} from "../Fill"
 import {Model} from "../Model"
-import {PixmapDrawTarget} from "../DrawTarget"
+import {CanvasDrawTarget} from "../DrawTarget"
 
 const context = new Context(document.getElementById("canvas") as HTMLCanvasElement)
 
-const pixmap = new Pixmap(context, new Vec2(100, 100))
-const drawTarget = new PixmapDrawTarget(context, pixmap)
+const drawTarget = new CanvasDrawTarget(context)
+drawTarget.clear(new Color(0.9, 0.9, 0.9, 1))
 const shape = new RectShape(context)
-shape.rect = new Rect(new Vec2(40, 40), new Vec2(80, 80))
+shape.rect = new Rect(new Vec2(100, 200), new Vec2(200, 300))
 const fill = new ColorFill(context)
-fill.color = new Color(0.5, 0.4, 0.3, 1)
+fill.color = new Color(0.5, 0.4, 0.3, 0.5)
 
 const model = new Model(context, shape, fill)
 
