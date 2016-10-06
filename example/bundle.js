@@ -1,35 +1,29 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 "use strict";
 var paintvec_1 = require("paintvec");
-var Color_1 = require("../lib/Color");
-var Context_1 = require("../lib/Context");
-var Pixmap_1 = require("../lib/Pixmap");
-var Shape_1 = require("../lib/Shape");
-var Fill_1 = require("../lib/Fill");
-var Model_1 = require("../lib/Model");
-var DrawTarget_1 = require("../lib/DrawTarget");
-var context = new Context_1.Context(document.getElementById("canvas"));
-var pixmap = new Pixmap_1.Pixmap(context, { size: new paintvec_1.Vec2(400, 400) });
-var drawTarget = new DrawTarget_1.PixmapDrawTarget(context, pixmap);
-drawTarget.clear(new Color_1.Color(0.9, 0.9, 0.9, 1));
-var shape = new Shape_1.RectShape(context);
+var lib_1 = require("../lib");
+var context = new lib_1.Context(document.getElementById("canvas"));
+var pixmap = new lib_1.Pixmap(context, { size: new paintvec_1.Vec2(400, 400) });
+var drawTarget = new lib_1.PixmapDrawTarget(context, pixmap);
+drawTarget.clear(new lib_1.Color(0.9, 0.9, 0.9, 1));
+var shape = new lib_1.RectShape(context);
 shape.rect = new paintvec_1.Rect(new paintvec_1.Vec2(100, 100), new paintvec_1.Vec2(200, 300));
-var fill = new Fill_1.ColorFill(context);
-fill.color = new Color_1.Color(0.9, 0.1, 0.2, 1);
-var model = new Model_1.Model(context, shape, fill);
+var fill = new lib_1.ColorFill(context);
+fill.color = new lib_1.Color(0.9, 0.1, 0.2, 1);
+var model = new lib_1.Model(context, shape, fill);
 drawTarget.draw(model);
 drawTarget.transform = paintvec_1.Transform.rotate(0.1 * Math.PI);
 drawTarget.blendMode = "dst-out";
 drawTarget.draw(model);
-var canvasDrawTarget = new DrawTarget_1.CanvasDrawTarget(context);
-var pixmapShape = new Shape_1.RectShape(context);
+var canvasDrawTarget = new lib_1.CanvasDrawTarget(context);
+var pixmapShape = new lib_1.RectShape(context);
 pixmapShape.rect = new paintvec_1.Rect(new paintvec_1.Vec2(0), pixmap.size);
-var pixmapFill = new Fill_1.PixmapFill(context);
+var pixmapFill = new lib_1.PixmapFill(context);
 pixmapFill.pixmap = pixmap;
-var pixmapModel = new Model_1.Model(context, pixmapShape, pixmapFill);
+var pixmapModel = new lib_1.Model(context, pixmapShape, pixmapFill);
 canvasDrawTarget.draw(pixmapModel);
 
-},{"../lib/Color":2,"../lib/Context":3,"../lib/DrawTarget":4,"../lib/Fill":5,"../lib/Model":6,"../lib/Pixmap":7,"../lib/Shape":8,"paintvec":9}],2:[function(require,module,exports){
+},{"../lib":9,"paintvec":10}],2:[function(require,module,exports){
 "use strict";
 var Color = (function () {
     function Color(r, g, b, a) {
@@ -232,7 +226,7 @@ function blendFuncs(gl, mode) {
     }
 }
 
-},{"paintvec":9}],5:[function(require,module,exports){
+},{"paintvec":10}],5:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -376,7 +370,7 @@ var ColorFill = (function (_super) {
 }(Fill));
 exports.ColorFill = ColorFill;
 
-},{"./Color":2,"paintvec":9}],6:[function(require,module,exports){
+},{"./Color":2,"paintvec":10}],6:[function(require,module,exports){
 "use strict";
 var paintvec_1 = require("paintvec");
 var Model = (function () {
@@ -416,7 +410,7 @@ var Model = (function () {
 }());
 exports.Model = Model;
 
-},{"paintvec":9}],7:[function(require,module,exports){
+},{"paintvec":10}],7:[function(require,module,exports){
 "use strict";
 var paintvec_1 = require("paintvec");
 function glDataType(context, format) {
@@ -516,7 +510,7 @@ var Pixmap = (function () {
 }());
 exports.Pixmap = Pixmap;
 
-},{"paintvec":9}],8:[function(require,module,exports){
+},{"paintvec":10}],8:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -674,7 +668,30 @@ var RectShape = (function (_super) {
 }(QuadShape));
 exports.RectShape = RectShape;
 
-},{"paintvec":9}],9:[function(require,module,exports){
+},{"paintvec":10}],9:[function(require,module,exports){
+"use strict";
+var Color_1 = require("./Color");
+exports.Color = Color_1.Color;
+var Context_1 = require("./Context");
+exports.Context = Context_1.Context;
+var DrawTarget_1 = require("./DrawTarget");
+exports.DrawTarget = DrawTarget_1.DrawTarget;
+exports.CanvasDrawTarget = DrawTarget_1.CanvasDrawTarget;
+exports.PixmapDrawTarget = DrawTarget_1.PixmapDrawTarget;
+var Fill_1 = require("./Fill");
+exports.Fill = Fill_1.Fill;
+exports.ColorFill = Fill_1.ColorFill;
+exports.PixmapFill = Fill_1.PixmapFill;
+var Model_1 = require("./Model");
+exports.Model = Model_1.Model;
+var Pixmap_1 = require("./Pixmap");
+exports.Pixmap = Pixmap_1.Pixmap;
+var Shape_1 = require("./Shape");
+exports.Shape = Shape_1.Shape;
+exports.QuadShape = Shape_1.QuadShape;
+exports.RectShape = Shape_1.RectShape;
+
+},{"./Color":2,"./Context":3,"./DrawTarget":4,"./Fill":5,"./Model":6,"./Pixmap":7,"./Shape":8}],10:[function(require,module,exports){
 "use strict";
 var Vec2 = (function () {
     function Vec2(x, y) {

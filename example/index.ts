@@ -1,11 +1,5 @@
 import {Vec2, Rect, Transform} from "paintvec"
-import {Color} from "../lib/Color"
-import {Context} from "../lib/Context"
-import {Pixmap} from "../lib/Pixmap"
-import {RectShape} from "../lib/Shape"
-import {ColorFill, PixmapFill} from "../lib/Fill"
-import {Model} from "../lib/Model"
-import {PixmapDrawTarget, CanvasDrawTarget} from "../lib/DrawTarget"
+import {Color, Context, Pixmap, RectShape, ColorFill, PixmapFill, Model, PixmapDrawTarget, CanvasDrawTarget} from "../lib"
 
 const context = new Context(document.getElementById("canvas") as HTMLCanvasElement)
 
