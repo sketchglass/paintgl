@@ -610,8 +610,8 @@ var QuadShape = (function (_super) {
     __extends(QuadShape, _super);
     function QuadShape() {
         _super.apply(this, arguments);
-        this.positions = [new paintvec_1.Vec2(0, 0), new paintvec_1.Vec2(0, 1), new paintvec_1.Vec2(1, 0), new paintvec_1.Vec2(1, 1)];
-        this.texCoords = [new paintvec_1.Vec2(0, 0), new paintvec_1.Vec2(0, 1), new paintvec_1.Vec2(1, 0), new paintvec_1.Vec2(1, 1)];
+        this.positions = [new paintvec_1.Vec2(0, 0), new paintvec_1.Vec2(1, 0), new paintvec_1.Vec2(0, 1), new paintvec_1.Vec2(1, 1)];
+        this.texCoords = [new paintvec_1.Vec2(0, 0), new paintvec_1.Vec2(1, 0), new paintvec_1.Vec2(0, 1), new paintvec_1.Vec2(1, 1)];
         this.indices = [0, 1, 2, 1, 2, 3];
     }
     return QuadShape;
@@ -664,13 +664,14 @@ fill.color = new Color_1.Color(0.9, 0.1, 0.2, 1);
 var model = new Model_1.Model(context, shape, fill);
 drawTarget.draw(model);
 drawTarget.transform = paintvec_1.Transform.rotate(0.1 * Math.PI);
+drawTarget.blendMode = "dst-out";
 drawTarget.draw(model);
 var canvasDrawTarget = new DrawTarget_1.CanvasDrawTarget(context);
 var pixmapShape = new Shape_1.RectShape(context);
 pixmapShape.rect = new paintvec_1.Rect(new paintvec_1.Vec2(0), pixmap.size);
 var pixmapFill = new Fill_1.PixmapFill(context);
 pixmapFill.pixmap = pixmap;
-var pixmapModel = new Model_1.Model(context, shape, fill);
+var pixmapModel = new Model_1.Model(context, pixmapShape, pixmapFill);
 canvasDrawTarget.draw(pixmapModel);
 
 },{"../Color":1,"../Context":2,"../DrawTarget":3,"../Fill":4,"../Model":5,"../Pixmap":6,"../Shape":7,"paintvec":9}],9:[function(require,module,exports){

@@ -22,9 +22,8 @@ const model = new Model(context, shape, fill)
 
 drawTarget.draw(model)
 drawTarget.transform = Transform.rotate(0.1 * Math.PI)
-//drawTarget.blendMode = "dst-out"
+drawTarget.blendMode = "dst-out"
 drawTarget.draw(model)
-
 
 const canvasDrawTarget = new CanvasDrawTarget(context)
 
@@ -32,6 +31,6 @@ const pixmapShape = new RectShape(context)
 pixmapShape.rect = new Rect(new Vec2(0), pixmap.size)
 const pixmapFill = new PixmapFill(context)
 pixmapFill.pixmap = pixmap
-const pixmapModel = new Model(context, shape, fill)
+const pixmapModel = new Model(context, pixmapShape, pixmapFill)
 
 canvasDrawTarget.draw(pixmapModel)

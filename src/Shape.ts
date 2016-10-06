@@ -120,8 +120,8 @@ class Shape extends ShapeBase {
 
 export
 class QuadShape extends Shape {
-  positions: [Vec2, Vec2, Vec2, Vec2] = [new Vec2(0, 0), new Vec2(0, 1), new Vec2(1, 0), new Vec2(1, 1)]
-  texCoords: [Vec2, Vec2, Vec2, Vec2] = [new Vec2(0, 0), new Vec2(0, 1), new Vec2(1, 0), new Vec2(1, 1)]
+  positions: [Vec2, Vec2, Vec2, Vec2] = [new Vec2(0, 0), new Vec2(1, 0), new Vec2(0, 1), new Vec2(1, 1)]
+  texCoords: [Vec2, Vec2, Vec2, Vec2] = [new Vec2(0, 0), new Vec2(1, 0), new Vec2(0, 1), new Vec2(1, 1)]
   indices = [0, 1, 2, 1, 2, 3]
 }
 
