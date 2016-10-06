@@ -116,14 +116,13 @@ class Pixmap {
     if (params.image) {
       this.setImage(params.image)
     } else {
-      this.size = params.size || new Vec2(0)
-      this.setData(this.size, params.data)
+      this.setData(params.size || new Vec2(0), params.data)
     }
   }
 
   setData(size: Vec2, data?: ArrayBufferView) {
     const {gl, halfFloatExt} = this.context
-    this.size = size
+    this._size = size
     gl.bindTexture(gl.TEXTURE_2D, this.texture)
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, size.x, size.y, 0, gl.RGBA, glDataType(this.context, this.format), data ? data : null as any)
     gl.bindTexture(gl.TEXTURE_2D, null)
@@ -131,7 +130,7 @@ class Pixmap {
 
   setImage(image: ImageSource) {
     const {gl} = this.context
-    this.size = new Vec2(image.width, image.height)
+    this._size = new Vec2(image.width, image.height)
     gl.bindTexture(gl.TEXTURE_2D, this.texture)
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, glDataType(this.context, this.format), image)
     gl.bindTexture(gl.TEXTURE_2D, null)
