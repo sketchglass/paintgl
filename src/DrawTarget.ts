@@ -87,6 +87,9 @@ abstract class DrawTarget {
     }
     gl.viewport(0, 0, this.size.x, this.size.y)
   }
+
+  dispose() {
+  }
 }
 
 /**
@@ -131,8 +134,8 @@ class PixmapDrawTarget extends DrawTarget {
   constructor(public context: Context, pixmap: Pixmap) {
     super(context)
     const {gl} = context
-    this.pixmap = pixmap
     this.framebuffer = gl.createFramebuffer()!
+    this.pixmap = pixmap
   }
 
   get size() {
@@ -143,6 +146,11 @@ class PixmapDrawTarget extends DrawTarget {
     const {gl} = this.context
     gl.bindFramebuffer(gl.FRAMEBUFFER, this.framebuffer)
     super.use()
+  }
+
+  dispose() {
+    const {gl} = this.context
+    gl.deleteFramebuffer(this.framebuffer)
   }
 }
 

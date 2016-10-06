@@ -48,7 +48,7 @@ class ShapeBase {
 
   update() {
     const {gl} = this.context
-    const length = this.attributes[0].data.length
+    const length = this.attributes[Object.keys(this.attributes)[0]].data.length
     const stride = this.attributeStride()
     const vertexData = new Float32Array(length * stride)
 

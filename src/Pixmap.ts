@@ -71,33 +71,30 @@ class Pixmap {
     return this._filter
   }
   set filter(filter: PixmapFilter) {
-    if (this._filter != filter) {
-      this._filter = filter
-      const {gl} = this.context
-      gl.bindTexture(gl.TEXTURE_2D, this.texture)
-      switch (filter) {
-        case "nearest":
-          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST)
-          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST)
-          break
-        case "mipmap-nearest":
-          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST)
-          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST_MIPMAP_NEAREST)
-          break
-        case "bilinear":
-          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR)
-          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR)
-          break
-        case "mipmap-bilinear":
-          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR)
-          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST_MIPMAP_LINEAR )
-          break
-        case "trilinear":
-          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR)
-          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR)
-          break
-      }
-      gl.bindTexture(gl.TEXTURE_2D, null)
+    this._filter = filter
+    const {gl} = this.context
+    gl.bindTexture(gl.TEXTURE_2D, this.texture)
+    switch (filter) {
+      case "nearest":
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST)
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST)
+        break
+      case "mipmap-nearest":
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST)
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST_MIPMAP_NEAREST)
+        break
+      case "bilinear":
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR)
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR)
+        break
+      case "mipmap-bilinear":
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR)
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST_MIPMAP_LINEAR )
+        break
+      case "trilinear":
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR)
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR)
+        break
     }
   }
 
@@ -108,7 +105,6 @@ class Pixmap {
     gl.bindTexture(gl.TEXTURE_2D, this.texture)
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE)
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE)
-    gl.bindTexture(gl.TEXTURE_2D, null)
 
     this.filter = (params.filter != undefined) ? params.filter : "nearest"
     this.format = (params.format != undefined) ? params.format : "byte"
@@ -125,7 +121,6 @@ class Pixmap {
     this._size = size
     gl.bindTexture(gl.TEXTURE_2D, this.texture)
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, size.x, size.y, 0, gl.RGBA, glDataType(this.context, this.format), data ? data : null as any)
-    gl.bindTexture(gl.TEXTURE_2D, null)
   }
 
   setImage(image: ImageSource) {
@@ -133,14 +128,12 @@ class Pixmap {
     this._size = new Vec2(image.width, image.height)
     gl.bindTexture(gl.TEXTURE_2D, this.texture)
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, glDataType(this.context, this.format), image)
-    gl.bindTexture(gl.TEXTURE_2D, null)
   }
 
   generateMipmap() {
     const {gl} = this.context
     gl.bindTexture(gl.TEXTURE_2D, this.texture)
     gl.generateMipmap(gl.TEXTURE_2D)
-    gl.bindTexture(gl.TEXTURE_2D, null)
   }
 
   dispose() {

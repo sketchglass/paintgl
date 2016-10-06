@@ -117,10 +117,8 @@ class Fill extends FillBase {
     return this._transform
   }
   set transform(transform: Transform) {
-    if (!this._transform.equals(transform)) {
-      this.setUniformTransform("uTransform", transform)
-      this._transform = transform
-    }
+    this.setUniformTransform("uTransform", transform)
+    this._transform = transform
   }
 
   constructor(context: Context) {
@@ -131,7 +129,7 @@ class Fill extends FillBase {
 
 export
 class PixmapFill extends Fill {
-  static vertexShader = `
+  static fragmentShader = `
     precision mediump float;
     varying highp vec2 vTexCoord;
     uniform sampler2D uPixmap;
@@ -146,18 +144,16 @@ class PixmapFill extends Fill {
     return this._pixmap
   }
   set pixmap(pixmap: Pixmap|undefined) {
-    if (this._pixmap != pixmap) {
-      if (pixmap) {
-        this.setUniformPixmap("uPixmap", pixmap)
-      }
-      this._pixmap = pixmap
+    if (pixmap) {
+      this.setUniformPixmap("uPixmap", pixmap)
     }
+    this._pixmap = pixmap
   }
 }
 
 export
 class ColorFill extends Fill {
-  static vertexShader = `
+  static fragmentShader = `
     precision mediump float;
     uniform vec4 uColor;
     void main(void) {
@@ -171,9 +167,8 @@ class ColorFill extends Fill {
     return this._color
   }
   set color(color: Color) {
-    if (!this._color.equals(color)) {
-      this.setUniformColor("uColor", color)
-    }
+    this.setUniformColor("uColor", color)
+    this._color = color
   }
 
   constructor(context: Context) {
