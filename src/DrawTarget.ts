@@ -123,12 +123,10 @@ class PixmapDrawTarget extends DrawTarget {
     return this._pixmap
   }
   set pixmap(pixmap: Pixmap) {
-    if (this._pixmap != pixmap) {
-      const {gl} = this.context
-      gl.bindFramebuffer(gl.FRAMEBUFFER, this.framebuffer)
-      gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, pixmap.texture, 0)
-      this._pixmap = pixmap
-    }
+    const {gl} = this.context
+    gl.bindFramebuffer(gl.FRAMEBUFFER, this.framebuffer)
+    gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, pixmap.texture, 0)
+    this._pixmap = pixmap
   }
 
   constructor(public context: Context, pixmap: Pixmap) {

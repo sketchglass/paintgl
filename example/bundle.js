@@ -37,10 +37,12 @@ var Context = (function () {
         }
         var gl = this.gl = canvas.getContext("webgl", glOpts);
         this.halfFloatExt = gl.getExtension("OES_texture_half_float");
-        this.capabilities.halfFloat = !!this.halfFloatExt;
-        this.capabilities.halfFloatLinearFilter = !!gl.getExtension("OES_texture_half_float_linear");
-        this.capabilities.float = !!gl.getExtension("OES_texture_float");
-        this.capabilities.floatLinearFilter = !!gl.getExtension("OES_texture_float_linear");
+        this.capabilities = {
+            halfFloat: !!this.halfFloatExt,
+            halfFloatLinearFilter: !!gl.getExtension("OES_texture_half_float_linear"),
+            float: !!gl.getExtension("OES_texture_float"),
+            floatLinearFilter: !!gl.getExtension("OES_texture_float_linear"),
+        };
     }
     return Context;
 }());
@@ -146,12 +148,10 @@ var PixmapDrawTarget = (function (_super) {
             return this._pixmap;
         },
         set: function (pixmap) {
-            if (this._pixmap != pixmap) {
-                var gl = this.context.gl;
-                gl.bindFramebuffer(gl.FRAMEBUFFER, this.framebuffer);
-                gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, pixmap.texture, 0);
-                this._pixmap = pixmap;
-            }
+            var gl = this.context.gl;
+            gl.bindFramebuffer(gl.FRAMEBUFFER, this.framebuffer);
+            gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, pixmap.texture, 0);
+            this._pixmap = pixmap;
         },
         enumerable: true,
         configurable: true
@@ -201,7 +201,7 @@ function blendFuncs(gl, mode) {
     }
 }
 
-},{"paintvec":8}],4:[function(require,module,exports){
+},{"paintvec":9}],4:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -345,7 +345,7 @@ var ColorFill = (function (_super) {
 }(Fill));
 exports.ColorFill = ColorFill;
 
-},{"./Color":1,"paintvec":8}],5:[function(require,module,exports){
+},{"./Color":1,"paintvec":9}],5:[function(require,module,exports){
 "use strict";
 var paintvec_1 = require("paintvec");
 var Model = (function () {
@@ -385,7 +385,107 @@ var Model = (function () {
 }());
 exports.Model = Model;
 
-},{"paintvec":8}],6:[function(require,module,exports){
+},{"paintvec":9}],6:[function(require,module,exports){
+"use strict";
+var paintvec_1 = require("paintvec");
+function glDataType(context, format) {
+    switch (format) {
+        case "byte":
+        default:
+            return context.gl.UNSIGNED_BYTE;
+        case "half-float":
+            return context.halfFloatExt.HALF_FLOAT_OES;
+        case "float":
+            return context.gl.FLOAT;
+    }
+}
+var Pixmap = (function () {
+    function Pixmap(context, params) {
+        this.context = context;
+        var gl = context.gl;
+        this.texture = gl.createTexture();
+        gl.bindTexture(gl.TEXTURE_2D, this.texture);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        this.filter = (params.filter != undefined) ? params.filter : "nearest";
+        this.format = (params.format != undefined) ? params.format : "byte";
+        if (params.image) {
+            this.setImage(params.image);
+        }
+        else {
+            this.setData(params.size || new paintvec_1.Vec2(0), params.data);
+        }
+    }
+    Object.defineProperty(Pixmap.prototype, "size", {
+        get: function () {
+            return this._size;
+        },
+        set: function (size) {
+            this.setData(this.size);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Pixmap.prototype, "filter", {
+        get: function () {
+            return this._filter;
+        },
+        set: function (filter) {
+            this._filter = filter;
+            var gl = this.context.gl;
+            gl.bindTexture(gl.TEXTURE_2D, this.texture);
+            switch (filter) {
+                case "nearest":
+                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+                    break;
+                case "mipmap-nearest":
+                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST_MIPMAP_NEAREST);
+                    break;
+                case "bilinear":
+                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+                    break;
+                case "mipmap-bilinear":
+                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST_MIPMAP_LINEAR);
+                    break;
+                case "trilinear":
+                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+                    break;
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Pixmap.prototype.setData = function (size, data) {
+        var _a = this.context, gl = _a.gl, halfFloatExt = _a.halfFloatExt;
+        this._size = size;
+        gl.bindTexture(gl.TEXTURE_2D, this.texture);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, size.x, size.y, 0, gl.RGBA, glDataType(this.context, this.format), data ? data : null);
+    };
+    Pixmap.prototype.setImage = function (image) {
+        var gl = this.context.gl;
+        this._size = new paintvec_1.Vec2(image.width, image.height);
+        gl.bindTexture(gl.TEXTURE_2D, this.texture);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, glDataType(this.context, this.format), image);
+    };
+    Pixmap.prototype.generateMipmap = function () {
+        var gl = this.context.gl;
+        gl.bindTexture(gl.TEXTURE_2D, this.texture);
+        gl.generateMipmap(gl.TEXTURE_2D);
+    };
+    Pixmap.prototype.dispose = function () {
+        var gl = this.context.gl;
+        gl.deleteTexture(this.texture);
+    };
+    return Pixmap;
+}());
+exports.Pixmap = Pixmap;
+
+},{"paintvec":9}],7:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -543,17 +643,19 @@ var RectShape = (function (_super) {
 }(QuadShape));
 exports.RectShape = RectShape;
 
-},{"paintvec":8}],7:[function(require,module,exports){
+},{"paintvec":9}],8:[function(require,module,exports){
 "use strict";
 var paintvec_1 = require("paintvec");
 var Color_1 = require("../Color");
 var Context_1 = require("../Context");
+var Pixmap_1 = require("../Pixmap");
 var Shape_1 = require("../Shape");
 var Fill_1 = require("../Fill");
 var Model_1 = require("../Model");
 var DrawTarget_1 = require("../DrawTarget");
 var context = new Context_1.Context(document.getElementById("canvas"));
-var drawTarget = new DrawTarget_1.CanvasDrawTarget(context);
+var pixmap = new Pixmap_1.Pixmap(context, { size: new paintvec_1.Vec2(400, 400) });
+var drawTarget = new DrawTarget_1.PixmapDrawTarget(context, pixmap);
 drawTarget.clear(new Color_1.Color(0.9, 0.9, 0.9, 1));
 var shape = new Shape_1.RectShape(context);
 shape.rect = new paintvec_1.Rect(new paintvec_1.Vec2(100, 100), new paintvec_1.Vec2(200, 300));
@@ -562,10 +664,16 @@ fill.color = new Color_1.Color(0.9, 0.1, 0.2, 1);
 var model = new Model_1.Model(context, shape, fill);
 drawTarget.draw(model);
 drawTarget.transform = paintvec_1.Transform.rotate(0.1 * Math.PI);
-drawTarget.blendMode = "dst-out";
 drawTarget.draw(model);
+var canvasDrawTarget = new DrawTarget_1.CanvasDrawTarget(context);
+var pixmapShape = new Shape_1.RectShape(context);
+pixmapShape.rect = new paintvec_1.Rect(new paintvec_1.Vec2(0), pixmap.size);
+var pixmapFill = new Fill_1.PixmapFill(context);
+pixmapFill.pixmap = pixmap;
+var pixmapModel = new Model_1.Model(context, shape, fill);
+canvasDrawTarget.draw(pixmapModel);
 
-},{"../Color":1,"../Context":2,"../DrawTarget":3,"../Fill":4,"../Model":5,"../Shape":6,"paintvec":8}],8:[function(require,module,exports){
+},{"../Color":1,"../Context":2,"../DrawTarget":3,"../Fill":4,"../Model":5,"../Pixmap":6,"../Shape":7,"paintvec":9}],9:[function(require,module,exports){
 "use strict";
 var Vec2 = (function () {
     function Vec2(x, y) {
@@ -920,4 +1028,4 @@ var Transform = (function () {
 }());
 exports.Transform = Transform;
 
-},{}]},{},[7]);
+},{}]},{},[8]);
