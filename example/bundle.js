@@ -37,8 +37,10 @@ var Context = (function () {
         }
         var gl = this.gl = canvas.getContext("webgl", glOpts);
         this.halfFloatExt = gl.getExtension("OES_texture_half_float");
-        gl.getExtension("OES_texture_half_float_linear");
-        gl.getExtension("OES_texture_float");
+        this.capabilities.halfFloat = !!this.halfFloatExt;
+        this.capabilities.halfFloatLinearFilter = !!gl.getExtension("OES_texture_half_float_linear");
+        this.capabilities.float = !!gl.getExtension("OES_texture_float");
+        this.capabilities.floatLinearFilter = !!gl.getExtension("OES_texture_float_linear");
     }
     return Context;
 }());

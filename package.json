@@ -4,7 +4,7 @@
   "description": "[WIP] WebGL wrapper for 2D painting",
   "main": "index.js",
   "scripts": {
-    "build:example": "browserify lib/example/example.js -o example/bundle.js",
+    "example:build": "browserify lib/example/index.js -o example/bundle.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
