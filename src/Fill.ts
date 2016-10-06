@@ -85,6 +85,10 @@ class FillBase {
   }
 }
 
+/**
+  Fill represents how shapes are placed and how pixels are filled.
+  It wraps WebGL vertex shader and fragment shader.
+*/
 export
 class Fill extends FillBase {
   static vertexShader = `

@@ -12,10 +12,16 @@ class Color {
   constructor(public r: number, public g: number, public b: number, public a: number) {
   }
 
+  /**
+    Returns [r, g, b, a] array.
+  */
   members() {
     return [this.r, this.g, this.b, this.a]
   }
 
+  /**
+    Compares values of this Color with other Color.
+  */
   equals(other: Color) {
     return this.r == other.r && this.g == other.g && this.b == other.b && this.a == other.a
   }

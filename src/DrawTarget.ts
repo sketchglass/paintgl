@@ -93,7 +93,7 @@ abstract class DrawTarget {
 }
 
 /**
-  CanvasDrawTarget draws directly into the context canvas.
+  CanvasDrawTarget represents the draw target that draws directly into the context canvas.
 */
 export
 class CanvasDrawTarget extends DrawTarget {
@@ -112,7 +112,7 @@ class CanvasDrawTarget extends DrawTarget {
 }
 
 /**
-  PixmapDrawTarget draws into a pixmap.
+  PixmapDrawTarget represents the draw target that draws into a pixmap.
 */
 export
 class PixmapDrawTarget extends DrawTarget {
