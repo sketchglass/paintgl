@@ -5,6 +5,10 @@
         "noImplicitAny": true,
         "strictNullChecks": true,
         "sourceMap": false,
-        "outDir": "lib"
-    }
+        "outDir": "lib",
+        "rootDir": "src"
+    },
+    "include": [
+      "src/**/*.ts"
+    ]
 }
