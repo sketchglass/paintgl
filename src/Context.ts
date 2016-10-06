@@ -1,10 +1,12 @@
 
+export
 interface ContextOptions {
   preserveDrawingBuffer?: boolean
   alpha?: boolean
   antialias?: boolean
 }
 
+export
 interface ContextCapabilities {
   /**
     Whether the context support half float pixmaps.

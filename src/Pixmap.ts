@@ -2,7 +2,7 @@ import {Context} from "./Context"
 import {Vec2} from "paintvec"
 
 // TODO: add ImageBitmap and OffscreenCanvas
-type ImageSource = ImageData | HTMLVideoElement | HTMLImageElement | HTMLCanvasElement
+export type ImageSource = ImageData | HTMLVideoElement | HTMLImageElement | HTMLCanvasElement
 
 /**
   The pixmap filter that is used in scaling.
@@ -26,6 +26,7 @@ function glDataType(context: Context, format: PixmapFormat) {
   }
 }
 
+export
 interface PixmapParams {
   filter?: PixmapFilter
   format?: PixmapFormat

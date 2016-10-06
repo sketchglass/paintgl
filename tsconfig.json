@@ -6,7 +6,8 @@
         "strictNullChecks": true,
         "sourceMap": false,
         "outDir": "lib",
-        "rootDir": "src"
+        "rootDir": "src",
+        "declaration": true
     },
     "exclude": [
         "node_modules"
