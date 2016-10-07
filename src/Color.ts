@@ -13,7 +13,7 @@ class Color {
   }
 
   /**
-    Returns [r, g, b, a] array.
+    @return The [r, g, b, a] array.
   */
   members() {
     return [this.r, this.g, this.b, this.a]

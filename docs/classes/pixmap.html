@@ -2,606 +2,229 @@
 <html class="default no-js">
 <head>
 	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<title>Pixmap | paintgl</title>
 	<meta name="description" content="">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="../assets/css/main.css">
-	<script src="../assets/js/modernizr.js"></script>
+	<link href="https://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/tomorrow.min.css">
+	<link rel="stylesheet" href="../assets/styles.css">
 </head>
 <body>
-<header>
-	<div class="tsd-page-toolbar">
-		<div class="container">
-			<div class="table-wrap">
-				<div class="table-cell" id="tsd-search" data-index="../assets/js/search.js" data-base="..">
-					<div class="field">
-						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
-						<input id="tsd-search-field" type="text" />
-					</div>
-					<ul class="results">
-						<li class="state loading">Preparing search index...</li>
-						<li class="state failure">The search index is not available</li>
-					</ul>
-					<a href="../index.html" class="title">paintgl</a>
-				</div>
-				<div class="table-cell" id="tsd-widgets">
-					<div id="tsd-filter">
-						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
-						<div class="tsd-filter-group">
-							<div class="tsd-select" id="tsd-filter-visibility">
-								<span class="tsd-select-label">All</span>
-								<ul class="tsd-select-list">
-									<li data-value="public">Public</li>
-									<li data-value="protected">Public/Protected</li>
-									<li data-value="private" class="selected">All</li>
-								</ul>
-							</div>
-							<input type="checkbox" id="tsd-filter-inherited" checked />
-							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
-							<input type="checkbox" id="tsd-filter-externals" checked />
-							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
-							<input type="checkbox" id="tsd-filter-only-exported" />
-							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
-						</div>
-					</div>
-					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+<div class="main">
+	<nav class="navigation">
+		<a href="../index.html" class="title">paintgl</a>
+		<ul>
+			<li class="globals  ">
+				<a href="../globals.html"><em>Globals</em></a>
+			</li>
+		</ul>
+		<ul>
+			<li class=" tsd-kind-class tsd-is-external">
+				<a href="canvasdrawtarget.html" class="tsd-kind-icon">Canvas<wbr>Draw<wbr>Target</a>
+			</li>
+			<li class=" tsd-kind-class tsd-is-external">
+				<a href="color.html" class="tsd-kind-icon">Color</a>
+			</li>
+			<li class=" tsd-kind-class tsd-is-external">
+				<a href="colorfill.html" class="tsd-kind-icon">Color<wbr>Fill</a>
+			</li>
+			<li class=" tsd-kind-class tsd-is-external">
+				<a href="context.html" class="tsd-kind-icon">Context</a>
+			</li>
+			<li class=" tsd-kind-class tsd-is-external">
+				<a href="drawtarget.html" class="tsd-kind-icon">Draw<wbr>Target</a>
+			</li>
+			<li class=" tsd-kind-class tsd-is-external">
+				<a href="fill.html" class="tsd-kind-icon">Fill</a>
+			</li>
+			<li class=" tsd-kind-class tsd-is-external">
+				<a href="fillbase.html" class="tsd-kind-icon">Fill<wbr>Base</a>
+			</li>
+			<li class=" tsd-kind-class tsd-is-external">
+				<a href="model.html" class="tsd-kind-icon">Model</a>
+			</li>
+		</ul>
+		<ul class="current">
+			<li class="current tsd-kind-class tsd-is-external">
+				<a href="pixmap.html" class="tsd-kind-icon">Pixmap</a>
+				<ul>
+					<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-is-external">
+						<a href="pixmap.html#constructor" class="tsd-kind-icon">constructor</a>
+					</li>
+					<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-external">
+						<a href="pixmap.html#_filter" class="tsd-kind-icon">_filter</a>
+					</li>
+					<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-external">
+						<a href="pixmap.html#_size" class="tsd-kind-icon">_size</a>
+					</li>
+					<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-external">
+						<a href="pixmap.html#context" class="tsd-kind-icon">context</a>
+					</li>
+					<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-external">
+						<a href="pixmap.html#format" class="tsd-kind-icon">format</a>
+					</li>
+					<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-external">
+						<a href="pixmap.html#texture" class="tsd-kind-icon">texture</a>
+					</li>
+					<li class=" tsd-kind-accessor tsd-parent-kind-class tsd-is-external">
+						<a href="pixmap.html#filter" class="tsd-kind-icon">filter</a>
+					</li>
+					<li class=" tsd-kind-accessor tsd-parent-kind-class tsd-is-external">
+						<a href="pixmap.html#size" class="tsd-kind-icon">size</a>
+					</li>
+					<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-external">
+						<a href="pixmap.html#dispose" class="tsd-kind-icon">dispose</a>
+					</li>
+					<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-external">
+						<a href="pixmap.html#generatemipmap" class="tsd-kind-icon">generate<wbr>Mipmap</a>
+					</li>
+					<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-external">
+						<a href="pixmap.html#setdata" class="tsd-kind-icon">set<wbr>Data</a>
+					</li>
+					<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-external">
+						<a href="pixmap.html#setimage" class="tsd-kind-icon">set<wbr>Image</a>
+					</li>
+				</ul>
+			</li>
+		</ul>
+		<ul class="after-current">
+			<li class=" tsd-kind-class tsd-is-external">
+				<a href="pixmapdrawtarget.html" class="tsd-kind-icon">Pixmap<wbr>Draw<wbr>Target</a>
+			</li>
+			<li class=" tsd-kind-class tsd-is-external">
+				<a href="pixmapfill.html" class="tsd-kind-icon">Pixmap<wbr>Fill</a>
+			</li>
+			<li class=" tsd-kind-class tsd-is-external">
+				<a href="quadshape.html" class="tsd-kind-icon">Quad<wbr>Shape</a>
+			</li>
+			<li class=" tsd-kind-class tsd-is-external">
+				<a href="rectshape.html" class="tsd-kind-icon">Rect<wbr>Shape</a>
+			</li>
+			<li class=" tsd-kind-class tsd-is-external">
+				<a href="shape.html" class="tsd-kind-icon">Shape</a>
+			</li>
+			<li class=" tsd-kind-class tsd-is-external">
+				<a href="shapebase.html" class="tsd-kind-icon">Shape<wbr>Base</a>
+			</li>
+			<li class=" tsd-kind-interface tsd-is-external">
+				<a href="../interfaces/contextcapabilities.html" class="tsd-kind-icon">Context<wbr>Capabilities</a>
+			</li>
+			<li class=" tsd-kind-interface tsd-is-external">
+				<a href="../interfaces/contextoptions.html" class="tsd-kind-icon">Context<wbr>Options</a>
+			</li>
+			<li class=" tsd-kind-interface tsd-is-external">
+				<a href="../interfaces/drawable.html" class="tsd-kind-icon">Drawable</a>
+			</li>
+			<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
+				<a href="../interfaces/objectmap.html" class="tsd-kind-icon">Object<wbr>Map</a>
+			</li>
+			<li class=" tsd-kind-interface tsd-is-external">
+				<a href="../interfaces/pixmapparams.html" class="tsd-kind-icon">Pixmap<wbr>Params</a>
+			</li>
+			<li class=" tsd-kind-type-alias tsd-is-external">
+				<a href="../globals.html#blendmode" class="tsd-kind-icon">Blend<wbr>Mode</a>
+			</li>
+			<li class=" tsd-kind-type-alias tsd-is-external">
+				<a href="../globals.html#imagesource" class="tsd-kind-icon">Image<wbr>Source</a>
+			</li>
+			<li class=" tsd-kind-type-alias tsd-is-external">
+				<a href="../globals.html#pixmapfilter" class="tsd-kind-icon">Pixmap<wbr>Filter</a>
+			</li>
+			<li class=" tsd-kind-type-alias tsd-is-external">
+				<a href="../globals.html#pixmapformat" class="tsd-kind-icon">Pixmap<wbr>Format</a>
+			</li>
+			<li class=" tsd-kind-type-alias tsd-is-external">
+				<a href="../globals.html#shapeusage" class="tsd-kind-icon">Shape<wbr>Usage</a>
+			</li>
+			<li class=" tsd-kind-function tsd-is-external tsd-is-not-exported">
+				<a href="../globals.html#blendfuncs" class="tsd-kind-icon">blend<wbr>Funcs</a>
+			</li>
+			<li class=" tsd-kind-function tsd-is-external tsd-is-not-exported">
+				<a href="../globals.html#gldatatype" class="tsd-kind-icon">gl<wbr>Data<wbr>Type</a>
+			</li>
+			<li class=" tsd-kind-function tsd-is-external tsd-is-not-exported">
+				<a href="../globals.html#glusage" class="tsd-kind-icon">gl<wbr>Usage</a>
+			</li>
+		</ul>
+	</nav>
+	<div class="content">
+		<h1>Pixmap</h1>
+		<section class="tsd-panel tsd-comment">
+			<div class="comment">
+				<div class="lead">
+					<p>The Pixmap represents the image data on the GPU.
+					It wraps a WebGL texture.</p>
 				</div>
 			</div>
-		</div>
-	</div>
-	<div class="tsd-page-title">
-		<div class="container">
-			<ul class="tsd-breadcrumb">
-				<li>
-					<a href="../globals.html">Globals</a>
-				</li>
-				<li>
-					<a href="pixmap.html">Pixmap</a>
-				</li>
-			</ul>
-			<h1>Class Pixmap</h1>
-		</div>
-	</div>
-</header>
-<div class="container container-main">
-	<div class="row">
-		<div class="col-8 col-content">
-			<section class="tsd-panel tsd-comment">
-				<div class="tsd-comment tsd-typography">
+		</section>
+		<section class="tsd-panel tsd-hierarchy">
+			<h3>Hierarchy</h3>
+		</section>
+		<section class="tsd-panel-group tsd-member-group tsd-is-external">
+			<h2 class="member-group-title">Constructors</h2>
+			<section class="member tsd-kind-constructor tsd-parent-kind-class tsd-is-external" id="constructor">
+				<h3 class="member-title tsd-kind-constructor tsd-parent-kind-class tsd-is-external">new <wbr>Pixmap<span class="tsd-signature-symbol">(</span>context<span class="tsd-signature-symbol">: </span><a href="context.html" class="tsd-signature-type">Context</a>, params<span class="tsd-signature-symbol">: </span><a href="../interfaces/pixmapparams.html" class="tsd-signature-type">PixmapParams</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="pixmap.html" class="tsd-signature-type">Pixmap</a></h3>
+				<ul class="parameters">
+				</ul>
+			</section>
+		</section>
+		<section class="tsd-panel-group tsd-member-group tsd-is-external">
+			<h2 class="member-group-title">Properties</h2>
+			<section class="member tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-external" id="_filter">
+				<div><h3 class="member-title tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-external">_filter<span>:</span> <a href="../globals.html#pixmapfilter" class="tsd-signature-type">PixmapFilter</a></h3></div>
+			</section>
+			<section class="member tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-external" id="_size">
+				<div><h3 class="member-title tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-external">_size<span>:</span> <span class="tsd-signature-type">Vec2</span></h3></div>
+			</section>
+			<section class="member tsd-kind-property tsd-parent-kind-class tsd-is-external" id="context">
+				<div><h3 class="member-title tsd-kind-property tsd-parent-kind-class tsd-is-external">context<span>:</span> <a href="context.html" class="tsd-signature-type">Context</a></h3></div>
+			</section>
+			<section class="member tsd-kind-property tsd-parent-kind-class tsd-is-external" id="format">
+				<div><h3 class="member-title tsd-kind-property tsd-parent-kind-class tsd-is-external">format<span>:</span> <a href="../globals.html#pixmapformat" class="tsd-signature-type">PixmapFormat</a></h3></div>
+				<div class="comment">
 					<div class="lead">
-						<p>The Pixmap represents the image data on the GPU.
-						It wraps a WebGL texture.</p>
+						<p>The format of this Pixmap.</p>
 					</div>
 				</div>
 			</section>
-			<section class="tsd-panel tsd-hierarchy">
-				<h3>Hierarchy</h3>
-				<ul class="tsd-hierarchy">
-					<li>
-						<span class="target">Pixmap</span>
-					</li>
-				</ul>
-			</section>
-			<section class="tsd-panel-group tsd-index-group">
-				<h2>Index</h2>
-				<section class="tsd-panel tsd-index-panel">
-					<div class="tsd-index-content">
-						<section class="tsd-index-section tsd-is-external">
-							<h3>Constructors</h3>
-							<ul class="tsd-index-list">
-								<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-external"><a href="pixmap.html#constructor" class="tsd-kind-icon">constructor</a></li>
-							</ul>
-						</section>
-						<section class="tsd-index-section tsd-is-external">
-							<h3>Properties</h3>
-							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-external"><a href="pixmap.html#_filter" class="tsd-kind-icon">_filter</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-external"><a href="pixmap.html#_size" class="tsd-kind-icon">_size</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-external"><a href="pixmap.html#context" class="tsd-kind-icon">context</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-external"><a href="pixmap.html#format" class="tsd-kind-icon">format</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-external"><a href="pixmap.html#texture" class="tsd-kind-icon">texture</a></li>
-							</ul>
-						</section>
-						<section class="tsd-index-section tsd-is-external">
-							<h3>Accessors</h3>
-							<ul class="tsd-index-list">
-								<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-external"><a href="pixmap.html#filter" class="tsd-kind-icon">filter</a></li>
-								<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-external"><a href="pixmap.html#size" class="tsd-kind-icon">size</a></li>
-							</ul>
-						</section>
-						<section class="tsd-index-section tsd-is-external">
-							<h3>Methods</h3>
-							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="pixmap.html#dispose" class="tsd-kind-icon">dispose</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="pixmap.html#generatemipmap" class="tsd-kind-icon">generate<wbr>Mipmap</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="pixmap.html#setdata" class="tsd-kind-icon">set<wbr>Data</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="pixmap.html#setimage" class="tsd-kind-icon">set<wbr>Image</a></li>
-							</ul>
-						</section>
+			<section class="member tsd-kind-property tsd-parent-kind-class tsd-is-external" id="texture">
+				<div><h3 class="member-title tsd-kind-property tsd-parent-kind-class tsd-is-external">texture<span>:</span> <span class="tsd-signature-type">WebGLTexture</span></h3></div>
+				<div class="comment">
+					<div class="lead">
+						<p>The WebGL texture of this Pixmap.</p>
 					</div>
-				</section>
+				</div>
 			</section>
-			<section class="tsd-panel-group tsd-member-group tsd-is-external">
-				<h2>Constructors</h2>
-				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class tsd-is-external">
-					<a name="constructor" class="tsd-anchor"></a>
-					<h3>constructor</h3>
-					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Pixmap<span class="tsd-signature-symbol">(</span>context<span class="tsd-signature-symbol">: </span><a href="context.html" class="tsd-signature-type">Context</a>, params<span class="tsd-signature-symbol">: </span><a href="../interfaces/pixmapparams.html" class="tsd-signature-type">PixmapParams</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="pixmap.html" class="tsd-signature-type">Pixmap</a></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/seanchas116/paintgl/blob/0d988d5/src/Pixmap.ts#L100">Pixmap.ts:100</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>context: <a href="context.html" class="tsd-signature-type">Context</a></h5>
-								</li>
-								<li>
-									<h5>params: <a href="../interfaces/pixmapparams.html" class="tsd-signature-type">PixmapParams</a></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="pixmap.html" class="tsd-signature-type">Pixmap</a></h4>
-						</li>
-					</ul>
-				</section>
+		</section>
+		<section class="tsd-panel-group tsd-member-group tsd-is-external">
+			<h2 class="member-group-title">Accessors</h2>
+			<section class="member tsd-kind-accessor tsd-parent-kind-class tsd-is-external" id="filter">
+				<h3 class="member-title tsd-kind-accessor tsd-parent-kind-class tsd-is-external"><span>get</span> filter<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">"nearest"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"mipmap-nearest"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"bilinear"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"mipmap-bilinear"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"trilinear"</span>            </h3><div class="comment"><div class="lead"><p>The filter used in scaling of this Pixmap.</p></div></div><h3 class="member-title tsd-kind-accessor tsd-parent-kind-class tsd-is-external"><span>set</span> filter<span class="tsd-signature-symbol">(</span>filter<span class="tsd-signature-symbol">: </span><a href="../globals.html#pixmapfilter" class="tsd-signature-type">PixmapFilter</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span>            </h3><div class="comment"><div class="lead"><p>The filter used in scaling of this Pixmap.</p></div></div><ul class="parameters"></ul>
 			</section>
-			<section class="tsd-panel-group tsd-member-group tsd-is-external">
-				<h2>Properties</h2>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-external">
-					<a name="_filter" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _filter</h3>
-					<div class="tsd-signature tsd-kind-icon">_filter<span class="tsd-signature-symbol">:</span> <a href="../globals.html#pixmapfilter" class="tsd-signature-type">PixmapFilter</a></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/seanchas116/paintgl/blob/0d988d5/src/Pixmap.ts#L66">Pixmap.ts:66</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-external">
-					<a name="_size" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _size</h3>
-					<div class="tsd-signature tsd-kind-icon">_size<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Vec2</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/seanchas116/paintgl/blob/0d988d5/src/Pixmap.ts#L54">Pixmap.ts:54</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-external">
-					<a name="context" class="tsd-anchor"></a>
-					<h3>context</h3>
-					<div class="tsd-signature tsd-kind-icon">context<span class="tsd-signature-symbol">:</span> <a href="context.html" class="tsd-signature-type">Context</a></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/seanchas116/paintgl/blob/0d988d5/src/Pixmap.ts#L102">Pixmap.ts:102</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-external">
-					<a name="format" class="tsd-anchor"></a>
-					<h3>format</h3>
-					<div class="tsd-signature tsd-kind-icon">format<span class="tsd-signature-symbol">:</span> <a href="../globals.html#pixmapformat" class="tsd-signature-type">PixmapFormat</a></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/seanchas116/paintgl/blob/0d988d5/src/Pixmap.ts#L52">Pixmap.ts:52</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>The format of this Pixmap.</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-external">
-					<a name="texture" class="tsd-anchor"></a>
-					<h3>texture</h3>
-					<div class="tsd-signature tsd-kind-icon">texture<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">WebGLTexture</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/seanchas116/paintgl/blob/0d988d5/src/Pixmap.ts#L47">Pixmap.ts:47</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>The WebGL texture of this Pixmap.</p>
-						</div>
-					</div>
-				</section>
+			<section class="member tsd-kind-accessor tsd-parent-kind-class tsd-is-external" id="size">
+				<h3 class="member-title tsd-kind-accessor tsd-parent-kind-class tsd-is-external"><span>get</span> size<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Vec2</span>            </h3><div class="comment"><div class="lead"><p>The size of this Pixmap.</p></div></div><h3 class="member-title tsd-kind-accessor tsd-parent-kind-class tsd-is-external"><span>set</span> size<span class="tsd-signature-symbol">(</span>size<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Vec2</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span>            </h3><div class="comment"><div class="lead"><p>The size of this Pixmap.</p></div></div><ul class="parameters"></ul>
 			</section>
-			<section class="tsd-panel-group tsd-member-group tsd-is-external">
-				<h2>Accessors</h2>
-				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class tsd-is-external">
-					<a name="filter" class="tsd-anchor"></a>
-					<h3>filter</h3>
-					<ul class="tsd-signatures tsd-kind-accessor tsd-parent-kind-class tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> filter<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">"nearest"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"mipmap-nearest"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"bilinear"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"mipmap-bilinear"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"trilinear"</span></li>
-						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">set</span> filter<span class="tsd-signature-symbol">(</span>filter<span class="tsd-signature-symbol">: </span><a href="../globals.html#pixmapfilter" class="tsd-signature-type">PixmapFilter</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/seanchas116/paintgl/blob/0d988d5/src/Pixmap.ts#L71">Pixmap.ts:71</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>The filter used in scaling of this Pixmap.</p>
-								</div>
-							</div>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">"nearest"</span>
-								<span class="tsd-signature-symbol"> | </span>
-								<span class="tsd-signature-type">"mipmap-nearest"</span>
-								<span class="tsd-signature-symbol"> | </span>
-								<span class="tsd-signature-type">"bilinear"</span>
-								<span class="tsd-signature-symbol"> | </span>
-								<span class="tsd-signature-type">"mipmap-bilinear"</span>
-								<span class="tsd-signature-symbol"> | </span>
-								<span class="tsd-signature-type">"trilinear"</span>
-							</h4>
-						</li>
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/seanchas116/paintgl/blob/0d988d5/src/Pixmap.ts#L74">Pixmap.ts:74</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>The filter used in scaling of this Pixmap.</p>
-								</div>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>filter: <a href="../globals.html#pixmapfilter" class="tsd-signature-type">PixmapFilter</a></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class tsd-is-external">
-					<a name="size" class="tsd-anchor"></a>
-					<h3>size</h3>
-					<ul class="tsd-signatures tsd-kind-accessor tsd-parent-kind-class tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> size<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Vec2</span></li>
-						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">set</span> size<span class="tsd-signature-symbol">(</span>size<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Vec2</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/seanchas116/paintgl/blob/0d988d5/src/Pixmap.ts#L59">Pixmap.ts:59</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>The size of this Pixmap.</p>
-								</div>
-							</div>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Vec2</span></h4>
-						</li>
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/seanchas116/paintgl/blob/0d988d5/src/Pixmap.ts#L62">Pixmap.ts:62</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>The size of this Pixmap.</p>
-								</div>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>size: <span class="tsd-signature-type">Vec2</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-						</li>
-					</ul>
-				</section>
+		</section>
+		<section class="tsd-panel-group tsd-member-group tsd-is-external">
+			<h2 class="member-group-title">Methods</h2>
+			<section class="member tsd-kind-method tsd-parent-kind-class tsd-is-external" id="dispose">
+				<h3 class="member-title tsd-kind-method tsd-parent-kind-class tsd-is-external">dispose<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></h3>
 			</section>
-			<section class="tsd-panel-group tsd-member-group tsd-is-external">
-				<h2>Methods</h2>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-external">
-					<a name="dispose" class="tsd-anchor"></a>
-					<h3>dispose</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">dispose<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/seanchas116/paintgl/blob/0d988d5/src/Pixmap.ts#L140">Pixmap.ts:140</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-external">
-					<a name="generatemipmap" class="tsd-anchor"></a>
-					<h3>generate<wbr>Mipmap</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">generate<wbr>Mipmap<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/seanchas116/paintgl/blob/0d988d5/src/Pixmap.ts#L134">Pixmap.ts:134</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-external">
-					<a name="setdata" class="tsd-anchor"></a>
-					<h3>set<wbr>Data</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">set<wbr>Data<span class="tsd-signature-symbol">(</span>size<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Vec2</span>, data<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">ArrayBufferView</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/seanchas116/paintgl/blob/0d988d5/src/Pixmap.ts#L120">Pixmap.ts:120</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>size: <span class="tsd-signature-type">Vec2</span></h5>
-								</li>
-								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> data: <span class="tsd-signature-type">ArrayBufferView</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-external">
-					<a name="setimage" class="tsd-anchor"></a>
-					<h3>set<wbr>Image</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">set<wbr>Image<span class="tsd-signature-symbol">(</span>image<span class="tsd-signature-symbol">: </span><a href="../globals.html#imagesource" class="tsd-signature-type">ImageSource</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/seanchas116/paintgl/blob/0d988d5/src/Pixmap.ts#L127">Pixmap.ts:127</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>image: <a href="../globals.html#imagesource" class="tsd-signature-type">ImageSource</a></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-						</li>
-					</ul>
-				</section>
+			<section class="member tsd-kind-method tsd-parent-kind-class tsd-is-external" id="generatemipmap">
+				<h3 class="member-title tsd-kind-method tsd-parent-kind-class tsd-is-external">generate<wbr>Mipmap<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></h3>
 			</section>
-		</div>
-		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
-			<nav class="tsd-navigation primary">
-				<ul>
-					<li class="globals  ">
-						<a href="../globals.html"><em>Globals</em></a>
-					</li>
+			<section class="member tsd-kind-method tsd-parent-kind-class tsd-is-external" id="setdata">
+				<h3 class="member-title tsd-kind-method tsd-parent-kind-class tsd-is-external">set<wbr>Data<span class="tsd-signature-symbol">(</span>size<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Vec2</span>, data<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">ArrayBufferView</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></h3>
+				<ul class="parameters">
 				</ul>
-			</nav>
-			<nav class="tsd-navigation secondary menu-sticky">
-				<ul class="before-current">
-					<li class=" tsd-kind-class tsd-is-external">
-						<a href="canvasdrawtarget.html" class="tsd-kind-icon">Canvas<wbr>Draw<wbr>Target</a>
-					</li>
-					<li class=" tsd-kind-class tsd-is-external">
-						<a href="color.html" class="tsd-kind-icon">Color</a>
-					</li>
-					<li class=" tsd-kind-class tsd-is-external">
-						<a href="colorfill.html" class="tsd-kind-icon">Color<wbr>Fill</a>
-					</li>
-					<li class=" tsd-kind-class tsd-is-external">
-						<a href="context.html" class="tsd-kind-icon">Context</a>
-					</li>
-					<li class=" tsd-kind-class tsd-is-external">
-						<a href="drawtarget.html" class="tsd-kind-icon">Draw<wbr>Target</a>
-					</li>
-					<li class=" tsd-kind-class tsd-is-external">
-						<a href="fill.html" class="tsd-kind-icon">Fill</a>
-					</li>
-					<li class=" tsd-kind-class tsd-is-external">
-						<a href="fillbase.html" class="tsd-kind-icon">Fill<wbr>Base</a>
-					</li>
-					<li class=" tsd-kind-class tsd-is-external">
-						<a href="model.html" class="tsd-kind-icon">Model</a>
-					</li>
+			</section>
+			<section class="member tsd-kind-method tsd-parent-kind-class tsd-is-external" id="setimage">
+				<h3 class="member-title tsd-kind-method tsd-parent-kind-class tsd-is-external">set<wbr>Image<span class="tsd-signature-symbol">(</span>image<span class="tsd-signature-symbol">: </span><a href="../globals.html#imagesource" class="tsd-signature-type">ImageSource</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></h3>
+				<ul class="parameters">
 				</ul>
-				<ul class="current">
-					<li class="current tsd-kind-class tsd-is-external">
-						<a href="pixmap.html" class="tsd-kind-icon">Pixmap</a>
-						<ul>
-							<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-is-external">
-								<a href="pixmap.html#constructor" class="tsd-kind-icon">constructor</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-external">
-								<a href="pixmap.html#_filter" class="tsd-kind-icon">_filter</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-external">
-								<a href="pixmap.html#_size" class="tsd-kind-icon">_size</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-external">
-								<a href="pixmap.html#context" class="tsd-kind-icon">context</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-external">
-								<a href="pixmap.html#format" class="tsd-kind-icon">format</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-external">
-								<a href="pixmap.html#texture" class="tsd-kind-icon">texture</a>
-							</li>
-							<li class=" tsd-kind-accessor tsd-parent-kind-class tsd-is-external">
-								<a href="pixmap.html#filter" class="tsd-kind-icon">filter</a>
-							</li>
-							<li class=" tsd-kind-accessor tsd-parent-kind-class tsd-is-external">
-								<a href="pixmap.html#size" class="tsd-kind-icon">size</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-external">
-								<a href="pixmap.html#dispose" class="tsd-kind-icon">dispose</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-external">
-								<a href="pixmap.html#generatemipmap" class="tsd-kind-icon">generate<wbr>Mipmap</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-external">
-								<a href="pixmap.html#setdata" class="tsd-kind-icon">set<wbr>Data</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-external">
-								<a href="pixmap.html#setimage" class="tsd-kind-icon">set<wbr>Image</a>
-							</li>
-						</ul>
-					</li>
-				</ul>
-				<ul class="after-current">
-					<li class=" tsd-kind-class tsd-is-external">
-						<a href="pixmapdrawtarget.html" class="tsd-kind-icon">Pixmap<wbr>Draw<wbr>Target</a>
-					</li>
-					<li class=" tsd-kind-class tsd-is-external">
-						<a href="pixmapfill.html" class="tsd-kind-icon">Pixmap<wbr>Fill</a>
-					</li>
-					<li class=" tsd-kind-class tsd-is-external">
-						<a href="quadshape.html" class="tsd-kind-icon">Quad<wbr>Shape</a>
-					</li>
-					<li class=" tsd-kind-class tsd-is-external">
-						<a href="rectshape.html" class="tsd-kind-icon">Rect<wbr>Shape</a>
-					</li>
-					<li class=" tsd-kind-class tsd-is-external">
-						<a href="shape.html" class="tsd-kind-icon">Shape</a>
-					</li>
-					<li class=" tsd-kind-class tsd-is-external">
-						<a href="shapebase.html" class="tsd-kind-icon">Shape<wbr>Base</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-is-external">
-						<a href="../interfaces/contextcapabilities.html" class="tsd-kind-icon">Context<wbr>Capabilities</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-is-external">
-						<a href="../interfaces/contextoptions.html" class="tsd-kind-icon">Context<wbr>Options</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-is-external">
-						<a href="../interfaces/drawable.html" class="tsd-kind-icon">Drawable</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
-						<a href="../interfaces/objectmap.html" class="tsd-kind-icon">Object<wbr>Map</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-is-external">
-						<a href="../interfaces/pixmapparams.html" class="tsd-kind-icon">Pixmap<wbr>Params</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-is-external">
-						<a href="../globals.html#blendmode" class="tsd-kind-icon">Blend<wbr>Mode</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-is-external">
-						<a href="../globals.html#imagesource" class="tsd-kind-icon">Image<wbr>Source</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-is-external">
-						<a href="../globals.html#pixmapfilter" class="tsd-kind-icon">Pixmap<wbr>Filter</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-is-external">
-						<a href="../globals.html#pixmapformat" class="tsd-kind-icon">Pixmap<wbr>Format</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-is-external">
-						<a href="../globals.html#shapeusage" class="tsd-kind-icon">Shape<wbr>Usage</a>
-					</li>
-					<li class=" tsd-kind-function tsd-is-external tsd-is-not-exported">
-						<a href="../globals.html#blendfuncs" class="tsd-kind-icon">blend<wbr>Funcs</a>
-					</li>
-					<li class=" tsd-kind-function tsd-is-external tsd-is-not-exported">
-						<a href="../globals.html#gldatatype" class="tsd-kind-icon">gl<wbr>Data<wbr>Type</a>
-					</li>
-					<li class=" tsd-kind-function tsd-is-external tsd-is-not-exported">
-						<a href="../globals.html#glusage" class="tsd-kind-icon">gl<wbr>Usage</a>
-					</li>
-				</ul>
-			</nav>
-		</div>
+			</section>
+		</section>
 	</div>
 </div>
-<footer class="with-border-bottom">
-	<div class="container">
-		<h2>Legend</h2>
-		<div class="tsd-legend-group">
-			<ul class="tsd-legend">
-				<li class="tsd-kind-module"><span class="tsd-kind-icon">Module</span></li>
-				<li class="tsd-kind-object-literal"><span class="tsd-kind-icon">Object literal</span></li>
-				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
-				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
-				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
-				<li class="tsd-kind-index-signature"><span class="tsd-kind-icon">Index signature</span></li>
-				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
-				<li class="tsd-kind-enum-member"><span class="tsd-kind-icon">Enumeration member</span></li>
-				<li class="tsd-kind-property tsd-parent-kind-enum"><span class="tsd-kind-icon">Property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-enum"><span class="tsd-kind-icon">Method</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
-				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
-				<li class="tsd-kind-constructor tsd-parent-kind-interface"><span class="tsd-kind-icon">Constructor</span></li>
-				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
-				<li class="tsd-kind-index-signature tsd-parent-kind-interface"><span class="tsd-kind-icon">Index signature</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
-				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
-				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
-				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
-				<li class="tsd-kind-accessor tsd-parent-kind-class"><span class="tsd-kind-icon">Accessor</span></li>
-				<li class="tsd-kind-index-signature tsd-parent-kind-class"><span class="tsd-kind-icon">Index signature</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
-				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li>
-				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited accessor</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
-				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected accessor</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li>
-				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private accessor</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static property</span></li>
-				<li class="tsd-kind-call-signature tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
-			</ul>
-		</div>
-	</div>
-</footer>
-<div class="container tsd-generator">
-	<p>Generated using <a href="http://typedoc.io" target="_blank">TypeDoc</a></p>
-</div>
-<div class="overlay"></div>
-<script src="../assets/js/main.js"></script>
-<script>if (location.protocol == 'file:') document.write('<script src="../assets/js/search.js"><' + '/script>');</script>
 </body>
 </html>

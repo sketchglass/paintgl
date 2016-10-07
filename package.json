@@ -4,7 +4,7 @@
   "description": "[WIP] WebGL wrapper for 2D painting",
   "main": "index.js",
   "scripts": {
-    "docs": "typedoc --mode file --target ES5 --module commonjs --out docs src/index.ts",
+    "docs": "typedoc --theme node_modules/typedoc-theme-clean/bin --mode file --target ES5 --module commonjs --out docs src/index.ts",
     "example:build": "browserify example/index.js -o example/bundle.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -21,6 +21,7 @@
   "devDependencies": {
     "browserify": "^13.1.0",
     "typedoc": "github:jasongrout/typedoc#ts2",
+    "typedoc-theme-clean": "github:seanchas116/typedoc-theme-clean",
     "typescript": "^2.0.3"
   },
   "dependencies": {
