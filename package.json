@@ -22,9 +22,7 @@
     "browserify": "^13.1.0",
     "typedoc": "github:jasongrout/typedoc#ts2",
     "typedoc-theme-clean": "github:seanchas116/typedoc-theme-clean",
-    "typescript": "^2.0.3"
-  },
-  "dependencies": {
+    "typescript": "^2.0.3",
     "paintvec": "github:seanchas116/paintvec"
   }
 }
