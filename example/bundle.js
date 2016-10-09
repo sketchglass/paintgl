@@ -1,53 +1,52 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 "use strict";
-var paintvec_1 = require("paintvec");
-var lib_1 = require("../lib");
-var context = new lib_1.Context(document.getElementById("canvas"));
-var pixmap = new lib_1.Pixmap(context, { size: new paintvec_1.Vec2(400, 400) });
-var drawTarget = new lib_1.PixmapDrawTarget(context, pixmap);
+const paintvec_1 = require("paintvec");
+const lib_1 = require("../lib");
+const context = new lib_1.Context(document.getElementById("canvas"));
+const pixmap = new lib_1.Pixmap(context, { size: new paintvec_1.Vec2(400, 400) });
+const drawTarget = new lib_1.PixmapDrawTarget(context, pixmap);
 drawTarget.clear(new lib_1.Color(0.9, 0.9, 0.9, 1));
-var shape = new lib_1.RectShape(context);
+const shape = new lib_1.RectShape(context);
 shape.rect = new paintvec_1.Rect(new paintvec_1.Vec2(100, 100), new paintvec_1.Vec2(200, 300));
-var fill = new lib_1.ColorFill(context);
+const fill = new lib_1.ColorFill(context);
 fill.color = new lib_1.Color(0.9, 0.1, 0.2, 1);
-var model = new lib_1.Model(context, shape, fill);
+const model = new lib_1.Model(context, shape, fill);
 drawTarget.draw(model);
 drawTarget.transform = paintvec_1.Transform.rotate(0.1 * Math.PI);
 drawTarget.blendMode = "dst-out";
 drawTarget.draw(model);
-var canvasDrawTarget = new lib_1.CanvasDrawTarget(context);
-var pixmapShape = new lib_1.RectShape(context);
+const canvasDrawTarget = new lib_1.CanvasDrawTarget(context);
+const pixmapShape = new lib_1.RectShape(context);
 pixmapShape.rect = new paintvec_1.Rect(new paintvec_1.Vec2(0), pixmap.size);
-var pixmapFill = new lib_1.PixmapFill(context);
+const pixmapFill = new lib_1.PixmapFill(context);
 pixmapFill.pixmap = pixmap;
-var pixmapModel = new lib_1.Model(context, pixmapShape, pixmapFill);
+const pixmapModel = new lib_1.Model(context, pixmapShape, pixmapFill);
 canvasDrawTarget.draw(pixmapModel);
 
 },{"../lib":9,"paintvec":10}],2:[function(require,module,exports){
 "use strict";
-var Color = (function () {
-    function Color(r, g, b, a) {
+class Color {
+    constructor(r, g, b, a) {
         this.r = r;
         this.g = g;
         this.b = b;
         this.a = a;
     }
-    Color.prototype.members = function () {
+    members() {
         return [this.r, this.g, this.b, this.a];
-    };
-    Color.prototype.equals = function (other) {
+    }
+    equals(other) {
         return this.r == other.r && this.g == other.g && this.b == other.b && this.a == other.a;
-    };
-    return Color;
-}());
+    }
+}
 exports.Color = Color;
 
 },{}],3:[function(require,module,exports){
 "use strict";
-var Context = (function () {
-    function Context(canvas, opts) {
+class Context {
+    constructor(canvas, opts) {
         this.canvas = canvas;
-        var glOpts = {
+        const glOpts = {
             preserveDrawingBuffer: false,
             alpha: true,
             antialias: true,
@@ -56,11 +55,11 @@ var Context = (function () {
             premultipliedAlpha: true,
         };
         if (opts) {
-            for (var key in opts) {
+            for (const key in opts) {
                 glOpts[key] = opts[key];
             }
         }
-        var gl = this.gl = canvas.getContext("webgl", glOpts);
+        const gl = this.gl = canvas.getContext("webgl", glOpts);
         this.halfFloatExt = gl.getExtension("OES_texture_half_float");
         this.capabilities = {
             halfFloat: !!this.halfFloatExt,
@@ -69,136 +68,109 @@ var Context = (function () {
             floatLinearFilter: !!gl.getExtension("OES_texture_float_linear"),
         };
     }
-    return Context;
-}());
+}
 exports.Context = Context;
 
 },{}],4:[function(require,module,exports){
 "use strict";
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var paintvec_1 = require("paintvec");
-var DrawTarget = (function () {
-    function DrawTarget(context) {
+const paintvec_1 = require("paintvec");
+class DrawTarget {
+    constructor(context) {
         this.context = context;
         this.flipY = false;
         this.transform = new paintvec_1.Transform();
         this.blendMode = "src-over";
     }
-    Object.defineProperty(DrawTarget.prototype, "size", {
-        get: function () { },
-        enumerable: true,
-        configurable: true
-    });
-    DrawTarget.prototype.draw = function (drawable) {
-        var gl = this.context.gl;
+    get size() { }
+    draw(drawable) {
+        const { gl } = this.context;
         this.use();
         if (this.blendMode == "src") {
             gl.disable(gl.BLEND);
         }
         else {
             gl.enable(gl.BLEND);
-            var funcs = blendFuncs(gl, this.blendMode);
+            const funcs = blendFuncs(gl, this.blendMode);
             gl.blendFunc(funcs[0], funcs[1]);
         }
-        var size = this.size;
-        var transform = this.transform
+        const { size } = this;
+        let transform = this.transform
             .merge(paintvec_1.Transform.scale(new paintvec_1.Vec2(2 / size.width, 2 / size.height)))
             .merge(paintvec_1.Transform.translate(new paintvec_1.Vec2(-1)));
         if (this.flipY) {
             transform = transform.merge(paintvec_1.Transform.scale(new paintvec_1.Vec2(1, -1)));
         }
         drawable.draw(transform);
-    };
-    DrawTarget.prototype.clear = function (color) {
+    }
+    clear(color) {
         this.use();
-        var gl = this.context.gl;
+        const { gl } = this.context;
         gl.clearColor(color.r, color.g, color.b, color.a);
         gl.clear(gl.COLOR_BUFFER_BIT);
-    };
-    DrawTarget.prototype.use = function () {
-        var gl = this.context.gl;
+    }
+    use() {
+        const { gl } = this.context;
         if (this.scissor) {
             gl.enable(gl.SCISSOR_TEST);
-            var drawableRect = new paintvec_1.Rect(new paintvec_1.Vec2(0), this.size);
-            var rect = this.scissor.intBounding().intersection(drawableRect);
+            const drawableRect = new paintvec_1.Rect(new paintvec_1.Vec2(0), this.size);
+            const rect = this.scissor.intBounding().intersection(drawableRect);
             gl.scissor(rect.left, rect.top, rect.width, rect.height);
         }
         else {
             gl.disable(gl.SCISSOR_TEST);
         }
         gl.viewport(0, 0, this.size.x, this.size.y);
-    };
-    DrawTarget.prototype.dispose = function () {
-    };
-    return DrawTarget;
-}());
+    }
+    dispose() {
+    }
+}
 exports.DrawTarget = DrawTarget;
-var CanvasDrawTarget = (function (_super) {
-    __extends(CanvasDrawTarget, _super);
-    function CanvasDrawTarget() {
-        _super.apply(this, arguments);
+class CanvasDrawTarget extends DrawTarget {
+    constructor(...args) {
+        super(...args);
         this.flipY = true;
     }
-    Object.defineProperty(CanvasDrawTarget.prototype, "size", {
-        get: function () {
-            var canvas = this.context.canvas;
-            return new paintvec_1.Vec2(canvas.width, canvas.height);
-        },
-        enumerable: true,
-        configurable: true
-    });
-    CanvasDrawTarget.prototype.use = function () {
-        var gl = this.context.gl;
+    get size() {
+        const { canvas } = this.context;
+        return new paintvec_1.Vec2(canvas.width, canvas.height);
+    }
+    use() {
+        const { gl } = this.context;
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-        _super.prototype.use.call(this);
-    };
-    return CanvasDrawTarget;
-}(DrawTarget));
+        super.use();
+    }
+}
 exports.CanvasDrawTarget = CanvasDrawTarget;
-var PixmapDrawTarget = (function (_super) {
-    __extends(PixmapDrawTarget, _super);
-    function PixmapDrawTarget(context, pixmap) {
-        _super.call(this, context);
+class PixmapDrawTarget extends DrawTarget {
+    constructor(context, pixmap) {
+        super(context);
         this.context = context;
-        var gl = context.gl;
+        const { gl } = context;
         this.framebuffer = gl.createFramebuffer();
         this.pixmap = pixmap;
     }
-    Object.defineProperty(PixmapDrawTarget.prototype, "pixmap", {
-        get: function () {
-            return this._pixmap;
-        },
-        set: function (pixmap) {
-            var gl = this.context.gl;
-            gl.bindFramebuffer(gl.FRAMEBUFFER, this.framebuffer);
-            gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, pixmap.texture, 0);
-            this._pixmap = pixmap;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(PixmapDrawTarget.prototype, "size", {
-        get: function () {
-            return this.pixmap.size;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    PixmapDrawTarget.prototype.use = function () {
-        var gl = this.context.gl;
+    get pixmap() {
+        return this._pixmap;
+    }
+    set pixmap(pixmap) {
+        const { gl } = this.context;
         gl.bindFramebuffer(gl.FRAMEBUFFER, this.framebuffer);
-        _super.prototype.use.call(this);
-    };
-    PixmapDrawTarget.prototype.dispose = function () {
-        var gl = this.context.gl;
+        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, pixmap.texture, 0);
+        this._pixmap = pixmap;
+    }
+    get size() {
+        return this.pixmap.size;
+    }
+    use() {
+        const { gl } = this.context;
+        gl.bindFramebuffer(gl.FRAMEBUFFER, this.framebuffer);
+        super.use();
+    }
+    dispose() {
+        const { gl } = this.context;
         gl.deleteFramebuffer(this.framebuffer);
-    };
-    return PixmapDrawTarget;
-}(DrawTarget));
+    }
+}
 exports.PixmapDrawTarget = PixmapDrawTarget;
 function blendFuncs(gl, mode) {
     switch (mode) {
@@ -228,191 +200,196 @@ function blendFuncs(gl, mode) {
 
 },{"paintvec":10}],5:[function(require,module,exports){
 "use strict";
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var paintvec_1 = require("paintvec");
-var Color_1 = require("./Color");
-var FillBase = (function () {
-    function FillBase(context) {
+const paintvec_1 = require("paintvec");
+const Color_1 = require("./Color");
+class FillBase {
+    constructor(context) {
         this.context = context;
         this._uniformLocations = {};
         this._pixmapValues = {};
-        var gl = context.gl;
+        const { gl } = context;
         this.program = gl.createProgram();
-        var klass = this.constructor;
+        const klass = this.constructor;
         this._addShader(gl.VERTEX_SHADER, klass.vertexShader);
         this._addShader(gl.FRAGMENT_SHADER, klass.fragmentShader);
         gl.linkProgram(this.program);
         if (!gl.getProgramParameter(this.program, gl.LINK_STATUS)) {
-            throw new Error("Failed to link shader:\n" + gl.getProgramInfoLog(this.program));
+            throw new Error(`Failed to link shader:\n${gl.getProgramInfoLog(this.program)}`);
         }
     }
-    FillBase.prototype._addShader = function (type, source) {
-        var gl = this.context.gl;
-        var shader = gl.createShader(type);
+    _addShader(type, source) {
+        const { gl } = this.context;
+        const shader = gl.createShader(type);
         gl.shaderSource(shader, source);
         gl.compileShader(shader);
         if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-            throw new Error("Failed to compile shader:\n" + gl.getShaderInfoLog(shader));
+            throw new Error(`Failed to compile shader:\n${gl.getShaderInfoLog(shader)}`);
         }
         gl.attachShader(this.program, shader);
-    };
-    FillBase.prototype._uniformLocation = function (name) {
-        var gl = this.context.gl;
+    }
+    _uniformLocation(name) {
+        const { gl } = this.context;
         if (!(name in this._uniformLocations)) {
             this._uniformLocations[name] = gl.getUniformLocation(this.program, name);
         }
         return this._uniformLocations[name];
-    };
-    FillBase.prototype.setUniformInt = function (name, value) {
-        var gl = this.context.gl;
+    }
+    setUniformInt(name, value) {
+        const { gl } = this.context;
         gl.useProgram(this.program);
         gl.uniform1i(this._uniformLocation(name), value);
-    };
-    FillBase.prototype.setUniformFloat = function (name, value) {
-        var gl = this.context.gl;
+    }
+    setUniformFloat(name, value) {
+        const { gl } = this.context;
         gl.useProgram(this.program);
         gl.uniform1f(this._uniformLocation(name), value);
-    };
-    FillBase.prototype.setUniformVec2 = function (name, value) {
-        var gl = this.context.gl;
+    }
+    setUniformVec2(name, value) {
+        const { gl } = this.context;
         gl.useProgram(this.program);
         gl.uniform2fv(this._uniformLocation(name), new Float32Array(value.members()));
-    };
-    FillBase.prototype.setUniformColor = function (name, value) {
-        var gl = this.context.gl;
+    }
+    setUniformColor(name, value) {
+        const { gl } = this.context;
         gl.useProgram(this.program);
         gl.uniform4fv(this._uniformLocation(name), new Float32Array(value.members()));
-    };
-    FillBase.prototype.setUniformTransform = function (name, value) {
-        var gl = this.context.gl;
+    }
+    setUniformTransform(name, value) {
+        const { gl } = this.context;
         gl.useProgram(this.program);
         gl.uniformMatrix3fv(this._uniformLocation(name), false, new Float32Array(value.members()));
-    };
-    FillBase.prototype.setUniformPixmap = function (name, pixmap) {
+    }
+    setUniformPixmap(name, pixmap) {
         this._pixmapValues[name] = pixmap;
-    };
-    FillBase.prototype.dispose = function () {
-        var gl = this.context.gl;
+    }
+    dispose() {
+        const { gl } = this.context;
         gl.deleteProgram(this.program);
-    };
-    FillBase.vertexShader = "";
-    FillBase.fragmentShader = "";
-    return FillBase;
-}());
+    }
+}
+FillBase.vertexShader = "";
+FillBase.fragmentShader = "";
 exports.FillBase = FillBase;
-var Fill = (function (_super) {
-    __extends(Fill, _super);
-    function Fill(context) {
-        _super.call(this, context);
+class Fill extends FillBase {
+    constructor(context) {
+        super(context);
         this.transform = new paintvec_1.Transform();
     }
-    Object.defineProperty(Fill.prototype, "transform", {
-        get: function () {
-            return this._transform;
-        },
-        set: function (transform) {
-            this.setUniformTransform("uTransform", transform);
-            this._transform = transform;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Fill.vertexShader = "\n    precision highp float;\n\n    uniform mat3 uTransform;\n    attribute vec2 aPosition;\n    attribute vec2 aTexCoord;\n    varying vec2 vPosition;\n    varying vec2 vTexCoord;\n\n    void main(void) {\n      vPosition = aPosition;\n      vTexCoord = aTexCoord;\n      vec3 pos = uTransform * vec3(aPosition, 1.0);\n      gl_Position = vec4(pos.xy / pos.z, 0.0, 1.0);\n    }\n  ";
-    Fill.fragmentShader = "\n    precision mediump float;\n    void main(void) {\n      gl_FragColor = vec4(0.0);\n    }\n  ";
-    return Fill;
-}(FillBase));
-exports.Fill = Fill;
-var PixmapFill = (function (_super) {
-    __extends(PixmapFill, _super);
-    function PixmapFill() {
-        _super.apply(this, arguments);
+    get transform() {
+        return this._transform;
     }
-    Object.defineProperty(PixmapFill.prototype, "pixmap", {
-        get: function () {
-            return this._pixmap;
-        },
-        set: function (pixmap) {
-            if (pixmap) {
-                this.setUniformPixmap("uPixmap", pixmap);
-            }
-            this._pixmap = pixmap;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    PixmapFill.fragmentShader = "\n    precision mediump float;\n    varying highp vec2 vTexCoord;\n    uniform sampler2D uPixmap;\n    void main(void) {\n      gl_FragColor = texture2D(uPixmap, vTexCoord);\n    }\n  ";
-    return PixmapFill;
-}(Fill));
+    set transform(transform) {
+        this.setUniformTransform("uTransform", transform);
+        this._transform = transform;
+    }
+}
+Fill.vertexShader = `
+    precision highp float;
+
+    uniform mat3 uTransform;
+    attribute vec2 aPosition;
+    attribute vec2 aTexCoord;
+    varying vec2 vPosition;
+    varying vec2 vTexCoord;
+
+    void main(void) {
+      vPosition = aPosition;
+      vTexCoord = aTexCoord;
+      vec3 pos = uTransform * vec3(aPosition, 1.0);
+      gl_Position = vec4(pos.xy / pos.z, 0.0, 1.0);
+    }
+  `;
+Fill.fragmentShader = `
+    precision mediump float;
+    void main(void) {
+      gl_FragColor = vec4(0.0);
+    }
+  `;
+exports.Fill = Fill;
+class PixmapFill extends Fill {
+    get pixmap() {
+        return this._pixmap;
+    }
+    set pixmap(pixmap) {
+        if (pixmap) {
+            this.setUniformPixmap("uPixmap", pixmap);
+        }
+        this._pixmap = pixmap;
+    }
+}
+PixmapFill.fragmentShader = `
+    precision mediump float;
+    varying highp vec2 vTexCoord;
+    uniform sampler2D uPixmap;
+    void main(void) {
+      gl_FragColor = texture2D(uPixmap, vTexCoord);
+    }
+  `;
 exports.PixmapFill = PixmapFill;
-var ColorFill = (function (_super) {
-    __extends(ColorFill, _super);
-    function ColorFill(context) {
-        _super.call(this, context);
+class ColorFill extends Fill {
+    constructor(context) {
+        super(context);
         this.color = new Color_1.Color(0, 0, 0, 1);
     }
-    Object.defineProperty(ColorFill.prototype, "color", {
-        get: function () {
-            return this._color;
-        },
-        set: function (color) {
-            this.setUniformColor("uColor", color);
-            this._color = color;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    ColorFill.fragmentShader = "\n    precision mediump float;\n    uniform vec4 uColor;\n    void main(void) {\n      gl_FragColor = uColor;\n    }\n  ";
-    return ColorFill;
-}(Fill));
+    get color() {
+        return this._color;
+    }
+    set color(color) {
+        this.setUniformColor("uColor", color);
+        this._color = color;
+    }
+}
+ColorFill.fragmentShader = `
+    precision mediump float;
+    uniform vec4 uColor;
+    void main(void) {
+      gl_FragColor = uColor;
+    }
+  `;
 exports.ColorFill = ColorFill;
 
 },{"./Color":2,"paintvec":10}],6:[function(require,module,exports){
 "use strict";
-var paintvec_1 = require("paintvec");
-var Model = (function () {
-    function Model(context, shape, fill) {
+const paintvec_1 = require("paintvec");
+class Model {
+    constructor(context, shape, fill) {
         this.context = context;
         this.shape = shape;
         this.fill = fill;
         this.transform = new paintvec_1.Transform();
     }
-    Model.prototype.draw = function (transform) {
-        var gl = this.context.gl;
-        var _a = this, shape = _a.shape, fill = _a.fill;
+    draw(transform) {
+        const { gl } = this.context;
+        const { shape, fill } = this;
         shape.updateIfNeeded();
         fill.transform = this.transform.merge(transform);
         gl.useProgram(fill.program);
-        var texUnit = 0;
-        for (var name_1 in fill._pixmapValues) {
+        let texUnit = 0;
+        for (const name in fill._pixmapValues) {
             gl.activeTexture(gl.TEXTURE0 + texUnit);
-            gl.bindTexture(gl.TEXTURE_2D, fill._pixmapValues[name_1].texture);
-            fill.setUniformInt(name_1, texUnit);
+            gl.bindTexture(gl.TEXTURE_2D, fill._pixmapValues[name].texture);
+            fill.setUniformInt(name, texUnit);
             ++texUnit;
         }
         gl.bindBuffer(gl.ARRAY_BUFFER, shape.vertexBuffer);
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, shape.indexBuffer);
-        var stride = shape.attributeStride();
-        var offset = 0;
-        for (var name_2 in shape.attributes) {
-            var attribute = shape.attributes[name_2];
-            var pos = gl.getAttribLocation(fill.program, name_2);
+        const stride = shape.attributeStride();
+        let offset = 0;
+        for (const name in shape.attributes) {
+            const attribute = shape.attributes[name];
+            const pos = gl.getAttribLocation(fill.program, name);
             gl.enableVertexAttribArray(pos);
             gl.vertexAttribPointer(pos, attribute.size, gl.FLOAT, false, stride * 4, offset * 4);
             offset += attribute.size;
         }
         gl.drawElements(gl.TRIANGLES, shape.indices.length, gl.UNSIGNED_SHORT, 0);
-    };
-    return Model;
-}());
+    }
+}
 exports.Model = Model;
 
 },{"paintvec":10}],7:[function(require,module,exports){
 "use strict";
-var paintvec_1 = require("paintvec");
+const paintvec_1 = require("paintvec");
 function glDataType(context, format) {
     switch (format) {
         case "byte":
@@ -424,10 +401,10 @@ function glDataType(context, format) {
             return context.gl.FLOAT;
     }
 }
-var Pixmap = (function () {
-    function Pixmap(context, params) {
+class Pixmap {
+    constructor(context, params) {
         this.context = context;
-        var gl = context.gl;
+        const { gl } = context;
         this.texture = gl.createTexture();
         gl.bindTexture(gl.TEXTURE_2D, this.texture);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
@@ -441,83 +418,69 @@ var Pixmap = (function () {
             this.setData(params.size || new paintvec_1.Vec2(0), params.data);
         }
     }
-    Object.defineProperty(Pixmap.prototype, "size", {
-        get: function () {
-            return this._size;
-        },
-        set: function (size) {
-            this.setData(this.size);
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Pixmap.prototype, "filter", {
-        get: function () {
-            return this._filter;
-        },
-        set: function (filter) {
-            this._filter = filter;
-            var gl = this.context.gl;
-            gl.bindTexture(gl.TEXTURE_2D, this.texture);
-            switch (filter) {
-                case "nearest":
-                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-                    break;
-                case "mipmap-nearest":
-                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST_MIPMAP_NEAREST);
-                    break;
-                case "bilinear":
-                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-                    break;
-                case "mipmap-bilinear":
-                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST_MIPMAP_LINEAR);
-                    break;
-                case "trilinear":
-                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
-                    break;
-            }
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Pixmap.prototype.setData = function (size, data) {
-        var _a = this.context, gl = _a.gl, halfFloatExt = _a.halfFloatExt;
+    get size() {
+        return this._size;
+    }
+    set size(size) {
+        this.setData(this.size);
+    }
+    get filter() {
+        return this._filter;
+    }
+    set filter(filter) {
+        this._filter = filter;
+        const { gl } = this.context;
+        gl.bindTexture(gl.TEXTURE_2D, this.texture);
+        switch (filter) {
+            case "nearest":
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+                break;
+            case "mipmap-nearest":
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST_MIPMAP_NEAREST);
+                break;
+            case "bilinear":
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+                break;
+            case "mipmap-bilinear":
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST_MIPMAP_LINEAR);
+                break;
+            case "trilinear":
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+                break;
+        }
+    }
+    setData(size, data) {
+        const { gl, halfFloatExt } = this.context;
         this._size = size;
         gl.bindTexture(gl.TEXTURE_2D, this.texture);
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, size.x, size.y, 0, gl.RGBA, glDataType(this.context, this.format), data ? data : null);
-    };
-    Pixmap.prototype.setImage = function (image) {
-        var gl = this.context.gl;
+    }
+    setImage(image) {
+        const { gl } = this.context;
         this._size = new paintvec_1.Vec2(image.width, image.height);
         gl.bindTexture(gl.TEXTURE_2D, this.texture);
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, glDataType(this.context, this.format), image);
-    };
-    Pixmap.prototype.generateMipmap = function () {
-        var gl = this.context.gl;
+    }
+    generateMipmap() {
+        const { gl } = this.context;
         gl.bindTexture(gl.TEXTURE_2D, this.texture);
         gl.generateMipmap(gl.TEXTURE_2D);
-    };
-    Pixmap.prototype.dispose = function () {
-        var gl = this.context.gl;
+    }
+    dispose() {
+        const { gl } = this.context;
         gl.deleteTexture(this.texture);
-    };
-    return Pixmap;
-}());
+    }
+}
 exports.Pixmap = Pixmap;
 
 },{"paintvec":10}],8:[function(require,module,exports){
 "use strict";
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var paintvec_1 = require("paintvec");
+const paintvec_1 = require("paintvec");
 function glUsage(gl, usage) {
     switch (usage) {
         case "static":
@@ -529,45 +492,45 @@ function glUsage(gl, usage) {
             return gl.DYNAMIC_DRAW;
     }
 }
-var ShapeBase = (function () {
-    function ShapeBase(context) {
+class ShapeBase {
+    constructor(context) {
         this.context = context;
         this.usage = "dynamic";
         this.indices = [];
         this.attributes = {};
         this.needsUpdate = true;
-        var gl = context.gl;
+        const { gl } = context;
         this.vertexBuffer = gl.createBuffer();
         this.indexBuffer = gl.createBuffer();
     }
-    ShapeBase.prototype.attributeStride = function () {
-        var stride = 0;
-        for (var name_1 in this.attributes) {
-            stride += this.attributes[name_1].size;
+    attributeStride() {
+        let stride = 0;
+        for (const name in this.attributes) {
+            stride += this.attributes[name].size;
         }
         return stride;
-    };
-    ShapeBase.prototype.setFloatAttributes = function (name, attributes) {
+    }
+    setFloatAttributes(name, attributes) {
         this.attributes[name] = { size: 1, data: attributes };
-    };
-    ShapeBase.prototype.setVec2Attributes = function (name, attributes) {
+    }
+    setVec2Attributes(name, attributes) {
         this.attributes[name] = { size: 2, data: attributes };
-    };
-    ShapeBase.prototype.update = function () {
-        var gl = this.context.gl;
-        var length = this.attributes[Object.keys(this.attributes)[0]].data.length;
-        var stride = this.attributeStride();
-        var vertexData = new Float32Array(length * stride);
-        for (var i = 0; i < length; ++i) {
-            var offset = 0;
-            for (var name_2 in this.attributes) {
-                var attribute = this.attributes[name_2];
+    }
+    update() {
+        const { gl } = this.context;
+        const length = this.attributes[Object.keys(this.attributes)[0]].data.length;
+        const stride = this.attributeStride();
+        const vertexData = new Float32Array(length * stride);
+        for (let i = 0; i < length; ++i) {
+            let offset = 0;
+            for (const name in this.attributes) {
+                const attribute = this.attributes[name];
                 if (attribute.size == 1) {
-                    var value = attribute.data[i];
+                    const value = attribute.data[i];
                     vertexData[i * stride + offset] = value;
                 }
                 else {
-                    var value = attribute.data[i];
+                    const value = attribute.data[i];
                     vertexData[i * stride + offset] = value.x;
                     vertexData[i * stride + offset + 1] = value.y;
                 }
@@ -580,92 +543,70 @@ var ShapeBase = (function () {
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
         gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(this.indices), glUsage(gl, this.usage));
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
-    };
-    ShapeBase.prototype.updateIfNeeded = function () {
+    }
+    updateIfNeeded() {
         if (this.needsUpdate) {
             this.update();
             this.needsUpdate = false;
         }
-    };
-    ShapeBase.prototype.dispose = function () {
-        var gl = this.context.gl;
+    }
+    dispose() {
+        const { gl } = this.context;
         gl.deleteBuffer(this.vertexBuffer);
         gl.deleteBuffer(this.indexBuffer);
-    };
-    return ShapeBase;
-}());
-exports.ShapeBase = ShapeBase;
-var Shape = (function (_super) {
-    __extends(Shape, _super);
-    function Shape() {
-        _super.apply(this, arguments);
     }
-    Object.defineProperty(Shape.prototype, "positions", {
-        get: function () {
-            return this._positions;
-        },
-        set: function (positions) {
-            this._positions = positions;
-            this.needsUpdate = true;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Shape.prototype, "texCoords", {
-        get: function () {
-            return this._texCoords;
-        },
-        set: function (texCoords) {
-            this._texCoords = texCoords;
-            this.needsUpdate = true;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Shape.prototype.update = function () {
-        var length = this.positions.length;
+}
+exports.ShapeBase = ShapeBase;
+class Shape extends ShapeBase {
+    get positions() {
+        return this._positions;
+    }
+    set positions(positions) {
+        this._positions = positions;
+        this.needsUpdate = true;
+    }
+    get texCoords() {
+        return this._texCoords;
+    }
+    set texCoords(texCoords) {
+        this._texCoords = texCoords;
+        this.needsUpdate = true;
+    }
+    update() {
+        const { length } = this.positions;
         this.setVec2Attributes("aPosition", this.positions);
         this.setVec2Attributes("aTexCoord", this.texCoords);
-        _super.prototype.update.call(this);
-    };
-    return Shape;
-}(ShapeBase));
+        super.update();
+    }
+}
 exports.Shape = Shape;
-var QuadShape = (function (_super) {
-    __extends(QuadShape, _super);
-    function QuadShape() {
-        _super.apply(this, arguments);
+class QuadShape extends Shape {
+    constructor(...args) {
+        super(...args);
         this.positions = [new paintvec_1.Vec2(0, 0), new paintvec_1.Vec2(1, 0), new paintvec_1.Vec2(0, 1), new paintvec_1.Vec2(1, 1)];
         this.texCoords = [new paintvec_1.Vec2(0, 0), new paintvec_1.Vec2(1, 0), new paintvec_1.Vec2(0, 1), new paintvec_1.Vec2(1, 1)];
         this.indices = [0, 1, 2, 1, 2, 3];
     }
-    return QuadShape;
-}(Shape));
+}
 exports.QuadShape = QuadShape;
-var RectShape = (function (_super) {
-    __extends(RectShape, _super);
-    function RectShape() {
-        _super.apply(this, arguments);
+class RectShape extends QuadShape {
+    constructor(...args) {
+        super(...args);
         this._rect = new paintvec_1.Rect();
     }
-    Object.defineProperty(RectShape.prototype, "rect", {
-        get: function () {
-            return this._rect;
-        },
-        set: function (rect) {
-            this._rect = rect;
-            this.needsUpdate = true;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    RectShape.prototype.update = function () {
-        var rect = this.rect;
+    get rect() {
+        return this._rect;
+    }
+    set rect(rect) {
+        this._rect = rect;
+        this.needsUpdate = true;
+    }
+    update() {
+        const { rect } = this;
         this.positions = [rect.topLeft, rect.topRight, rect.bottomLeft, rect.bottomRight];
-        _super.prototype.update.call(this);
-    };
-    return RectShape;
-}(QuadShape));
+        super.update();
+    }
+}
 exports.RectShape = RectShape;
 
 },{"paintvec":10}],9:[function(require,module,exports){
