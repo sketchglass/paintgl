@@ -41,9 +41,6 @@
 				<a href="fillbase.html" class="tsd-kind-icon">Fill<wbr>Base</a>
 			</li>
 			<li class=" tsd-kind-class tsd-is-external">
-				<a href="model.html" class="tsd-kind-icon">Model</a>
-			</li>
-			<li class=" tsd-kind-class tsd-is-external">
 				<a href="pixmap.html" class="tsd-kind-icon">Pixmap</a>
 			</li>
 			<li class=" tsd-kind-class tsd-is-external">
@@ -63,14 +60,14 @@
 					<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited tsd-is-external">
 						<a href="rectshape.html#constructor" class="tsd-kind-icon">constructor</a>
 					</li>
-					<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-external">
-						<a href="rectshape.html#_rect" class="tsd-kind-icon">_rect</a>
-					</li>
 					<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
 						<a href="rectshape.html#attributes" class="tsd-kind-icon">attributes</a>
 					</li>
 					<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
 						<a href="rectshape.html#context" class="tsd-kind-icon">context</a>
+					</li>
+					<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+						<a href="rectshape.html#fill" class="tsd-kind-icon">fill</a>
 					</li>
 					<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
 						<a href="rectshape.html#indexbuffer" class="tsd-kind-icon">index<wbr>Buffer</a>
@@ -84,8 +81,17 @@
 					<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited tsd-is-external">
 						<a href="rectshape.html#positions" class="tsd-kind-icon">positions</a>
 					</li>
+					<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-external">
+						<a href="rectshape.html#rect" class="tsd-kind-icon">rect</a>
+					</li>
 					<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited tsd-is-external">
 						<a href="rectshape.html#texcoords" class="tsd-kind-icon">tex<wbr>Coords</a>
+					</li>
+					<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+						<a href="rectshape.html#transform" class="tsd-kind-icon">transform</a>
+					</li>
+					<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+						<a href="rectshape.html#uniforms" class="tsd-kind-icon">uniforms</a>
 					</li>
 					<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
 						<a href="rectshape.html#usage" class="tsd-kind-icon">usage</a>
@@ -93,14 +99,14 @@
 					<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
 						<a href="rectshape.html#vertexbuffer" class="tsd-kind-icon">vertex<wbr>Buffer</a>
 					</li>
-					<li class=" tsd-kind-accessor tsd-parent-kind-class tsd-is-external">
-						<a href="rectshape.html#rect" class="tsd-kind-icon">rect</a>
-					</li>
 					<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
 						<a href="rectshape.html#attributestride" class="tsd-kind-icon">attribute<wbr>Stride</a>
 					</li>
 					<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
 						<a href="rectshape.html#dispose" class="tsd-kind-icon">dispose</a>
+					</li>
+					<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+						<a href="rectshape.html#draw" class="tsd-kind-icon">draw</a>
 					</li>
 					<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
 						<a href="rectshape.html#setfloatattributes" class="tsd-kind-icon">set<wbr>Float<wbr>Attributes</a>
@@ -154,6 +160,9 @@
 			<li class=" tsd-kind-type-alias tsd-is-external">
 				<a href="../globals.html#shapeusage" class="tsd-kind-icon">Shape<wbr>Usage</a>
 			</li>
+			<li class=" tsd-kind-type-alias tsd-is-external">
+				<a href="../globals.html#uniformvalue" class="tsd-kind-icon">Uniform<wbr>Value</a>
+			</li>
 			<li class=" tsd-kind-function tsd-is-external tsd-is-not-exported">
 				<a href="../globals.html#blendfuncs" class="tsd-kind-icon">blend<wbr>Funcs</a>
 			</li>
@@ -170,6 +179,12 @@
 		<section class="tsd-panel tsd-hierarchy">
 			<h3>Hierarchy</h3>
 		</section>
+		<section class="tsd-panel">
+			<h3>Implements</h3>
+			<ul class="tsd-hierarchy">
+				<li><a href="../interfaces/drawable.html" class="tsd-signature-type">Drawable</a></li>
+			</ul>
+		</section>
 		<section class="tsd-panel-group tsd-member-group tsd-is-inherited tsd-is-external">
 			<h2 class="member-group-title">Constructors</h2>
 			<section class="member tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited tsd-is-external" id="constructor">
@@ -180,41 +195,85 @@
 		</section>
 		<section class="tsd-panel-group tsd-member-group tsd-is-external">
 			<h2 class="member-group-title">Properties</h2>
-			<section class="member tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-external" id="_rect">
-				<div><h3 class="member-title tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-external">_rect<span>:</span> <span class="tsd-signature-type">Rect</span><span class="default-value"> =&nbsp;new Rect()</span></h3></div>
-			</section>
 			<section class="member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external" id="attributes">
 				<div><h3 class="member-title tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">attributes<span>:</span> <a href="../interfaces/objectmap.html" class="tsd-signature-type">ObjectMap</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">&gt;</span></h3></div>
+				<div class="comment">
+					<div class="lead">
+						<p>The vertex attributes of this Shape.</p>
+					</div>
+				</div>
 			</section>
 			<section class="member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external" id="context">
 				<div><h3 class="member-title tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">context<span>:</span> <a href="context.html" class="tsd-signature-type">Context</a></h3></div>
 			</section>
+			<section class="member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external" id="fill">
+				<div><h3 class="member-title tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">fill<span>:</span> <a href="fill.html" class="tsd-signature-type">Fill</a></h3></div>
+				<div class="comment">
+					<div class="lead">
+						<p>Then fill class of this Shape.</p>
+					</div>
+				</div>
+			</section>
 			<section class="member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external" id="indexbuffer">
 				<div><h3 class="member-title tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">index<wbr>Buffer<span>:</span> <span class="tsd-signature-type">WebGLBuffer</span></h3></div>
+				<div class="comment">
+					<div class="lead">
+						<p>The WebGL index buffer for this Shape.</p>
+					</div>
+				</div>
 			</section>
 			<section class="member tsd-kind-property tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited tsd-is-external" id="indices">
 				<div><h3 class="member-title tsd-kind-property tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited tsd-is-external">indices<span>:</span> <span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span><span class="default-value"> =&nbsp;[0, 1, 2, 1, 2, 3]</span></h3></div>
 			</section>
 			<section class="member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external" id="needsupdate">
 				<div><h3 class="member-title tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">needs<wbr>Update<span>:</span> <span class="tsd-signature-type">boolean</span><span class="default-value"> =&nbsp;true</span></h3></div>
+				<div class="comment">
+					<div class="lead">
+						<p>Whether the buffer of this Shape should be updated.
+						Set it to true after this shape is changed.</p>
+					</div>
+				</div>
 			</section>
 			<section class="member tsd-kind-property tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited tsd-is-external" id="positions">
 				<div><h3 class="member-title tsd-kind-property tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited tsd-is-external">positions<span>:</span> <span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">Vec2</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Vec2</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Vec2</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Vec2</span><span class="tsd-signature-symbol">]</span><span class="default-value"> =&nbsp;[new Vec2(0, 0), new Vec2(1, 0), new Vec2(0, 1), new Vec2(1, 1)]</span></h3></div>
 			</section>
+			<section class="member tsd-kind-property tsd-parent-kind-class tsd-is-external" id="rect">
+				<div><h3 class="member-title tsd-kind-property tsd-parent-kind-class tsd-is-external">rect<span>:</span> <span class="tsd-signature-type">Rect</span><span class="default-value"> =&nbsp;new Rect()</span></h3></div>
+			</section>
 			<section class="member tsd-kind-property tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited tsd-is-external" id="texcoords">
 				<div><h3 class="member-title tsd-kind-property tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited tsd-is-external">tex<wbr>Coords<span>:</span> <span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">Vec2</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Vec2</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Vec2</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Vec2</span><span class="tsd-signature-symbol">]</span><span class="default-value"> =&nbsp;[new Vec2(0, 0), new Vec2(1, 0), new Vec2(0, 1), new Vec2(1, 1)]</span></h3></div>
 			</section>
+			<section class="member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external" id="transform">
+				<div><h3 class="member-title tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">transform<span>:</span> <span class="tsd-signature-type">Transform</span><span class="default-value"> =&nbsp;new Transform()</span></h3></div>
+				<div class="comment">
+					<div class="lead">
+						<p>The transform of this Shape.</p>
+					</div>
+				</div>
+			</section>
+			<section class="member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external" id="uniforms">
+				<div><h3 class="member-title tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">uniforms<span>:</span> <a href="../interfaces/objectmap.html" class="tsd-signature-type">ObjectMap</a><span class="tsd-signature-symbol">&lt;</span><a href="../globals.html#uniformvalue" class="tsd-signature-type">UniformValue</a><span class="tsd-signature-symbol">&gt;</span></h3></div>
+				<div class="comment">
+					<div class="lead">
+						<p>The uniform values passed to the fill.</p>
+					</div>
+				</div>
+			</section>
 			<section class="member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external" id="usage">
 				<div><h3 class="member-title tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">usage<span>:</span> <a href="../globals.html#shapeusage" class="tsd-signature-type">ShapeUsage</a><span class="default-value"> =&nbsp;&quot;dynamic&quot;</span></h3></div>
+				<div class="comment">
+					<div class="lead">
+						<p>The usage hint of this Shape.</p>
+					</div>
+				</div>
 			</section>
 			<section class="member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external" id="vertexbuffer">
 				<div><h3 class="member-title tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">vertex<wbr>Buffer<span>:</span> <span class="tsd-signature-type">WebGLBuffer</span></h3></div>
-			</section>
-		</section>
-		<section class="tsd-panel-group tsd-member-group tsd-is-external">
-			<h2 class="member-group-title">Accessors</h2>
-			<section class="member tsd-kind-accessor tsd-parent-kind-class tsd-is-external" id="rect">
-				<h3 class="member-title tsd-kind-accessor tsd-parent-kind-class tsd-is-external"><span>get</span> rect<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Rect</span>            </h3><h3 class="member-title tsd-kind-accessor tsd-parent-kind-class tsd-is-external"><span>set</span> rect<span class="tsd-signature-symbol">(</span>rect<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Rect</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span>            </h3><ul class="parameters"></ul>
+				<div class="comment">
+					<div class="lead">
+						<p>The WebGL vertex buffer for this Shape.</p>
+					</div>
+				</div>
 			</section>
 		</section>
 		<section class="tsd-panel-group tsd-member-group tsd-is-external">
@@ -224,6 +283,11 @@
 			</section>
 			<section class="member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external" id="dispose">
 				<h3 class="member-title tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">dispose<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></h3>
+			</section>
+			<section class="member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external" id="draw">
+				<h3 class="member-title tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">draw<span class="tsd-signature-symbol">(</span>transform<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Transform</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></h3>
+				<ul class="parameters">
+				</ul>
 			</section>
 			<section class="member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external" id="setfloatattributes">
 				<h3 class="member-title tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">set<wbr>Float<wbr>Attributes<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, attributes<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></h3>

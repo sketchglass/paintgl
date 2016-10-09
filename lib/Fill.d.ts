@@ -4,11 +4,11 @@ import { Context } from "./Context";
 import { Pixmap } from "./Pixmap";
 import { ObjectMap } from "./ObjectMap";
 export declare type UniformValue = number | Vec2 | Color | Transform | Pixmap;
-export declare class FillBase {
+export declare abstract class FillBase {
     context: Context;
     readonly program: WebGLProgram;
-    static vertexShader: string;
-    static fragmentShader: string;
+    readonly abstract vertexShader: string;
+    readonly abstract fragmentShader: string;
     private _uniformValues;
     private _uniformLocations;
     _pixmapValues: ObjectMap<Pixmap>;
@@ -20,12 +20,12 @@ export declare class FillBase {
     dispose(): void;
 }
 export declare class Fill extends FillBase {
-    static vertexShader: string;
-    static fragmentShader: string;
+    readonly vertexShader: string;
+    readonly fragmentShader: string;
 }
 export declare class PixmapFill extends Fill {
-    static fragmentShader: string;
+    readonly fragmentShader: string;
 }
 export declare class ColorFill extends Fill {
-    static fragmentShader: string;
+    readonly fragmentShader: string;
 }

@@ -221,14 +221,15 @@ class FillBase {
         this._pixmapValues = {};
         const { gl } = context;
         this.program = gl.createProgram();
-        const klass = this.constructor;
-        this._addShader(gl.VERTEX_SHADER, klass.vertexShader);
-        this._addShader(gl.FRAGMENT_SHADER, klass.fragmentShader);
+        this._addShader(gl.VERTEX_SHADER, this.vertexShader);
+        this._addShader(gl.FRAGMENT_SHADER, this.fragmentShader);
         gl.linkProgram(this.program);
         if (!gl.getProgramParameter(this.program, gl.LINK_STATUS)) {
             throw new Error(`Failed to link shader:\n${gl.getProgramInfoLog(this.program)}`);
         }
     }
+    get vertexShader() { }
+    get fragmentShader() { }
     _addShader(type, source) {
         const { gl } = this.context;
         const shader = gl.createShader(type);
@@ -290,54 +291,60 @@ class FillBase {
         gl.deleteProgram(this.program);
     }
 }
-FillBase.vertexShader = "";
-FillBase.fragmentShader = "";
 exports.FillBase = FillBase;
 class Fill extends FillBase {
+    get vertexShader() {
+        return `
+      precision highp float;
+
+      uniform mat3 transform;
+      attribute vec2 aPosition;
+      attribute vec2 aTexCoord;
+      varying vec2 vPosition;
+      varying vec2 vTexCoord;
+
+      void main(void) {
+        vPosition = aPosition;
+        vTexCoord = aTexCoord;
+        vec3 pos = transform * vec3(aPosition, 1.0);
+        gl_Position = vec4(pos.xy / pos.z, 0.0, 1.0);
+      }
+    `;
+    }
+    get fragmentShader() {
+        return `
+      precision mediump float;
+      void main(void) {
+        gl_FragColor = vec4(0.0);
+      }
+    `;
+    }
 }
-Fill.vertexShader = `
-    precision highp float;
-
-    uniform mat3 transform;
-    attribute vec2 aPosition;
-    attribute vec2 aTexCoord;
-    varying vec2 vPosition;
-    varying vec2 vTexCoord;
-
-    void main(void) {
-      vPosition = aPosition;
-      vTexCoord = aTexCoord;
-      vec3 pos = transform * vec3(aPosition, 1.0);
-      gl_Position = vec4(pos.xy / pos.z, 0.0, 1.0);
-    }
-  `;
-Fill.fragmentShader = `
-    precision mediump float;
-    void main(void) {
-      gl_FragColor = vec4(0.0);
-    }
-  `;
 exports.Fill = Fill;
 class PixmapFill extends Fill {
-}
-PixmapFill.fragmentShader = `
-    precision mediump float;
-    varying highp vec2 vTexCoord;
-    uniform sampler2D pixmap;
-    void main(void) {
-      gl_FragColor = texture2D(pixmap, vTexCoord);
+    get fragmentShader() {
+        return `
+      precision mediump float;
+      varying highp vec2 vTexCoord;
+      uniform sampler2D pixmap;
+      void main(void) {
+        gl_FragColor = texture2D(pixmap, vTexCoord);
+      }
+    `;
     }
-  `;
+}
 exports.PixmapFill = PixmapFill;
 class ColorFill extends Fill {
-}
-ColorFill.fragmentShader = `
-    precision mediump float;
-    uniform vec4 color;
-    void main(void) {
-      gl_FragColor = color;
+    get fragmentShader() {
+        return `
+      precision mediump float;
+      uniform vec4 color;
+      void main(void) {
+        gl_FragColor = color;
+      }
+    `;
     }
-  `;
+}
 exports.ColorFill = ColorFill;
 
 },{"./Color":2,"./Pixmap":6,"paintvec":9}],6:[function(require,module,exports){
@@ -498,11 +505,11 @@ class ShapeBase {
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
         gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(this.indices), glUsage(gl, this.usage));
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
+        this.needsUpdate = false;
     }
     updateIfNeeded() {
         if (this.needsUpdate) {
             this.update();
-            this.needsUpdate = false;
         }
     }
     draw(transform) {

@@ -8,11 +8,11 @@ export
 type UniformValue = number|Vec2|Color|Transform|Pixmap
 
 export
-class FillBase {
+abstract class FillBase {
   readonly program: WebGLProgram
 
-  static vertexShader = ""
-  static fragmentShader = ""
+  abstract get vertexShader(): string
+  abstract get fragmentShader(): string
 
   private _uniformValues: ObjectMap<UniformValue> = {}
   private _uniformLocations: ObjectMap<WebGLUniformLocation> = {}
@@ -21,9 +21,8 @@ class FillBase {
   constructor(public context: Context) {
     const {gl} = context
     this.program = gl.createProgram()!
-    const klass = this.constructor as (typeof FillBase)
-    this._addShader(gl.VERTEX_SHADER, klass.vertexShader)
-    this._addShader(gl.FRAGMENT_SHADER, klass.fragmentShader)
+    this._addShader(gl.VERTEX_SHADER, this.vertexShader)
+    this._addShader(gl.FRAGMENT_SHADER, this.fragmentShader)
     gl.linkProgram(this.program)
     if (!gl.getProgramParameter(this.program, gl.LINK_STATUS)) {
       throw new Error(`Failed to link shader:\n${gl.getProgramInfoLog(this.program)}`)
@@ -97,50 +96,58 @@ class FillBase {
 */
 export
 class Fill extends FillBase {
-  static vertexShader = `
-    precision highp float;
+  get vertexShader() {
+    return `
+      precision highp float;
 
-    uniform mat3 transform;
-    attribute vec2 aPosition;
-    attribute vec2 aTexCoord;
-    varying vec2 vPosition;
-    varying vec2 vTexCoord;
+      uniform mat3 transform;
+      attribute vec2 aPosition;
+      attribute vec2 aTexCoord;
+      varying vec2 vPosition;
+      varying vec2 vTexCoord;
 
-    void main(void) {
-      vPosition = aPosition;
-      vTexCoord = aTexCoord;
-      vec3 pos = transform * vec3(aPosition, 1.0);
-      gl_Position = vec4(pos.xy / pos.z, 0.0, 1.0);
-    }
-  `
+      void main(void) {
+        vPosition = aPosition;
+        vTexCoord = aTexCoord;
+        vec3 pos = transform * vec3(aPosition, 1.0);
+        gl_Position = vec4(pos.xy / pos.z, 0.0, 1.0);
+      }
+    `
+  }
 
-  static fragmentShader = `
-    precision mediump float;
-    void main(void) {
-      gl_FragColor = vec4(0.0);
-    }
-  `
+  get fragmentShader() {
+    return `
+      precision mediump float;
+      void main(void) {
+        gl_FragColor = vec4(0.0);
+      }
+    `
+  }
 }
 
 export
 class PixmapFill extends Fill {
-  static fragmentShader = `
-    precision mediump float;
-    varying highp vec2 vTexCoord;
-    uniform sampler2D pixmap;
-    void main(void) {
-      gl_FragColor = texture2D(pixmap, vTexCoord);
-    }
-  `
+  get fragmentShader() {
+    return `
+      precision mediump float;
+      varying highp vec2 vTexCoord;
+      uniform sampler2D pixmap;
+      void main(void) {
+        gl_FragColor = texture2D(pixmap, vTexCoord);
+      }
+    `
+  }
 }
 
 export
 class ColorFill extends Fill {
-  static fragmentShader = `
-    precision mediump float;
-    uniform vec4 color;
-    void main(void) {
-      gl_FragColor = color;
-    }
-  `
+  get fragmentShader() {
+    return `
+      precision mediump float;
+      uniform vec4 color;
+      void main(void) {
+        gl_FragColor = color;
+      }
+    `
+  }
 }
