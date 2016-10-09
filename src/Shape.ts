@@ -19,16 +19,55 @@ function glUsage(gl: WebGLRenderingContext, usage: ShapeUsage) {
   }
 }
 
+/**
+  The base class of Shape.
+*/
 export
 class ShapeBase implements Drawable {
+  /**
+    The WebGL vertex buffer for this Shape.
+  */
   readonly vertexBuffer: WebGLBuffer
+
+  /**
+    The WebGL index buffer for this Shape.
+  */
   readonly indexBuffer: WebGLBuffer
+
+  /**
+    The usage hint of this Shape.
+  */
   usage: ShapeUsage = "dynamic"
+
+  /**
+    The indices of each triangles of this Shape.
+  */
   indices: number[] = []
+
+  /**
+    The vertex attributes of this Shape.
+  */
   attributes: ObjectMap<{size: number, data: number[]|Vec2[]}> = {}
+
+  /**
+    Whether the buffer of this Shape should be updated.
+    Set it to true after this shape is changed.
+  */
   needsUpdate = true
+
+  /**
+    Then fill class of this Shape.
+  */
   fill: typeof Fill
+
+  /**
+    The uniform values passed to the fill.
+  */
   uniforms: ObjectMap<UniformValue> = {}
+
+  /**
+    The transform of this Shape.
+  */
   transform = new Transform()
 
   attributeStride() {
@@ -80,12 +119,13 @@ class ShapeBase implements Drawable {
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer)
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(this.indices), glUsage(gl, this.usage))
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null)
+
+    this.needsUpdate = false
   }
 
   updateIfNeeded() {
     if (this.needsUpdate) {
       this.update()
-      this.needsUpdate = false
     }
   }
 
