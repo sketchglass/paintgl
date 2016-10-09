@@ -28,8 +28,6 @@ export declare class ShapeBase implements Drawable {
     dispose(): void;
 }
 export declare class Shape extends ShapeBase {
-    private _positions;
-    private _texCoords;
     positions: Vec2[];
     texCoords: Vec2[];
     update(): void;
@@ -40,7 +38,6 @@ export declare class QuadShape extends Shape {
     indices: number[];
 }
 export declare class RectShape extends QuadShape {
-    private _rect;
     rect: Rect;
     update(): void;
 }

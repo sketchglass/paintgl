@@ -134,23 +134,8 @@ class ShapeBase implements Drawable {
 
 export
 class Shape extends ShapeBase {
-  private _positions: Vec2[]
-  private _texCoords: Vec2[]
-
-  get positions() {
-    return this._positions
-  }
-  set positions(positions: Vec2[]) {
-    this._positions = positions
-    this.needsUpdate = true
-  }
-  get texCoords() {
-    return this._texCoords
-  }
-  set texCoords(texCoords: Vec2[]) {
-    this._texCoords = texCoords
-    this.needsUpdate = true
-  }
+  positions: Vec2[] = []
+  texCoords: Vec2[] = []
 
   update() {
     const {length} = this.positions
@@ -169,15 +154,7 @@ class QuadShape extends Shape {
 
 export
 class RectShape extends QuadShape {
-  private _rect = new Rect()
-
-  get rect() {
-    return this._rect
-  }
-  set rect(rect: Rect) {
-    this._rect = rect
-    this.needsUpdate = true
-  }
+  rect = new Rect()
 
   update() {
     const {rect} = this
