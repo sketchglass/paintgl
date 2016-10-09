@@ -1,6 +1,9 @@
-import {Vec2, Rect} from "paintvec"
+import {Vec2, Rect, Transform} from "paintvec"
 import {Context} from './Context'
 import {ObjectMap} from "./ObjectMap"
+import {Fill, UniformValue} from "./Fill"
+import {Color} from "./Color"
+import {Drawable} from "./Drawable"
 
 export type ShapeUsage = "static" | "stream" | "dynamic"
 
@@ -17,13 +20,16 @@ function glUsage(gl: WebGLRenderingContext, usage: ShapeUsage) {
 }
 
 export
-class ShapeBase {
+class ShapeBase implements Drawable {
   readonly vertexBuffer: WebGLBuffer
   readonly indexBuffer: WebGLBuffer
   usage: ShapeUsage = "dynamic"
   indices: number[] = []
   attributes: ObjectMap<{size: number, data: number[]|Vec2[]}> = {}
   needsUpdate = true
+  fill: typeof Fill
+  uniforms: ObjectMap<UniformValue> = {}
+  transform = new Transform()
 
   attributeStride() {
     let stride = 0
@@ -81,6 +87,42 @@ class ShapeBase {
       this.update()
       this.needsUpdate = false
     }
+  }
+
+  draw(transform: Transform) {
+    const {gl} = this.context
+    const fill = this.context.getOrCreateFill(this.fill)
+
+    this.updateIfNeeded()
+    fill.setUniform("transform", this.transform.merge(transform))
+    for (const uniform in this.uniforms) {
+      fill.setUniform(uniform, this.uniforms[uniform])
+    }
+
+    gl.useProgram(fill.program)
+
+    let texUnit = 0
+    for (const name in fill._pixmapValues) {
+      gl.activeTexture(gl.TEXTURE0 + texUnit)
+      gl.bindTexture(gl.TEXTURE_2D, fill._pixmapValues[name].texture)
+      fill.setUniformInt(name, texUnit)
+      ++texUnit
+    }
+
+    // TODO: use vertex array object if possible
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer)
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer)
+    const stride = this.attributeStride()
+    let offset = 0
+    for (const name in this.attributes) {
+      const attribute = this.attributes[name]
+      const pos = gl.getAttribLocation(fill.program, name)!
+      gl.enableVertexAttribArray(pos)
+      gl.vertexAttribPointer(pos, attribute.size, gl.FLOAT, false, stride * 4, offset * 4)
+      offset += attribute.size
+    }
+
+    gl.drawElements(gl.TRIANGLES, this.indices.length, gl.UNSIGNED_SHORT, 0)
   }
 
   dispose() {

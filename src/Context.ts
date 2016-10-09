@@ -1,3 +1,4 @@
+import {Fill} from "./Fill"
 
 export
 interface ContextOptions {
@@ -43,6 +44,8 @@ class Context {
   */
   capabilities: ContextCapabilities
 
+  private _fills = new WeakMap<typeof Fill, Fill>()
+
   constructor(public canvas: HTMLCanvasElement, opts?: ContextOptions) {
     const glOpts = {
       preserveDrawingBuffer: false,
@@ -66,6 +69,17 @@ class Context {
       halfFloatLinearFilter:  !!gl.getExtension("OES_texture_half_float_linear"),
       float: !!gl.getExtension("OES_texture_float"),
       floatLinearFilter: !!gl.getExtension("OES_texture_float_linear"),
+    }
+  }
+
+  getOrCreateFill(klass: typeof Fill) {
+    let fill = this._fills.get(klass)
+    if (fill) {
+      return fill
+    } else {
+      fill = new klass(this)
+      this._fills.set(klass, fill)
+      return fill
     }
   }
 }

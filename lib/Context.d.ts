@@ -1,3 +1,4 @@
+import { Fill } from "./Fill";
 export interface ContextOptions {
     preserveDrawingBuffer?: boolean;
     alpha?: boolean;
@@ -14,5 +15,7 @@ export declare class Context {
     gl: WebGLRenderingContext;
     halfFloatExt: any;
     capabilities: ContextCapabilities;
+    private _fills;
     constructor(canvas: HTMLCanvasElement, opts?: ContextOptions);
+    getOrCreateFill(klass: typeof Fill): Fill;
 }

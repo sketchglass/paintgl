@@ -8,22 +8,20 @@ const drawTarget = new lib_1.PixmapDrawTarget(context, pixmap);
 drawTarget.clear(new lib_1.Color(0.9, 0.9, 0.9, 1));
 const shape = new lib_1.RectShape(context);
 shape.rect = new paintvec_1.Rect(new paintvec_1.Vec2(100, 100), new paintvec_1.Vec2(200, 300));
-const fill = new lib_1.ColorFill(context);
-fill.color = new lib_1.Color(0.9, 0.1, 0.2, 1);
-const model = new lib_1.Model(context, shape, fill);
-drawTarget.draw(model);
+shape.fill = lib_1.ColorFill;
+shape.uniforms["color"] = new lib_1.Color(0.9, 0.1, 0.2, 1);
+drawTarget.draw(shape);
 drawTarget.transform = paintvec_1.Transform.rotate(0.1 * Math.PI);
 drawTarget.blendMode = "dst-out";
-drawTarget.draw(model);
+drawTarget.draw(shape);
 const canvasDrawTarget = new lib_1.CanvasDrawTarget(context);
 const pixmapShape = new lib_1.RectShape(context);
 pixmapShape.rect = new paintvec_1.Rect(new paintvec_1.Vec2(0), pixmap.size);
-const pixmapFill = new lib_1.PixmapFill(context);
-pixmapFill.pixmap = pixmap;
-const pixmapModel = new lib_1.Model(context, pixmapShape, pixmapFill);
-canvasDrawTarget.draw(pixmapModel);
+pixmapShape.fill = lib_1.PixmapFill;
+pixmapShape.uniforms["pixmap"] = pixmap;
+canvasDrawTarget.draw(pixmapShape);
 
-},{"../lib":9,"paintvec":10}],2:[function(require,module,exports){
+},{"../lib":8,"paintvec":9}],2:[function(require,module,exports){
 "use strict";
 class Color {
     constructor(r, g, b, a) {
@@ -46,6 +44,7 @@ exports.Color = Color;
 class Context {
     constructor(canvas, opts) {
         this.canvas = canvas;
+        this._fills = new WeakMap();
         const glOpts = {
             preserveDrawingBuffer: false,
             alpha: true,
@@ -67,6 +66,17 @@ class Context {
             float: !!gl.getExtension("OES_texture_float"),
             floatLinearFilter: !!gl.getExtension("OES_texture_float_linear"),
         };
+    }
+    getOrCreateFill(klass) {
+        let fill = this._fills.get(klass);
+        if (fill) {
+            return fill;
+        }
+        else {
+            fill = new klass(this);
+            this._fills.set(klass, fill);
+            return fill;
+        }
     }
 }
 exports.Context = Context;
@@ -198,13 +208,15 @@ function blendFuncs(gl, mode) {
     }
 }
 
-},{"paintvec":10}],5:[function(require,module,exports){
+},{"paintvec":9}],5:[function(require,module,exports){
 "use strict";
 const paintvec_1 = require("paintvec");
 const Color_1 = require("./Color");
+const Pixmap_1 = require("./Pixmap");
 class FillBase {
     constructor(context) {
         this.context = context;
+        this._uniformValues = {};
         this._uniformLocations = {};
         this._pixmapValues = {};
         const { gl } = context;
@@ -234,33 +246,42 @@ class FillBase {
         }
         return this._uniformLocations[name];
     }
+    setUniform(name, value) {
+        if (this._uniformValues[name] == value) {
+            return;
+        }
+        const { gl } = this.context;
+        gl.useProgram(this.program);
+        if (typeof value == "number") {
+            gl.uniform1f(this._uniformLocation(name), value);
+        }
+        else if (value instanceof paintvec_1.Vec2) {
+            gl.uniform2fv(this._uniformLocation(name), value.members());
+        }
+        else if (value instanceof Color_1.Color) {
+            gl.uniform4fv(this._uniformLocation(name), value.members());
+        }
+        else if (value instanceof paintvec_1.Transform) {
+            gl.uniformMatrix3fv(this._uniformLocation(name), false, value.members());
+        }
+        else if (value instanceof Pixmap_1.Pixmap) {
+            this._pixmapValues[name] = value;
+        }
+        this._uniformValues[name] = value;
+    }
     setUniformInt(name, value) {
+        if (this._uniformValues[name] == value) {
+            return;
+        }
         const { gl } = this.context;
         gl.useProgram(this.program);
-        gl.uniform1i(this._uniformLocation(name), value);
-    }
-    setUniformFloat(name, value) {
-        const { gl } = this.context;
-        gl.useProgram(this.program);
-        gl.uniform1f(this._uniformLocation(name), value);
-    }
-    setUniformVec2(name, value) {
-        const { gl } = this.context;
-        gl.useProgram(this.program);
-        gl.uniform2fv(this._uniformLocation(name), new Float32Array(value.members()));
-    }
-    setUniformColor(name, value) {
-        const { gl } = this.context;
-        gl.useProgram(this.program);
-        gl.uniform4fv(this._uniformLocation(name), new Float32Array(value.members()));
-    }
-    setUniformTransform(name, value) {
-        const { gl } = this.context;
-        gl.useProgram(this.program);
-        gl.uniformMatrix3fv(this._uniformLocation(name), false, new Float32Array(value.members()));
-    }
-    setUniformPixmap(name, pixmap) {
-        this._pixmapValues[name] = pixmap;
+        if (typeof value == "number") {
+            gl.uniform1i(this._uniformLocation(name), value);
+        }
+        else if (value instanceof paintvec_1.Vec2) {
+            gl.uniform2iv(this._uniformLocation(name), value.members());
+        }
+        this._uniformValues[name] = value;
     }
     dispose() {
         const { gl } = this.context;
@@ -271,22 +292,11 @@ FillBase.vertexShader = "";
 FillBase.fragmentShader = "";
 exports.FillBase = FillBase;
 class Fill extends FillBase {
-    constructor(context) {
-        super(context);
-        this.transform = new paintvec_1.Transform();
-    }
-    get transform() {
-        return this._transform;
-    }
-    set transform(transform) {
-        this.setUniformTransform("uTransform", transform);
-        this._transform = transform;
-    }
 }
 Fill.vertexShader = `
     precision highp float;
 
-    uniform mat3 uTransform;
+    uniform mat3 transform;
     attribute vec2 aPosition;
     attribute vec2 aTexCoord;
     varying vec2 vPosition;
@@ -295,7 +305,7 @@ Fill.vertexShader = `
     void main(void) {
       vPosition = aPosition;
       vTexCoord = aTexCoord;
-      vec3 pos = uTransform * vec3(aPosition, 1.0);
+      vec3 pos = transform * vec3(aPosition, 1.0);
       gl_Position = vec4(pos.xy / pos.z, 0.0, 1.0);
     }
   `;
@@ -307,87 +317,28 @@ Fill.fragmentShader = `
   `;
 exports.Fill = Fill;
 class PixmapFill extends Fill {
-    get pixmap() {
-        return this._pixmap;
-    }
-    set pixmap(pixmap) {
-        if (pixmap) {
-            this.setUniformPixmap("uPixmap", pixmap);
-        }
-        this._pixmap = pixmap;
-    }
 }
 PixmapFill.fragmentShader = `
     precision mediump float;
     varying highp vec2 vTexCoord;
-    uniform sampler2D uPixmap;
+    uniform sampler2D pixmap;
     void main(void) {
-      gl_FragColor = texture2D(uPixmap, vTexCoord);
+      gl_FragColor = texture2D(pixmap, vTexCoord);
     }
   `;
 exports.PixmapFill = PixmapFill;
 class ColorFill extends Fill {
-    constructor(context) {
-        super(context);
-        this.color = new Color_1.Color(0, 0, 0, 1);
-    }
-    get color() {
-        return this._color;
-    }
-    set color(color) {
-        this.setUniformColor("uColor", color);
-        this._color = color;
-    }
 }
 ColorFill.fragmentShader = `
     precision mediump float;
-    uniform vec4 uColor;
+    uniform vec4 color;
     void main(void) {
-      gl_FragColor = uColor;
+      gl_FragColor = color;
     }
   `;
 exports.ColorFill = ColorFill;
 
-},{"./Color":2,"paintvec":10}],6:[function(require,module,exports){
-"use strict";
-const paintvec_1 = require("paintvec");
-class Model {
-    constructor(context, shape, fill) {
-        this.context = context;
-        this.shape = shape;
-        this.fill = fill;
-        this.transform = new paintvec_1.Transform();
-    }
-    draw(transform) {
-        const { gl } = this.context;
-        const { shape, fill } = this;
-        shape.updateIfNeeded();
-        fill.transform = this.transform.merge(transform);
-        gl.useProgram(fill.program);
-        let texUnit = 0;
-        for (const name in fill._pixmapValues) {
-            gl.activeTexture(gl.TEXTURE0 + texUnit);
-            gl.bindTexture(gl.TEXTURE_2D, fill._pixmapValues[name].texture);
-            fill.setUniformInt(name, texUnit);
-            ++texUnit;
-        }
-        gl.bindBuffer(gl.ARRAY_BUFFER, shape.vertexBuffer);
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, shape.indexBuffer);
-        const stride = shape.attributeStride();
-        let offset = 0;
-        for (const name in shape.attributes) {
-            const attribute = shape.attributes[name];
-            const pos = gl.getAttribLocation(fill.program, name);
-            gl.enableVertexAttribArray(pos);
-            gl.vertexAttribPointer(pos, attribute.size, gl.FLOAT, false, stride * 4, offset * 4);
-            offset += attribute.size;
-        }
-        gl.drawElements(gl.TRIANGLES, shape.indices.length, gl.UNSIGNED_SHORT, 0);
-    }
-}
-exports.Model = Model;
-
-},{"paintvec":10}],7:[function(require,module,exports){
+},{"./Color":2,"./Pixmap":6,"paintvec":9}],6:[function(require,module,exports){
 "use strict";
 const paintvec_1 = require("paintvec");
 function glDataType(context, format) {
@@ -478,7 +429,7 @@ class Pixmap {
 }
 exports.Pixmap = Pixmap;
 
-},{"paintvec":10}],8:[function(require,module,exports){
+},{"paintvec":9}],7:[function(require,module,exports){
 "use strict";
 const paintvec_1 = require("paintvec");
 function glUsage(gl, usage) {
@@ -499,6 +450,8 @@ class ShapeBase {
         this.indices = [];
         this.attributes = {};
         this.needsUpdate = true;
+        this.uniforms = {};
+        this.transform = new paintvec_1.Transform();
         const { gl } = context;
         this.vertexBuffer = gl.createBuffer();
         this.indexBuffer = gl.createBuffer();
@@ -549,6 +502,35 @@ class ShapeBase {
             this.update();
             this.needsUpdate = false;
         }
+    }
+    draw(transform) {
+        const { gl } = this.context;
+        const fill = this.context.getOrCreateFill(this.fill);
+        this.updateIfNeeded();
+        fill.setUniform("transform", this.transform.merge(transform));
+        for (const uniform in this.uniforms) {
+            fill.setUniform(uniform, this.uniforms[uniform]);
+        }
+        gl.useProgram(fill.program);
+        let texUnit = 0;
+        for (const name in fill._pixmapValues) {
+            gl.activeTexture(gl.TEXTURE0 + texUnit);
+            gl.bindTexture(gl.TEXTURE_2D, fill._pixmapValues[name].texture);
+            fill.setUniformInt(name, texUnit);
+            ++texUnit;
+        }
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
+        const stride = this.attributeStride();
+        let offset = 0;
+        for (const name in this.attributes) {
+            const attribute = this.attributes[name];
+            const pos = gl.getAttribLocation(fill.program, name);
+            gl.enableVertexAttribArray(pos);
+            gl.vertexAttribPointer(pos, attribute.size, gl.FLOAT, false, stride * 4, offset * 4);
+            offset += attribute.size;
+        }
+        gl.drawElements(gl.TRIANGLES, this.indices.length, gl.UNSIGNED_SHORT, 0);
     }
     dispose() {
         const { gl } = this.context;
@@ -609,7 +591,7 @@ class RectShape extends QuadShape {
 }
 exports.RectShape = RectShape;
 
-},{"paintvec":10}],9:[function(require,module,exports){
+},{"paintvec":9}],8:[function(require,module,exports){
 "use strict";
 var Color_1 = require("./Color");
 exports.Color = Color_1.Color;
@@ -623,8 +605,6 @@ var Fill_1 = require("./Fill");
 exports.Fill = Fill_1.Fill;
 exports.ColorFill = Fill_1.ColorFill;
 exports.PixmapFill = Fill_1.PixmapFill;
-var Model_1 = require("./Model");
-exports.Model = Model_1.Model;
 var Pixmap_1 = require("./Pixmap");
 exports.Pixmap = Pixmap_1.Pixmap;
 var Shape_1 = require("./Shape");
@@ -632,7 +612,7 @@ exports.Shape = Shape_1.Shape;
 exports.QuadShape = Shape_1.QuadShape;
 exports.RectShape = Shape_1.RectShape;
 
-},{"./Color":2,"./Context":3,"./DrawTarget":4,"./Fill":5,"./Model":6,"./Pixmap":7,"./Shape":8}],10:[function(require,module,exports){
+},{"./Color":2,"./Context":3,"./DrawTarget":4,"./Fill":5,"./Pixmap":6,"./Shape":7}],9:[function(require,module,exports){
 "use strict";
 var Vec2 = (function () {
     function Vec2(x, y) {

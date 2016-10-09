@@ -1,5 +1,5 @@
 import {Vec2, Rect, Transform} from "paintvec"
-import {Color, Context, Pixmap, RectShape, ColorFill, PixmapFill, Model, PixmapDrawTarget, CanvasDrawTarget} from "../lib"
+import {Color, Context, Pixmap, RectShape, ColorFill, PixmapFill, PixmapDrawTarget, CanvasDrawTarget} from "../lib"
 
 const context = new Context(document.getElementById("canvas") as HTMLCanvasElement)
 
@@ -10,21 +10,19 @@ drawTarget.clear(new Color(0.9, 0.9, 0.9, 1))
 
 const shape = new RectShape(context)
 shape.rect = new Rect(new Vec2(100, 100), new Vec2(200, 300))
-const fill = new ColorFill(context)
-fill.color = new Color(0.9, 0.1, 0.2, 1)
-const model = new Model(context, shape, fill)
+shape.fill = ColorFill
+shape.uniforms["color"] = new Color(0.9, 0.1, 0.2, 1)
 
-drawTarget.draw(model)
+drawTarget.draw(shape)
 drawTarget.transform = Transform.rotate(0.1 * Math.PI)
 drawTarget.blendMode = "dst-out"
-drawTarget.draw(model)
+drawTarget.draw(shape)
 
 const canvasDrawTarget = new CanvasDrawTarget(context)
 
 const pixmapShape = new RectShape(context)
 pixmapShape.rect = new Rect(new Vec2(0), pixmap.size)
-const pixmapFill = new PixmapFill(context)
-pixmapFill.pixmap = pixmap
-const pixmapModel = new Model(context, pixmapShape, pixmapFill)
+pixmapShape.fill = PixmapFill
+pixmapShape.uniforms["pixmap"] = pixmap
 
-canvasDrawTarget.draw(pixmapModel)
+canvasDrawTarget.draw(pixmapShape)

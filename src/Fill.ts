@@ -5,12 +5,16 @@ import {Pixmap} from "./Pixmap"
 import {ObjectMap} from "./ObjectMap"
 
 export
+type UniformValue = number|Vec2|Color|Transform|Pixmap
+
+export
 class FillBase {
   readonly program: WebGLProgram
 
   static vertexShader = ""
   static fragmentShader = ""
 
+  private _uniformValues: ObjectMap<UniformValue> = {}
   private _uniformLocations: ObjectMap<WebGLUniformLocation> = {}
   _pixmapValues: ObjectMap<Pixmap> = {}
 
@@ -45,38 +49,38 @@ class FillBase {
     return this._uniformLocations[name]
   }
 
-  setUniformInt(name: string, value: number) {
+  setUniform(name: string, value: UniformValue) {
+    if (this._uniformValues[name] == value) {
+      return
+    }
     const {gl} = this.context
     gl.useProgram(this.program)
-    gl.uniform1i(this._uniformLocation(name), value)
+    if (typeof value == "number") {
+      gl.uniform1f(this._uniformLocation(name), value)
+    } else if (value instanceof Vec2) {
+      gl.uniform2fv(this._uniformLocation(name), value.members())
+    } else if (value instanceof Color) {
+      gl.uniform4fv(this._uniformLocation(name), value.members())
+    } else if (value instanceof Transform) {
+      gl.uniformMatrix3fv(this._uniformLocation(name), false, value.members())
+    } else if (value instanceof Pixmap) {
+      this._pixmapValues[name] = value
+    }
+    this._uniformValues[name] = value
   }
 
-  setUniformFloat(name: string, value: number) {
+  setUniformInt(name: string, value: number|Vec2) {
+    if (this._uniformValues[name] == value) {
+      return
+    }
     const {gl} = this.context
     gl.useProgram(this.program)
-    gl.uniform1f(this._uniformLocation(name), value)
-  }
-
-  setUniformVec2(name: string, value: Vec2) {
-    const {gl} = this.context
-    gl.useProgram(this.program)
-    gl.uniform2fv(this._uniformLocation(name), new Float32Array(value.members()))
-  }
-
-  setUniformColor(name: string, value: Color) {
-    const {gl} = this.context
-    gl.useProgram(this.program)
-    gl.uniform4fv(this._uniformLocation(name), new Float32Array(value.members()))
-  }
-
-  setUniformTransform(name: string, value: Transform) {
-    const {gl} = this.context
-    gl.useProgram(this.program)
-    gl.uniformMatrix3fv(this._uniformLocation(name), false, new Float32Array(value.members()))
-  }
-
-  setUniformPixmap(name: string, pixmap: Pixmap) {
-    this._pixmapValues[name] = pixmap
+    if (typeof value == "number") {
+      gl.uniform1i(this._uniformLocation(name), value)
+    } else if (value instanceof Vec2) {
+      gl.uniform2iv(this._uniformLocation(name), value.members())
+    }
+    this._uniformValues[name] = value
   }
 
   dispose() {
@@ -94,7 +98,7 @@ class Fill extends FillBase {
   static vertexShader = `
     precision highp float;
 
-    uniform mat3 uTransform;
+    uniform mat3 transform;
     attribute vec2 aPosition;
     attribute vec2 aTexCoord;
     varying vec2 vPosition;
@@ -103,7 +107,7 @@ class Fill extends FillBase {
     void main(void) {
       vPosition = aPosition;
       vTexCoord = aTexCoord;
-      vec3 pos = uTransform * vec3(aPosition, 1.0);
+      vec3 pos = transform * vec3(aPosition, 1.0);
       gl_Position = vec4(pos.xy / pos.z, 0.0, 1.0);
     }
   `
@@ -114,21 +118,6 @@ class Fill extends FillBase {
       gl_FragColor = vec4(0.0);
     }
   `
-
-  private _transform: Transform
-
-  get transform() {
-    return this._transform
-  }
-  set transform(transform: Transform) {
-    this.setUniformTransform("uTransform", transform)
-    this._transform = transform
-  }
-
-  constructor(context: Context) {
-    super(context)
-    this.transform = new Transform()
-  }
 }
 
 export
@@ -136,47 +125,20 @@ class PixmapFill extends Fill {
   static fragmentShader = `
     precision mediump float;
     varying highp vec2 vTexCoord;
-    uniform sampler2D uPixmap;
+    uniform sampler2D pixmap;
     void main(void) {
-      gl_FragColor = texture2D(uPixmap, vTexCoord);
+      gl_FragColor = texture2D(pixmap, vTexCoord);
     }
   `
-
-  private _pixmap: Pixmap|undefined
-
-  get pixmap() {
-    return this._pixmap
-  }
-  set pixmap(pixmap: Pixmap|undefined) {
-    if (pixmap) {
-      this.setUniformPixmap("uPixmap", pixmap)
-    }
-    this._pixmap = pixmap
-  }
 }
 
 export
 class ColorFill extends Fill {
   static fragmentShader = `
     precision mediump float;
-    uniform vec4 uColor;
+    uniform vec4 color;
     void main(void) {
-      gl_FragColor = uColor;
+      gl_FragColor = color;
     }
   `
-
-  private _color: Color
-
-  get color() {
-    return this._color
-  }
-  set color(color: Color) {
-    this.setUniformColor("uColor", color)
-    this._color = color
-  }
-
-  constructor(context: Context) {
-    super(context)
-    this.color = new Color(0, 0, 0, 1)
-  }
 }
