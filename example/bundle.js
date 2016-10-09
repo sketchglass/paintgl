@@ -241,10 +241,12 @@ class FillBase {
     }
     _uniformLocation(name) {
         const { gl } = this.context;
-        if (!(name in this._uniformLocations)) {
-            this._uniformLocations[name] = gl.getUniformLocation(this.program, name);
+        let location = this._uniformLocations[name];
+        if (!location) {
+            location = gl.getUniformLocation(this.program, name);
+            this._uniformLocations[name] = location;
         }
-        return this._uniformLocations[name];
+        return location;
     }
     setUniform(name, value) {
         if (this._uniformValues[name] == value) {
