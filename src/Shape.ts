@@ -1,7 +1,7 @@
 import {Vec2, Rect, Transform} from "paintvec"
 import {Context} from './Context'
 import {ObjectMap} from "./ObjectMap"
-import {Fill, UniformValue} from "./Fill"
+import {Shader, UniformValue} from "./Shader"
 import {Color} from "./Color"
 import {Drawable} from "./Drawable"
 
@@ -56,12 +56,12 @@ class ShapeBase implements Drawable {
   needsUpdate = true
 
   /**
-    Then fill class of this Shape.
+    The shader class of this Shape.
   */
-  fill: typeof Fill
+  shader: typeof Shader
 
   /**
-    The uniform values passed to the fill.
+    The uniform values passed to the shader.
   */
   uniforms: ObjectMap<UniformValue> = {}
 
@@ -131,21 +131,21 @@ class ShapeBase implements Drawable {
 
   draw(transform: Transform) {
     const {gl} = this.context
-    const fill = this.context.getOrCreateFill(this.fill)
+    const shader = this.context.getOrCreateShader(this.shader)
 
     this.updateIfNeeded()
-    fill.setUniform("transform", this.transform.merge(transform))
+    shader.setUniform("transform", this.transform.merge(transform))
     for (const uniform in this.uniforms) {
-      fill.setUniform(uniform, this.uniforms[uniform])
+      shader.setUniform(uniform, this.uniforms[uniform])
     }
 
-    gl.useProgram(fill.program)
+    gl.useProgram(shader.program)
 
     let texUnit = 0
-    for (const name in fill._textureValues) {
+    for (const name in shader._textureValues) {
       gl.activeTexture(gl.TEXTURE0 + texUnit)
-      gl.bindTexture(gl.TEXTURE_2D, fill._textureValues[name].texture)
-      fill.setUniformInt(name, texUnit)
+      gl.bindTexture(gl.TEXTURE_2D, shader._textureValues[name].texture)
+      shader.setUniformInt(name, texUnit)
       ++texUnit
     }
 
@@ -156,7 +156,7 @@ class ShapeBase implements Drawable {
     let offset = 0
     for (const name in this.attributes) {
       const attribute = this.attributes[name]
-      const pos = gl.getAttribLocation(fill.program, name)!
+      const pos = gl.getAttribLocation(shader.program, name)!
       gl.enableVertexAttribArray(pos)
       gl.vertexAttribPointer(pos, attribute.size, gl.FLOAT, false, stride * 4, offset * 4)
       offset += attribute.size

@@ -4,7 +4,7 @@ import { Context } from "./Context";
 import { Texture } from "./Texture";
 import { ObjectMap } from "./ObjectMap";
 export declare type UniformValue = number | Vec2 | Color | Transform | Texture;
-export declare abstract class FillBase {
+export declare abstract class ShaderBase {
     context: Context;
     readonly program: WebGLProgram;
     readonly abstract vertexShader: string;
@@ -19,13 +19,13 @@ export declare abstract class FillBase {
     setUniformInt(name: string, value: number | Vec2): void;
     dispose(): void;
 }
-export declare class Fill extends FillBase {
+export declare class Shader extends ShaderBase {
     readonly vertexShader: string;
     readonly fragmentShader: string;
 }
-export declare class TextureFill extends Fill {
+export declare class TextureShader extends Shader {
     readonly fragmentShader: string;
 }
-export declare class ColorFill extends Fill {
+export declare class ColorShader extends Shader {
     readonly fragmentShader: string;
 }

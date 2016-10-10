@@ -1,7 +1,7 @@
 import { Vec2, Rect, Transform } from "paintvec";
 import { Context } from './Context';
 import { ObjectMap } from "./ObjectMap";
-import { Fill, UniformValue } from "./Fill";
+import { Shader, UniformValue } from "./Shader";
 import { Drawable } from "./Drawable";
 export declare type ShapeUsage = "static" | "stream" | "dynamic";
 export declare class ShapeBase implements Drawable {
@@ -15,7 +15,7 @@ export declare class ShapeBase implements Drawable {
         data: number[] | Vec2[];
     }>;
     needsUpdate: boolean;
-    fill: typeof Fill;
+    shader: typeof Shader;
     uniforms: ObjectMap<UniformValue>;
     transform: Transform;
     attributeStride(): number;

@@ -8,7 +8,7 @@ export
 type UniformValue = number|Vec2|Color|Transform|Texture
 
 export
-abstract class FillBase {
+abstract class ShaderBase {
   readonly program: WebGLProgram
 
   abstract get vertexShader(): string
@@ -91,11 +91,10 @@ abstract class FillBase {
 }
 
 /**
-  Fill represents how shapes are placed and how pixels are filled.
-  It wraps WebGL vertex shader and fragment shader.
+  Shader represents how shapes are placed and how pixels are filled.
 */
 export
-class Fill extends FillBase {
+class Shader extends ShaderBase {
   get vertexShader() {
     return `
       precision highp float;
@@ -126,7 +125,7 @@ class Fill extends FillBase {
 }
 
 export
-class TextureFill extends Fill {
+class TextureShader extends Shader {
   get fragmentShader() {
     return `
       precision mediump float;
@@ -140,7 +139,7 @@ class TextureFill extends Fill {
 }
 
 export
-class ColorFill extends Fill {
+class ColorShader extends Shader {
   get fragmentShader() {
     return `
       precision mediump float;

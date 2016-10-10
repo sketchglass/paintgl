@@ -1,4 +1,4 @@
-import {Fill} from "./Fill"
+import {Shader} from "./Shader"
 
 export
 interface ContextOptions {
@@ -10,19 +10,19 @@ interface ContextOptions {
 export
 interface ContextCapabilities {
   /**
-    Whether the context support half float textures.
+    Whether the context support half float pixmaps.
   */
   halfFloat: boolean
   /**
-    Whether the context support linear filtering of half float textures.
+    Whether the context support linear filtering of half float pixmaps.
   */
   halfFloatLinearFilter: boolean
   /**
-    Whether the context support float textures.
+    Whether the context support float pixmaps.
   */
   float: boolean
   /**
-    Whether the context support linear filtering of float textures.
+    Whether the context support linear filtering of float pixmaps.
   */
   floatLinearFilter: boolean
 }
@@ -44,7 +44,7 @@ class Context {
   */
   capabilities: ContextCapabilities
 
-  private _fills = new WeakMap<typeof Fill, Fill>()
+  private _shaders = new WeakMap<typeof Shader, Shader>()
 
   constructor(public canvas: HTMLCanvasElement, opts?: ContextOptions) {
     const glOpts = {
@@ -72,14 +72,14 @@ class Context {
     }
   }
 
-  getOrCreateFill(klass: typeof Fill) {
-    let fill = this._fills.get(klass)
-    if (fill) {
-      return fill
+  getOrCreateShader(klass: typeof Shader) {
+    let shader = this._shaders.get(klass)
+    if (shader) {
+      return shader
     } else {
-      fill = new klass(this)
-      this._fills.set(klass, fill)
-      return fill
+      shader = new klass(this)
+      this._shaders.set(klass, shader)
+      return shader
     }
   }
 }

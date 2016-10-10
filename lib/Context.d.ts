@@ -1,4 +1,4 @@
-import { Fill } from "./Fill";
+import { Shader } from "./Shader";
 export interface ContextOptions {
     preserveDrawingBuffer?: boolean;
     alpha?: boolean;
@@ -15,7 +15,7 @@ export declare class Context {
     gl: WebGLRenderingContext;
     halfFloatExt: any;
     capabilities: ContextCapabilities;
-    private _fills;
+    private _shaders;
     constructor(canvas: HTMLCanvasElement, opts?: ContextOptions);
-    getOrCreateFill(klass: typeof Fill): Fill;
+    getOrCreateShader(klass: typeof Shader): Shader;
 }

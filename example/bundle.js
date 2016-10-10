@@ -8,7 +8,7 @@ const drawTarget = new lib_1.TextureDrawTarget(context, texture);
 drawTarget.clear(new lib_1.Color(0.9, 0.9, 0.9, 1));
 const shape = new lib_1.RectShape(context);
 shape.rect = new paintvec_1.Rect(new paintvec_1.Vec2(100, 100), new paintvec_1.Vec2(200, 300));
-shape.fill = lib_1.ColorFill;
+shape.shader = lib_1.ColorShader;
 shape.uniforms["color"] = new lib_1.Color(0.9, 0.1, 0.2, 1);
 drawTarget.draw(shape);
 drawTarget.transform = paintvec_1.Transform.rotate(0.1 * Math.PI);
@@ -17,7 +17,7 @@ drawTarget.draw(shape);
 const canvasDrawTarget = new lib_1.CanvasDrawTarget(context);
 const textureShape = new lib_1.RectShape(context);
 textureShape.rect = new paintvec_1.Rect(new paintvec_1.Vec2(0), texture.size);
-textureShape.fill = lib_1.TextureFill;
+textureShape.shader = lib_1.TextureShader;
 textureShape.uniforms["texture"] = texture;
 canvasDrawTarget.draw(textureShape);
 
@@ -44,7 +44,7 @@ exports.Color = Color;
 class Context {
     constructor(canvas, opts) {
         this.canvas = canvas;
-        this._fills = new WeakMap();
+        this._shaders = new WeakMap();
         const glOpts = {
             preserveDrawingBuffer: false,
             alpha: true,
@@ -67,15 +67,15 @@ class Context {
             floatLinearFilter: !!gl.getExtension("OES_texture_float_linear"),
         };
     }
-    getOrCreateFill(klass) {
-        let fill = this._fills.get(klass);
-        if (fill) {
-            return fill;
+    getOrCreateShader(klass) {
+        let shader = this._shaders.get(klass);
+        if (shader) {
+            return shader;
         }
         else {
-            fill = new klass(this);
-            this._fills.set(klass, fill);
-            return fill;
+            shader = new klass(this);
+            this._shaders.set(klass, shader);
+            return shader;
         }
     }
 }
@@ -213,7 +213,7 @@ function blendFuncs(gl, mode) {
 const paintvec_1 = require("paintvec");
 const Color_1 = require("./Color");
 const Texture_1 = require("./Texture");
-class FillBase {
+class ShaderBase {
     constructor(context) {
         this.context = context;
         this._uniformValues = {};
@@ -291,8 +291,8 @@ class FillBase {
         gl.deleteProgram(this.program);
     }
 }
-exports.FillBase = FillBase;
-class Fill extends FillBase {
+exports.ShaderBase = ShaderBase;
+class Shader extends ShaderBase {
     get vertexShader() {
         return `
       precision highp float;
@@ -320,8 +320,8 @@ class Fill extends FillBase {
     `;
     }
 }
-exports.Fill = Fill;
-class TextureFill extends Fill {
+exports.Shader = Shader;
+class TextureShader extends Shader {
     get fragmentShader() {
         return `
       precision mediump float;
@@ -333,8 +333,8 @@ class TextureFill extends Fill {
     `;
     }
 }
-exports.TextureFill = TextureFill;
-class ColorFill extends Fill {
+exports.TextureShader = TextureShader;
+class ColorShader extends Shader {
     get fragmentShader() {
         return `
       precision mediump float;
@@ -345,7 +345,7 @@ class ColorFill extends Fill {
     `;
     }
 }
-exports.ColorFill = ColorFill;
+exports.ColorShader = ColorShader;
 
 },{"./Color":2,"./Texture":7,"paintvec":9}],6:[function(require,module,exports){
 "use strict";
@@ -423,18 +423,18 @@ class ShapeBase {
     }
     draw(transform) {
         const { gl } = this.context;
-        const fill = this.context.getOrCreateFill(this.fill);
+        const shader = this.context.getOrCreateShader(this.shader);
         this.updateIfNeeded();
-        fill.setUniform("transform", this.transform.merge(transform));
+        shader.setUniform("transform", this.transform.merge(transform));
         for (const uniform in this.uniforms) {
-            fill.setUniform(uniform, this.uniforms[uniform]);
+            shader.setUniform(uniform, this.uniforms[uniform]);
         }
-        gl.useProgram(fill.program);
+        gl.useProgram(shader.program);
         let texUnit = 0;
-        for (const name in fill._textureValues) {
+        for (const name in shader._textureValues) {
             gl.activeTexture(gl.TEXTURE0 + texUnit);
-            gl.bindTexture(gl.TEXTURE_2D, fill._textureValues[name].texture);
-            fill.setUniformInt(name, texUnit);
+            gl.bindTexture(gl.TEXTURE_2D, shader._textureValues[name].texture);
+            shader.setUniformInt(name, texUnit);
             ++texUnit;
         }
         gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
@@ -443,7 +443,7 @@ class ShapeBase {
         let offset = 0;
         for (const name in this.attributes) {
             const attribute = this.attributes[name];
-            const pos = gl.getAttribLocation(fill.program, name);
+            const pos = gl.getAttribLocation(shader.program, name);
             gl.enableVertexAttribArray(pos);
             gl.vertexAttribPointer(pos, attribute.size, gl.FLOAT, false, stride * 4, offset * 4);
             offset += attribute.size;
@@ -594,10 +594,10 @@ var DrawTarget_1 = require("./DrawTarget");
 exports.DrawTarget = DrawTarget_1.DrawTarget;
 exports.CanvasDrawTarget = DrawTarget_1.CanvasDrawTarget;
 exports.TextureDrawTarget = DrawTarget_1.TextureDrawTarget;
-var Fill_1 = require("./Fill");
-exports.Fill = Fill_1.Fill;
-exports.ColorFill = Fill_1.ColorFill;
-exports.TextureFill = Fill_1.TextureFill;
+var Shader_1 = require("./Shader");
+exports.Shader = Shader_1.Shader;
+exports.ColorShader = Shader_1.ColorShader;
+exports.TextureShader = Shader_1.TextureShader;
 var Texture_1 = require("./Texture");
 exports.Texture = Texture_1.Texture;
 var Shape_1 = require("./Shape");
@@ -605,7 +605,7 @@ exports.Shape = Shape_1.Shape;
 exports.QuadShape = Shape_1.QuadShape;
 exports.RectShape = Shape_1.RectShape;
 
-},{"./Color":2,"./Context":3,"./DrawTarget":4,"./Fill":5,"./Shape":6,"./Texture":7}],9:[function(require,module,exports){
+},{"./Color":2,"./Context":3,"./DrawTarget":4,"./Shader":5,"./Shape":6,"./Texture":7}],9:[function(require,module,exports){
 "use strict";
 var Vec2 = (function () {
     function Vec2(x, y) {
