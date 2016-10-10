@@ -5,15 +5,36 @@ export interface ContextOptions {
     antialias?: boolean;
 }
 export interface ContextCapabilities {
+    /**
+      Whether the context support half float pixmaps.
+    */
     halfFloat: boolean;
+    /**
+      Whether the context support linear filtering of half float pixmaps.
+    */
     halfFloatLinearFilter: boolean;
+    /**
+      Whether the context support float pixmaps.
+    */
     float: boolean;
+    /**
+      Whether the context support linear filtering of float pixmaps.
+    */
     floatLinearFilter: boolean;
 }
+/**
+  Context contains the WebGL context.
+*/
 export declare class Context {
     canvas: HTMLCanvasElement;
+    /**
+      The WebGL rendering context used in this Context.
+    */
     gl: WebGLRenderingContext;
     halfFloatExt: any;
+    /**
+      The capabilities supported by current browser.
+    */
     capabilities: ContextCapabilities;
     private _shaders;
     constructor(canvas: HTMLCanvasElement, opts?: ContextOptions);
