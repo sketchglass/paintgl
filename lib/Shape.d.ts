@@ -4,6 +4,7 @@ import { ObjectMap } from "./ObjectMap";
 import { Shader, UniformValue } from "./Shader";
 import { Drawable } from "./Drawable";
 export declare type ShapeUsage = "static" | "stream" | "dynamic";
+export declare type BlendMode = "src" | "src-over" | "src-in" | "src-out" | "src-atop" | "dst" | "dst-over" | "dst-in" | "dst-out" | "dst-atop";
 export declare class ShapeBase implements Drawable {
     context: Context;
     readonly vertexBuffer: WebGLBuffer;
@@ -17,6 +18,7 @@ export declare class ShapeBase implements Drawable {
     needsUpdate: boolean;
     shader: typeof Shader;
     uniforms: ObjectMap<UniformValue>;
+    blendMode: BlendMode;
     transform: Transform;
     attributeStride(): number;
     constructor(context: Context);

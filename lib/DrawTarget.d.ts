@@ -3,7 +3,6 @@ import { Drawable } from "./Drawable";
 import { Context } from "./Context";
 import { Color } from "./Color";
 import { Texture, PixelType, PixelFormat } from "./Texture";
-import { BlendMode } from "./BlendMode";
 export declare abstract class DrawTarget {
     context: Context;
     abstract size: Vec2;
@@ -12,7 +11,6 @@ export declare abstract class DrawTarget {
     scissor: Rect | undefined;
     flipY: boolean;
     transform: Transform;
-    blendMode: BlendMode;
     constructor(context: Context);
     draw(drawable: Drawable): void;
     clear(color: Color): void;

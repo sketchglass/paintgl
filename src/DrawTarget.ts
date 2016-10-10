@@ -3,7 +3,6 @@ import {Drawable} from "./Drawable"
 import {Context} from "./Context"
 import {Color} from "./Color"
 import {Texture, PixelType, PixelFormat, glType, glFormat} from "./Texture"
-import {BlendMode} from "./BlendMode"
 
 export
 abstract class DrawTarget {
@@ -32,11 +31,6 @@ abstract class DrawTarget {
   transform = new Transform()
 
   /**
-    The global blend mode.
-  */
-  blendMode: BlendMode = "src-over"
-
-  /**
     @params context The context this `DrawTarget` belongs to.
   */
   constructor(public context: Context) {
@@ -49,14 +43,6 @@ abstract class DrawTarget {
     const {gl} = this.context
 
     this.use()
-
-    if (this.blendMode == "src") {
-      gl.disable(gl.BLEND)
-    } else {
-      gl.enable(gl.BLEND)
-      const funcs = blendFuncs(gl, this.blendMode)
-      gl.blendFunc(funcs[0], funcs[1])
-    }
 
     const {size} = this
     let transform = this.transform
@@ -181,31 +167,5 @@ class TextureDrawTarget extends DrawTarget {
   dispose() {
     const {gl} = this.context
     gl.deleteFramebuffer(this.framebuffer)
-  }
-}
-
-function blendFuncs(gl: WebGLRenderingContext, mode: BlendMode) {
-  switch (mode) {
-    case "src":
-      return [gl.ONE, gl.ZERO]
-    default:
-    case "src-over":
-      return [gl.ONE, gl.ONE_MINUS_SRC_ALPHA]
-    case "src-in":
-      return [gl.DST_ALPHA, gl.ZERO]
-    case "src-out":
-      return [gl.ONE_MINUS_DST_ALPHA, gl.ZERO]
-    case "src-atop":
-      return [gl.DST_ALPHA, gl.ONE_MINUS_SRC_ALPHA]
-    case "dst":
-      return [gl.ZERO, gl.ONE]
-    case "dst-over":
-      return [gl.ONE_MINUS_DST_ALPHA, gl.ONE]
-    case "dst-in":
-      return [gl.ZERO, gl.SRC_ALPHA]
-    case "dst-out":
-      return [gl.ZERO, gl.ONE_MINUS_SRC_ALPHA]
-    case "dst-atop":
-      return [gl.ONE_MINUS_DST_ALPHA, gl.SRC_ALPHA]
   }
 }

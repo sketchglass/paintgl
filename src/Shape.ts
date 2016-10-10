@@ -7,6 +7,12 @@ import {Drawable} from "./Drawable"
 
 export type ShapeUsage = "static" | "stream" | "dynamic"
 
+/**
+  BlendMode represents how drawn color and destination color are blended.
+*/
+export type BlendMode = "src" | "src-over" | "src-in" | "src-out" | "src-atop"
+                      | "dst" | "dst-over" | "dst-in" | "dst-out" | "dst-atop"
+
 function glUsage(gl: WebGLRenderingContext, usage: ShapeUsage) {
   switch (usage) {
     case "static":
@@ -16,6 +22,32 @@ function glUsage(gl: WebGLRenderingContext, usage: ShapeUsage) {
     case "dynamic":
     default:
       return gl.DYNAMIC_DRAW
+  }
+}
+
+function blendFuncs(gl: WebGLRenderingContext, mode: BlendMode) {
+  switch (mode) {
+    case "src":
+      return [gl.ONE, gl.ZERO]
+    default:
+    case "src-over":
+      return [gl.ONE, gl.ONE_MINUS_SRC_ALPHA]
+    case "src-in":
+      return [gl.DST_ALPHA, gl.ZERO]
+    case "src-out":
+      return [gl.ONE_MINUS_DST_ALPHA, gl.ZERO]
+    case "src-atop":
+      return [gl.DST_ALPHA, gl.ONE_MINUS_SRC_ALPHA]
+    case "dst":
+      return [gl.ZERO, gl.ONE]
+    case "dst-over":
+      return [gl.ONE_MINUS_DST_ALPHA, gl.ONE]
+    case "dst-in":
+      return [gl.ZERO, gl.SRC_ALPHA]
+    case "dst-out":
+      return [gl.ZERO, gl.ONE_MINUS_SRC_ALPHA]
+    case "dst-atop":
+      return [gl.ONE_MINUS_DST_ALPHA, gl.SRC_ALPHA]
   }
 }
 
@@ -64,6 +96,8 @@ class ShapeBase implements Drawable {
     The uniform values passed to the shader.
   */
   uniforms: ObjectMap<UniformValue> = {}
+
+  blendMode: BlendMode = "src-over"
 
   /**
     The transform of this Shape.
@@ -132,6 +166,14 @@ class ShapeBase implements Drawable {
   draw(transform: Transform) {
     const {gl} = this.context
     const shader = this.context.getOrCreateShader(this.shader)
+
+    if (this.blendMode == "src") {
+      gl.disable(gl.BLEND)
+    } else {
+      gl.enable(gl.BLEND)
+      const funcs = blendFuncs(gl, this.blendMode)
+      gl.blendFunc(funcs[0], funcs[1])
+    }
 
     this.updateIfNeeded()
     shader.setUniform("transform", this.transform.merge(transform))
