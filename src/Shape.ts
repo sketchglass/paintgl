@@ -247,21 +247,17 @@ type QuadPolygon = [Vec2, Vec2, Vec2, Vec2]
 export
 class QuadShape extends Shape {
   constructor(context: Context, positions: QuadPolygon) {
-    super(context, positions, [new Vec2(0, 0), new Vec2(1, 0), new Vec2(0, 1), new Vec2(1, 1)])
+    super(context, positions, new Rect(new Vec2(0), new Vec2(1)).vertices())
   }
   positions: QuadPolygon
   texCoords: QuadPolygon
   indices = [0, 1, 2, 1, 2, 3]
 }
 
-function rectToQuad(rect: Rect): QuadPolygon {
-  return [rect.topLeft, rect.topRight, rect.bottomLeft, rect.bottomRight]
-}
-
 export
 class RectShape extends QuadShape {
   constructor(context: Context, private _rect: Rect) {
-    super(context, rectToQuad(_rect))
+    super(context, _rect.vertices())
   }
 
   get rect() {
@@ -269,6 +265,6 @@ class RectShape extends QuadShape {
   }
   set rect(rect: Rect) {
     this._rect = rect
-    this.positions = rectToQuad(rect)
+    this.positions = rect.vertices()
   }
 }
