@@ -280,9 +280,16 @@ class ShaderBase {
 }
 exports.ShaderBase = ShaderBase;
 class Shader extends ShaderBase {
+    get additionalVertexShader() {
+        return `
+      void paintgl_additional() {
+      }
+    `;
+    }
     get vertexShader() {
         return `
       precision highp float;
+      ${this.additionalVertexShader}
 
       uniform mat3 transform;
       attribute vec2 aPosition;
@@ -295,6 +302,7 @@ class Shader extends ShaderBase {
         vTexCoord = aTexCoord;
         vec3 pos = transform * vec3(aPosition, 1.0);
         gl_Position = vec4(pos.xy / pos.z, 0.0, 1.0);
+        paintgl_additional();
       }
     `;
     }

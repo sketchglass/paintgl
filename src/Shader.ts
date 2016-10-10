@@ -11,7 +11,14 @@ export
 abstract class ShaderBase {
   readonly program: WebGLProgram
 
+  /**
+    The vertex shader.
+  */
   abstract get vertexShader(): string
+
+  /**
+    The fragment shader.
+  */
   abstract get fragmentShader(): string
 
   private _uniformValues: ObjectMap<UniformValue> = {}
@@ -95,9 +102,20 @@ abstract class ShaderBase {
 */
 export
 class Shader extends ShaderBase {
+  /**
+    The additional shader code for vertex shader alongside default one.
+  */
+  get additionalVertexShader() {
+    return `
+      void paintgl_additional() {
+      }
+    `
+  }
+
   get vertexShader() {
     return `
       precision highp float;
+      ${this.additionalVertexShader}
 
       uniform mat3 transform;
       attribute vec2 aPosition;
@@ -110,6 +128,7 @@ class Shader extends ShaderBase {
         vTexCoord = aTexCoord;
         vec3 pos = transform * vec3(aPosition, 1.0);
         gl_Position = vec4(pos.xy / pos.z, 0.0, 1.0);
+        paintgl_additional();
       }
     `
   }
@@ -124,6 +143,9 @@ class Shader extends ShaderBase {
   }
 }
 
+/**
+  TextureShader fills the shape with specified texture.
+*/
 export
 class TextureShader extends Shader {
   get fragmentShader() {
@@ -138,6 +160,9 @@ class TextureShader extends Shader {
   }
 }
 
+/**
+  ColorShader fills the shape with specified color.
+*/
 export
 class ColorShader extends Shader {
   get fragmentShader() {

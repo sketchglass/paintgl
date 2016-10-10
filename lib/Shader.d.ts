@@ -20,6 +20,7 @@ export declare abstract class ShaderBase {
     dispose(): void;
 }
 export declare class Shader extends ShaderBase {
+    readonly additionalVertexShader: string;
     readonly vertexShader: string;
     readonly fragmentShader: string;
 }
