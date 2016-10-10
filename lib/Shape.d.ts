@@ -30,16 +30,21 @@ export declare class ShapeBase implements Drawable {
     dispose(): void;
 }
 export declare class Shape extends ShapeBase {
+    private _positions;
+    private _texCoords;
+    constructor(context: Context, positions: Vec2[], texCoords: Vec2[]);
     positions: Vec2[];
     texCoords: Vec2[];
-    update(): void;
 }
+export declare type QuadPolygon = [Vec2, Vec2, Vec2, Vec2];
 export declare class QuadShape extends Shape {
-    positions: [Vec2, Vec2, Vec2, Vec2];
-    texCoords: [Vec2, Vec2, Vec2, Vec2];
+    constructor(context: Context, positions: QuadPolygon);
+    positions: QuadPolygon;
+    texCoords: QuadPolygon;
     indices: number[];
 }
 export declare class RectShape extends QuadShape {
+    private _rect;
+    constructor(context: Context, _rect: Rect);
     rect: Rect;
-    update(): void;
 }

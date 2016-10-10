@@ -120,9 +120,11 @@ class ShapeBase implements Drawable {
 
   setFloatAttributes(name: string, attributes: number[]) {
     this.attributes[name] = {size: 1, data: attributes}
+    this.needsUpdate = true
   }
   setVec2Attributes(name: string, attributes: Vec2[]) {
     this.attributes[name] = {size: 2, data: attributes}
+    this.needsUpdate = true
   }
 
   update() {
@@ -216,31 +218,57 @@ class ShapeBase implements Drawable {
 
 export
 class Shape extends ShapeBase {
-  positions: Vec2[] = []
-  texCoords: Vec2[] = []
+  private _positions: Vec2[] = []
+  private _texCoords: Vec2[] = []
 
-  update() {
-    const {length} = this.positions
-    this.setVec2Attributes("aPosition", this.positions)
-    this.setVec2Attributes("aTexCoord", this.texCoords)
-    super.update()
+  constructor(context: Context, positions: Vec2[], texCoords: Vec2[]) {
+    super(context)
+    this.positions = positions
+    this.texCoords = texCoords
+  }
+
+  get positions() {
+    return this._positions
+  }
+  set positions(positions: Vec2[]) {
+    this.setVec2Attributes("aPosition", positions)
+  }
+  get texCoords() {
+    return this._texCoords
+  }
+  set texCoords(texCoords: Vec2[]) {
+    this.setVec2Attributes("aTexCoord", texCoords)
   }
 }
 
 export
+type QuadPolygon = [Vec2, Vec2, Vec2, Vec2]
+
+export
 class QuadShape extends Shape {
-  positions: [Vec2, Vec2, Vec2, Vec2] = [new Vec2(0, 0), new Vec2(1, 0), new Vec2(0, 1), new Vec2(1, 1)]
-  texCoords: [Vec2, Vec2, Vec2, Vec2] = [new Vec2(0, 0), new Vec2(1, 0), new Vec2(0, 1), new Vec2(1, 1)]
+  constructor(context: Context, positions: QuadPolygon) {
+    super(context, positions, [new Vec2(0, 0), new Vec2(1, 0), new Vec2(0, 1), new Vec2(1, 1)])
+  }
+  positions: QuadPolygon
+  texCoords: QuadPolygon
   indices = [0, 1, 2, 1, 2, 3]
+}
+
+function rectToQuad(rect: Rect): QuadPolygon {
+  return [rect.topLeft, rect.topRight, rect.bottomLeft, rect.bottomRight]
 }
 
 export
 class RectShape extends QuadShape {
-  rect = new Rect()
+  constructor(context: Context, private _rect: Rect) {
+    super(context, rectToQuad(_rect))
+  }
 
-  update() {
-    const {rect} = this
-    this.positions = [rect.topLeft, rect.topRight, rect.bottomLeft, rect.bottomRight]
-    super.update()
+  get rect() {
+    return this._rect
+  }
+  set rect(rect: Rect) {
+    this._rect = rect
+    this.positions = rectToQuad(rect)
   }
 }

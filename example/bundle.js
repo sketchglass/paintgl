@@ -6,17 +6,15 @@ const context = new lib_1.Context(document.getElementById("canvas"));
 const texture = new lib_1.Texture(context, { size: new paintvec_1.Vec2(400, 400) });
 const drawTarget = new lib_1.TextureDrawTarget(context, texture);
 drawTarget.clear(new lib_1.Color(0.9, 0.9, 0.9, 1));
-const shape = new lib_1.RectShape(context);
-shape.rect = new paintvec_1.Rect(new paintvec_1.Vec2(100, 100), new paintvec_1.Vec2(200, 300));
+const shape = new lib_1.RectShape(context, new paintvec_1.Rect(new paintvec_1.Vec2(100, 100), new paintvec_1.Vec2(200, 300)));
 shape.shader = lib_1.ColorShader;
 shape.uniforms["color"] = new lib_1.Color(0.9, 0.1, 0.2, 1);
 drawTarget.draw(shape);
 drawTarget.transform = paintvec_1.Transform.rotate(0.1 * Math.PI);
-drawTarget.blendMode = "dst-out";
+shape.blendMode = "dst-out";
 drawTarget.draw(shape);
 const canvasDrawTarget = new lib_1.CanvasDrawTarget(context);
-const textureShape = new lib_1.RectShape(context);
-textureShape.rect = new paintvec_1.Rect(new paintvec_1.Vec2(0), texture.size);
+const textureShape = new lib_1.RectShape(context, new paintvec_1.Rect(new paintvec_1.Vec2(0), texture.size));
 textureShape.shader = lib_1.TextureShader;
 textureShape.uniforms["texture"] = texture;
 canvasDrawTarget.draw(textureShape);
@@ -84,25 +82,16 @@ exports.Context = Context;
 },{}],4:[function(require,module,exports){
 "use strict";
 const paintvec_1 = require("paintvec");
+const Texture_1 = require("./Texture");
 class DrawTarget {
     constructor(context) {
         this.context = context;
         this.flipY = false;
         this.transform = new paintvec_1.Transform();
-        this.blendMode = "src-over";
     }
-    get size() { }
     draw(drawable) {
         const { gl } = this.context;
         this.use();
-        if (this.blendMode == "src") {
-            gl.disable(gl.BLEND);
-        }
-        else {
-            gl.enable(gl.BLEND);
-            const funcs = blendFuncs(gl, this.blendMode);
-            gl.blendFunc(funcs[0], funcs[1]);
-        }
         const { size } = this;
         let transform = this.transform
             .merge(paintvec_1.Transform.scale(new paintvec_1.Vec2(2 / size.width, 2 / size.height)))
@@ -118,18 +107,33 @@ class DrawTarget {
         gl.clearColor(color.r, color.g, color.b, color.a);
         gl.clear(gl.COLOR_BUFFER_BIT);
     }
+    readPixels(rect, data) {
+        this.use();
+        const { gl } = this.context;
+        rect = this._flipRect(rect);
+        gl.readPixels(rect.left, rect.top, rect.width, rect.height, Texture_1.glFormat(gl, this.pixelFormat), Texture_1.glType(this.context, this.pixelType), data);
+    }
     use() {
         const { gl } = this.context;
         if (this.scissor) {
             gl.enable(gl.SCISSOR_TEST);
             const drawableRect = new paintvec_1.Rect(new paintvec_1.Vec2(0), this.size);
-            const rect = this.scissor.intBounding().intersection(drawableRect);
+            const rect = this._flipRect(this.scissor).intBounding().intersection(drawableRect);
             gl.scissor(rect.left, rect.top, rect.width, rect.height);
         }
         else {
             gl.disable(gl.SCISSOR_TEST);
         }
         gl.viewport(0, 0, this.size.x, this.size.y);
+    }
+    _flipRect(rect) {
+        if (this.flipY) {
+            let { left, right, top, bottom } = rect;
+            top = this.size.height - top;
+            bottom = this.size.height - bottom;
+            return new paintvec_1.Rect(new paintvec_1.Vec2(left, top), new paintvec_1.Vec2(right, bottom));
+        }
+        return rect;
     }
     dispose() {
     }
@@ -139,6 +143,8 @@ class CanvasDrawTarget extends DrawTarget {
     constructor(...args) {
         super(...args);
         this.flipY = true;
+        this.pixelType = "byte";
+        this.pixelFormat = "rgba";
     }
     get size() {
         const { canvas } = this.context;
@@ -171,6 +177,12 @@ class TextureDrawTarget extends DrawTarget {
     get size() {
         return this.texture.size;
     }
+    get pixelType() {
+        return this.texture.pixelType;
+    }
+    get pixelFormat() {
+        return this.texture.pixelFormat;
+    }
     use() {
         const { gl } = this.context;
         gl.bindFramebuffer(gl.FRAMEBUFFER, this.framebuffer);
@@ -182,33 +194,8 @@ class TextureDrawTarget extends DrawTarget {
     }
 }
 exports.TextureDrawTarget = TextureDrawTarget;
-function blendFuncs(gl, mode) {
-    switch (mode) {
-        case "src":
-            return [gl.ONE, gl.ZERO];
-        default:
-        case "src-over":
-            return [gl.ONE, gl.ONE_MINUS_SRC_ALPHA];
-        case "src-in":
-            return [gl.DST_ALPHA, gl.ZERO];
-        case "src-out":
-            return [gl.ONE_MINUS_DST_ALPHA, gl.ZERO];
-        case "src-atop":
-            return [gl.DST_ALPHA, gl.ONE_MINUS_SRC_ALPHA];
-        case "dst":
-            return [gl.ZERO, gl.ONE];
-        case "dst-over":
-            return [gl.ONE_MINUS_DST_ALPHA, gl.ONE];
-        case "dst-in":
-            return [gl.ZERO, gl.SRC_ALPHA];
-        case "dst-out":
-            return [gl.ZERO, gl.ONE_MINUS_SRC_ALPHA];
-        case "dst-atop":
-            return [gl.ONE_MINUS_DST_ALPHA, gl.SRC_ALPHA];
-    }
-}
 
-},{"paintvec":9}],5:[function(require,module,exports){
+},{"./Texture":7,"paintvec":9}],5:[function(require,module,exports){
 "use strict";
 const paintvec_1 = require("paintvec");
 const Color_1 = require("./Color");
@@ -361,6 +348,31 @@ function glUsage(gl, usage) {
             return gl.DYNAMIC_DRAW;
     }
 }
+function blendFuncs(gl, mode) {
+    switch (mode) {
+        case "src":
+            return [gl.ONE, gl.ZERO];
+        default:
+        case "src-over":
+            return [gl.ONE, gl.ONE_MINUS_SRC_ALPHA];
+        case "src-in":
+            return [gl.DST_ALPHA, gl.ZERO];
+        case "src-out":
+            return [gl.ONE_MINUS_DST_ALPHA, gl.ZERO];
+        case "src-atop":
+            return [gl.DST_ALPHA, gl.ONE_MINUS_SRC_ALPHA];
+        case "dst":
+            return [gl.ZERO, gl.ONE];
+        case "dst-over":
+            return [gl.ONE_MINUS_DST_ALPHA, gl.ONE];
+        case "dst-in":
+            return [gl.ZERO, gl.SRC_ALPHA];
+        case "dst-out":
+            return [gl.ZERO, gl.ONE_MINUS_SRC_ALPHA];
+        case "dst-atop":
+            return [gl.ONE_MINUS_DST_ALPHA, gl.SRC_ALPHA];
+    }
+}
 class ShapeBase {
     constructor(context) {
         this.context = context;
@@ -369,6 +381,7 @@ class ShapeBase {
         this.attributes = {};
         this.needsUpdate = true;
         this.uniforms = {};
+        this.blendMode = "src-over";
         this.transform = new paintvec_1.Transform();
         const { gl } = context;
         this.vertexBuffer = gl.createBuffer();
@@ -383,9 +396,11 @@ class ShapeBase {
     }
     setFloatAttributes(name, attributes) {
         this.attributes[name] = { size: 1, data: attributes };
+        this.needsUpdate = true;
     }
     setVec2Attributes(name, attributes) {
         this.attributes[name] = { size: 2, data: attributes };
+        this.needsUpdate = true;
     }
     update() {
         const { gl } = this.context;
@@ -424,6 +439,14 @@ class ShapeBase {
     draw(transform) {
         const { gl } = this.context;
         const shader = this.context.getOrCreateShader(this.shader);
+        if (this.blendMode == "src") {
+            gl.disable(gl.BLEND);
+        }
+        else {
+            gl.enable(gl.BLEND);
+            const funcs = blendFuncs(gl, this.blendMode);
+            gl.blendFunc(funcs[0], funcs[1]);
+        }
         this.updateIfNeeded();
         shader.setUniform("transform", this.transform.merge(transform));
         for (const uniform in this.uniforms) {
@@ -458,37 +481,48 @@ class ShapeBase {
 }
 exports.ShapeBase = ShapeBase;
 class Shape extends ShapeBase {
-    constructor(...args) {
-        super(...args);
-        this.positions = [];
-        this.texCoords = [];
+    constructor(context, positions, texCoords) {
+        super(context);
+        this._positions = [];
+        this._texCoords = [];
+        this.positions = positions;
+        this.texCoords = texCoords;
     }
-    update() {
-        const { length } = this.positions;
-        this.setVec2Attributes("aPosition", this.positions);
-        this.setVec2Attributes("aTexCoord", this.texCoords);
-        super.update();
+    get positions() {
+        return this._positions;
+    }
+    set positions(positions) {
+        this.setVec2Attributes("aPosition", positions);
+    }
+    get texCoords() {
+        return this._texCoords;
+    }
+    set texCoords(texCoords) {
+        this.setVec2Attributes("aTexCoord", texCoords);
     }
 }
 exports.Shape = Shape;
 class QuadShape extends Shape {
-    constructor(...args) {
-        super(...args);
-        this.positions = [new paintvec_1.Vec2(0, 0), new paintvec_1.Vec2(1, 0), new paintvec_1.Vec2(0, 1), new paintvec_1.Vec2(1, 1)];
-        this.texCoords = [new paintvec_1.Vec2(0, 0), new paintvec_1.Vec2(1, 0), new paintvec_1.Vec2(0, 1), new paintvec_1.Vec2(1, 1)];
+    constructor(context, positions) {
+        super(context, positions, [new paintvec_1.Vec2(0, 0), new paintvec_1.Vec2(1, 0), new paintvec_1.Vec2(0, 1), new paintvec_1.Vec2(1, 1)]);
         this.indices = [0, 1, 2, 1, 2, 3];
     }
 }
 exports.QuadShape = QuadShape;
+function rectToQuad(rect) {
+    return [rect.topLeft, rect.topRight, rect.bottomLeft, rect.bottomRight];
+}
 class RectShape extends QuadShape {
-    constructor(...args) {
-        super(...args);
-        this.rect = new paintvec_1.Rect();
+    constructor(context, _rect) {
+        super(context, rectToQuad(_rect));
+        this._rect = _rect;
     }
-    update() {
-        const { rect } = this;
-        this.positions = [rect.topLeft, rect.topRight, rect.bottomLeft, rect.bottomRight];
-        super.update();
+    get rect() {
+        return this._rect;
+    }
+    set rect(rect) {
+        this._rect = rect;
+        this.positions = rectToQuad(rect);
     }
 }
 exports.RectShape = RectShape;
@@ -507,6 +541,7 @@ function glType(context, pixelType) {
             return context.gl.FLOAT;
     }
 }
+exports.glType = glType;
 function glFormat(gl, format) {
     switch (format) {
         case "alpha":
@@ -518,6 +553,7 @@ function glFormat(gl, format) {
             return gl.RGBA;
     }
 }
+exports.glFormat = glFormat;
 class Texture {
     constructor(context, opts) {
         this.context = context;
