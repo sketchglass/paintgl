@@ -78,7 +78,11 @@ abstract class DrawTarget {
       gl.enable(gl.SCISSOR_TEST)
       const drawableRect = new Rect(new Vec2(0), this.size)
       const rect = this._flipRect(this.scissor).intBounding().intersection(drawableRect)
-      gl.scissor(rect.left, rect.top, rect.width, rect.height)
+      if (rect) {
+        gl.scissor(rect.left, rect.top, rect.width, rect.height)
+      } else {
+        gl.scissor(0, 0, 0, 0)
+      }
     } else {
       gl.disable(gl.SCISSOR_TEST)
     }
