@@ -10,12 +10,17 @@ export type ImageSource = ImageData | HTMLVideoElement | HTMLImageElement | HTML
 export type TextureFilter = "nearest" | "mipmap-nearest" | "bilinear" | "mipmap-bilinear" | "trilinear"
 
 /**
+  The pixel type of the texture.
+*/
+export type PixelType = "byte" | "half-float" | "float"
+
+/**
   The pixel format of the texture.
 */
-export type TextureFormat = "byte" | "half-float" | "float"
+export type PixelFormat = "alpha" | "rgb" | "rgba"
 
-function glDataType(context: Context, format: TextureFormat) {
-  switch (format) {
+function glType(context: Context, pixelType: PixelType) {
+  switch (pixelType) {
   case "byte":
   default:
     return context.gl.UNSIGNED_BYTE
@@ -26,10 +31,23 @@ function glDataType(context: Context, format: TextureFormat) {
   }
 }
 
+function glFormat(gl: WebGLRenderingContext, format: PixelFormat) {
+  switch (format) {
+  case "alpha":
+    return gl.ALPHA
+  case "rgb":
+    return gl.RGB
+  default:
+  case "rgba":
+    return gl.RGBA
+  }
+}
+
 export
 interface TextureOptions{
   filter?: TextureFilter
-  format?: TextureFormat
+  pixelType?: PixelType
+  pixelFormat?: PixelFormat
   size?: Vec2
   data?: ArrayBufferView
   image?: ImageSource
@@ -46,9 +64,14 @@ class Texture {
   texture: WebGLTexture
 
   /**
-    The format of this Texture.
+    The pixel type of this Texture.
   */
-  readonly format: TextureFormat
+  readonly pixelType: PixelType
+
+  /**
+    The pixel format of this Texture.
+  */
+  readonly pixelFormat: PixelFormat
 
   private _size: Vec2
 
@@ -107,7 +130,8 @@ class Texture {
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE)
 
     this.filter = (opts.filter != undefined) ? opts.filter : "nearest"
-    this.format = (opts.format != undefined) ? opts.format : "byte"
+    this.pixelType = (opts.pixelType != undefined) ? opts.pixelType : "byte"
+    this.pixelFormat = (opts.pixelFormat != undefined) ? opts.pixelFormat : "rgba"
 
     if (opts.image) {
       this.setImage(opts.image)
@@ -120,14 +144,19 @@ class Texture {
     const {gl, halfFloatExt} = this.context
     this._size = size
     gl.bindTexture(gl.TEXTURE_2D, this.texture)
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, size.x, size.y, 0, gl.RGBA, glDataType(this.context, this.format), data ? data : null as any)
+    const format = glFormat(gl, this.pixelFormat)
+    const type = glType(this.context, this.pixelType)
+    gl.texImage2D(gl.TEXTURE_2D, 0, format, size.x, size.y, 0, format, type, data ? data : null as any)
   }
 
   setImage(image: ImageSource) {
     const {gl} = this.context
     this._size = new Vec2(image.width, image.height)
     gl.bindTexture(gl.TEXTURE_2D, this.texture)
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, glDataType(this.context, this.format), image)
+    gl.bindTexture(gl.TEXTURE_2D, this.texture)
+    const format = glFormat(gl, this.pixelFormat)
+    const type = glType(this.context, this.pixelType)
+    gl.texImage2D(gl.TEXTURE_2D, 0, format, format, type, image)
   }
 
   generateMipmap() {

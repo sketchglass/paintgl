@@ -2,10 +2,12 @@ import { Context } from "./Context";
 import { Vec2 } from "paintvec";
 export declare type ImageSource = ImageData | HTMLVideoElement | HTMLImageElement | HTMLCanvasElement;
 export declare type TextureFilter = "nearest" | "mipmap-nearest" | "bilinear" | "mipmap-bilinear" | "trilinear";
-export declare type TextureFormat = "byte" | "half-float" | "float";
+export declare type PixelType = "byte" | "half-float" | "float";
+export declare type PixelFormat = "alpha" | "rgb" | "rgba";
 export interface TextureOptions {
     filter?: TextureFilter;
-    format?: TextureFormat;
+    pixelType?: PixelType;
+    pixelFormat?: PixelFormat;
     size?: Vec2;
     data?: ArrayBufferView;
     image?: ImageSource;
@@ -13,7 +15,8 @@ export interface TextureOptions {
 export declare class Texture {
     context: Context;
     texture: WebGLTexture;
-    readonly format: TextureFormat;
+    readonly pixelType: PixelType;
+    readonly pixelFormat: PixelFormat;
     private _size;
     size: Vec2;
     private _filter;
