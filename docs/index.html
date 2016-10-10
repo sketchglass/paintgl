@@ -26,7 +26,7 @@
 				<a href="classes/color.html" class="tsd-kind-icon">Color</a>
 			</li>
 			<li class=" tsd-kind-class tsd-is-external">
-				<a href="classes/colorfill.html" class="tsd-kind-icon">Color<wbr>Fill</a>
+				<a href="classes/colorshader.html" class="tsd-kind-icon">Color<wbr>Shader</a>
 			</li>
 			<li class=" tsd-kind-class tsd-is-external">
 				<a href="classes/context.html" class="tsd-kind-icon">Context</a>
@@ -35,16 +35,16 @@
 				<a href="classes/drawtarget.html" class="tsd-kind-icon">Draw<wbr>Target</a>
 			</li>
 			<li class=" tsd-kind-class tsd-is-external">
-				<a href="classes/fill.html" class="tsd-kind-icon">Fill</a>
-			</li>
-			<li class=" tsd-kind-class tsd-is-external">
-				<a href="classes/fillbase.html" class="tsd-kind-icon">Fill<wbr>Base</a>
-			</li>
-			<li class=" tsd-kind-class tsd-is-external">
 				<a href="classes/quadshape.html" class="tsd-kind-icon">Quad<wbr>Shape</a>
 			</li>
 			<li class=" tsd-kind-class tsd-is-external">
 				<a href="classes/rectshape.html" class="tsd-kind-icon">Rect<wbr>Shape</a>
+			</li>
+			<li class=" tsd-kind-class tsd-is-external">
+				<a href="classes/shader.html" class="tsd-kind-icon">Shader</a>
+			</li>
+			<li class=" tsd-kind-class tsd-is-external">
+				<a href="classes/shaderbase.html" class="tsd-kind-icon">Shader<wbr>Base</a>
 			</li>
 			<li class=" tsd-kind-class tsd-is-external">
 				<a href="classes/shape.html" class="tsd-kind-icon">Shape</a>
@@ -59,7 +59,7 @@
 				<a href="classes/texturedrawtarget.html" class="tsd-kind-icon">Texture<wbr>Draw<wbr>Target</a>
 			</li>
 			<li class=" tsd-kind-class tsd-is-external">
-				<a href="classes/texturefill.html" class="tsd-kind-icon">Texture<wbr>Fill</a>
+				<a href="classes/textureshader.html" class="tsd-kind-icon">Texture<wbr>Shader</a>
 			</li>
 			<li class=" tsd-kind-interface tsd-is-external">
 				<a href="interfaces/contextcapabilities.html" class="tsd-kind-icon">Context<wbr>Capabilities</a>
@@ -83,13 +83,16 @@
 				<a href="globals.html#imagesource" class="tsd-kind-icon">Image<wbr>Source</a>
 			</li>
 			<li class=" tsd-kind-type-alias tsd-is-external">
+				<a href="globals.html#pixelformat" class="tsd-kind-icon">Pixel<wbr>Format</a>
+			</li>
+			<li class=" tsd-kind-type-alias tsd-is-external">
+				<a href="globals.html#pixeltype" class="tsd-kind-icon">Pixel<wbr>Type</a>
+			</li>
+			<li class=" tsd-kind-type-alias tsd-is-external">
 				<a href="globals.html#shapeusage" class="tsd-kind-icon">Shape<wbr>Usage</a>
 			</li>
 			<li class=" tsd-kind-type-alias tsd-is-external">
 				<a href="globals.html#texturefilter" class="tsd-kind-icon">Texture<wbr>Filter</a>
-			</li>
-			<li class=" tsd-kind-type-alias tsd-is-external">
-				<a href="globals.html#textureformat" class="tsd-kind-icon">Texture<wbr>Format</a>
 			</li>
 			<li class=" tsd-kind-type-alias tsd-is-external">
 				<a href="globals.html#uniformvalue" class="tsd-kind-icon">Uniform<wbr>Value</a>
@@ -98,7 +101,10 @@
 				<a href="globals.html#blendfuncs" class="tsd-kind-icon">blend<wbr>Funcs</a>
 			</li>
 			<li class=" tsd-kind-function tsd-is-external tsd-is-not-exported">
-				<a href="globals.html#gldatatype" class="tsd-kind-icon">gl<wbr>Data<wbr>Type</a>
+				<a href="globals.html#glformat" class="tsd-kind-icon">gl<wbr>Format</a>
+			</li>
+			<li class=" tsd-kind-function tsd-is-external tsd-is-not-exported">
+				<a href="globals.html#gltype" class="tsd-kind-icon">gl<wbr>Type</a>
 			</li>
 			<li class=" tsd-kind-function tsd-is-external tsd-is-not-exported">
 				<a href="globals.html#glusage" class="tsd-kind-icon">gl<wbr>Usage</a>
@@ -115,26 +121,26 @@
 npm <span class="hljs-keyword">install</span> <span class="hljs-comment">--save github:seanchas116/paintgl</span>
 </code></pre><h2 id="usage">Usage</h2>
 			<pre><code class="lang-js"><span class="hljs-keyword">import</span> {Vec2, Rect, Transform} <span class="hljs-keyword">from</span> <span class="hljs-string">"paintvec"</span>
-<span class="hljs-keyword">import</span> {Color, Context, Pixmap, RectShape, ColorFill, PixmapFill, PixmapDrawTarget, CanvasDrawTarget} <span class="hljs-keyword">from</span> <span class="hljs-string">"../lib"</span>
+<span class="hljs-keyword">import</span> {Color, Context, Texture, RectShape, ColorShader, TextureShader, TextureDrawTarget, CanvasDrawTarget} <span class="hljs-keyword">from</span> <span class="hljs-string">"paintgl"</span>
 
 <span class="hljs-comment">// create context</span>
 <span class="hljs-keyword">const</span> context = <span class="hljs-keyword">new</span> Context(<span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"canvas"</span>) <span class="hljs-keyword">as</span> HTMLCanvasElement)
 
-<span class="hljs-comment">// create a pixmap (texture) with size</span>
-<span class="hljs-keyword">const</span> pixmap = <span class="hljs-keyword">new</span> Pixmap(context, {<span class="hljs-attr">size</span>: <span class="hljs-keyword">new</span> Vec2(<span class="hljs-number">400</span>, <span class="hljs-number">400</span>)})
+<span class="hljs-comment">// create a texture with size</span>
+<span class="hljs-keyword">const</span> texture = <span class="hljs-keyword">new</span> Texture(context, {<span class="hljs-attr">size</span>: <span class="hljs-keyword">new</span> Vec2(<span class="hljs-number">400</span>, <span class="hljs-number">400</span>)})
 
-<span class="hljs-comment">// create a draw target the draws into the pixmap</span>
-<span class="hljs-keyword">const</span> drawTarget = <span class="hljs-keyword">new</span> PixmapDrawTarget(context, pixmap)
+<span class="hljs-comment">// create a draw target the draws into the texture</span>
+<span class="hljs-keyword">const</span> drawTarget = <span class="hljs-keyword">new</span> TextureDrawTarget(context, texture)
 
-<span class="hljs-comment">// clear whole pixmap with color</span>
+<span class="hljs-comment">// clear whole texture with color</span>
 drawTarget.clear(<span class="hljs-keyword">new</span> Color(<span class="hljs-number">0.9</span>, <span class="hljs-number">0.9</span>, <span class="hljs-number">0.9</span>, <span class="hljs-number">1</span>))
 
 <span class="hljs-comment">// create a shape that is drawn into the draw target</span>
 <span class="hljs-keyword">const</span> shape = <span class="hljs-keyword">new</span> RectShape(context)
 shape.rect = <span class="hljs-keyword">new</span> Rect(<span class="hljs-keyword">new</span> Vec2(<span class="hljs-number">100</span>, <span class="hljs-number">100</span>), <span class="hljs-keyword">new</span> Vec2(<span class="hljs-number">200</span>, <span class="hljs-number">300</span>))
 
-<span class="hljs-comment">// specify fill of the shape</span>
-shape.fill = ColorFill
+<span class="hljs-comment">// specify shader of the shape</span>
+shape.shader = ColorShader
 shape.uniforms[<span class="hljs-string">"color"</span>] = <span class="hljs-keyword">new</span> Color(<span class="hljs-number">0.9</span>, <span class="hljs-number">0.1</span>, <span class="hljs-number">0.2</span>, <span class="hljs-number">1</span>)
 
 <span class="hljs-comment">// apply some transform</span>
@@ -145,14 +151,14 @@ drawTarget.draw(shape)
 <span class="hljs-comment">// create a draw target that draws directly into canvas element</span>
 <span class="hljs-keyword">const</span> canvasDrawTarget = <span class="hljs-keyword">new</span> CanvasDrawTarget(context)
 
-<span class="hljs-comment">// create a shape for pixmap</span>
-<span class="hljs-keyword">const</span> pixmapShape = <span class="hljs-keyword">new</span> RectShape(context)
-pixmapShape.rect = <span class="hljs-keyword">new</span> Rect(<span class="hljs-keyword">new</span> Vec2(<span class="hljs-number">0</span>), pixmap.size)
-pixmapShape.fill = PixmapFill
-pixmapShape.uniforms[<span class="hljs-string">"pixmap"</span>] = pixmap
+<span class="hljs-comment">// create a shape for texture</span>
+<span class="hljs-keyword">const</span> textureShape = <span class="hljs-keyword">new</span> RectShape(context)
+textureShape.rect = <span class="hljs-keyword">new</span> Rect(<span class="hljs-keyword">new</span> Vec2(<span class="hljs-number">0</span>), texture.size)
+textureShape.shader = TextureShader
+textureShape.uniforms[<span class="hljs-string">"texture"</span>] = texture
 
-<span class="hljs-comment">// draw pixmap into canvas</span>
-canvasDrawTarget.draw(pixmapShape)
+<span class="hljs-comment">// draw texture into canvas</span>
+canvasDrawTarget.draw(textureShape)
 </code></pre>
 		</div>
 	</div>

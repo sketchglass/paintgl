@@ -26,19 +26,13 @@
 				<a href="color.html" class="tsd-kind-icon">Color</a>
 			</li>
 			<li class=" tsd-kind-class tsd-is-external">
-				<a href="colorfill.html" class="tsd-kind-icon">Color<wbr>Fill</a>
+				<a href="colorshader.html" class="tsd-kind-icon">Color<wbr>Shader</a>
 			</li>
 			<li class=" tsd-kind-class tsd-is-external">
 				<a href="context.html" class="tsd-kind-icon">Context</a>
 			</li>
 			<li class=" tsd-kind-class tsd-is-external">
 				<a href="drawtarget.html" class="tsd-kind-icon">Draw<wbr>Target</a>
-			</li>
-			<li class=" tsd-kind-class tsd-is-external">
-				<a href="fill.html" class="tsd-kind-icon">Fill</a>
-			</li>
-			<li class=" tsd-kind-class tsd-is-external">
-				<a href="fillbase.html" class="tsd-kind-icon">Fill<wbr>Base</a>
 			</li>
 		</ul>
 		<ul class="current">
@@ -55,9 +49,6 @@
 						<a href="quadshape.html#context" class="tsd-kind-icon">context</a>
 					</li>
 					<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
-						<a href="quadshape.html#fill" class="tsd-kind-icon">fill</a>
-					</li>
-					<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
 						<a href="quadshape.html#indexbuffer" class="tsd-kind-icon">index<wbr>Buffer</a>
 					</li>
 					<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-overwrite tsd-is-external">
@@ -68,6 +59,9 @@
 					</li>
 					<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-overwrite tsd-is-external">
 						<a href="quadshape.html#positions" class="tsd-kind-icon">positions</a>
+					</li>
+					<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+						<a href="quadshape.html#shader" class="tsd-kind-icon">shader</a>
 					</li>
 					<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-overwrite tsd-is-external">
 						<a href="quadshape.html#texcoords" class="tsd-kind-icon">tex<wbr>Coords</a>
@@ -113,6 +107,12 @@
 				<a href="rectshape.html" class="tsd-kind-icon">Rect<wbr>Shape</a>
 			</li>
 			<li class=" tsd-kind-class tsd-is-external">
+				<a href="shader.html" class="tsd-kind-icon">Shader</a>
+			</li>
+			<li class=" tsd-kind-class tsd-is-external">
+				<a href="shaderbase.html" class="tsd-kind-icon">Shader<wbr>Base</a>
+			</li>
+			<li class=" tsd-kind-class tsd-is-external">
 				<a href="shape.html" class="tsd-kind-icon">Shape</a>
 			</li>
 			<li class=" tsd-kind-class tsd-is-external">
@@ -125,7 +125,7 @@
 				<a href="texturedrawtarget.html" class="tsd-kind-icon">Texture<wbr>Draw<wbr>Target</a>
 			</li>
 			<li class=" tsd-kind-class tsd-is-external">
-				<a href="texturefill.html" class="tsd-kind-icon">Texture<wbr>Fill</a>
+				<a href="textureshader.html" class="tsd-kind-icon">Texture<wbr>Shader</a>
 			</li>
 			<li class=" tsd-kind-interface tsd-is-external">
 				<a href="../interfaces/contextcapabilities.html" class="tsd-kind-icon">Context<wbr>Capabilities</a>
@@ -149,13 +149,16 @@
 				<a href="../globals.html#imagesource" class="tsd-kind-icon">Image<wbr>Source</a>
 			</li>
 			<li class=" tsd-kind-type-alias tsd-is-external">
+				<a href="../globals.html#pixelformat" class="tsd-kind-icon">Pixel<wbr>Format</a>
+			</li>
+			<li class=" tsd-kind-type-alias tsd-is-external">
+				<a href="../globals.html#pixeltype" class="tsd-kind-icon">Pixel<wbr>Type</a>
+			</li>
+			<li class=" tsd-kind-type-alias tsd-is-external">
 				<a href="../globals.html#shapeusage" class="tsd-kind-icon">Shape<wbr>Usage</a>
 			</li>
 			<li class=" tsd-kind-type-alias tsd-is-external">
 				<a href="../globals.html#texturefilter" class="tsd-kind-icon">Texture<wbr>Filter</a>
-			</li>
-			<li class=" tsd-kind-type-alias tsd-is-external">
-				<a href="../globals.html#textureformat" class="tsd-kind-icon">Texture<wbr>Format</a>
 			</li>
 			<li class=" tsd-kind-type-alias tsd-is-external">
 				<a href="../globals.html#uniformvalue" class="tsd-kind-icon">Uniform<wbr>Value</a>
@@ -164,7 +167,10 @@
 				<a href="../globals.html#blendfuncs" class="tsd-kind-icon">blend<wbr>Funcs</a>
 			</li>
 			<li class=" tsd-kind-function tsd-is-external tsd-is-not-exported">
-				<a href="../globals.html#gldatatype" class="tsd-kind-icon">gl<wbr>Data<wbr>Type</a>
+				<a href="../globals.html#glformat" class="tsd-kind-icon">gl<wbr>Format</a>
+			</li>
+			<li class=" tsd-kind-function tsd-is-external tsd-is-not-exported">
+				<a href="../globals.html#gltype" class="tsd-kind-icon">gl<wbr>Type</a>
 			</li>
 			<li class=" tsd-kind-function tsd-is-external tsd-is-not-exported">
 				<a href="../globals.html#glusage" class="tsd-kind-icon">gl<wbr>Usage</a>
@@ -203,14 +209,6 @@
 			<section class="member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external" id="context">
 				<div><h3 class="member-title tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">context<span>:</span> <a href="context.html" class="tsd-signature-type">Context</a></h3></div>
 			</section>
-			<section class="member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external" id="fill">
-				<div><h3 class="member-title tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">fill<span>:</span> <a href="fill.html" class="tsd-signature-type">Fill</a></h3></div>
-				<div class="comment">
-					<div class="lead">
-						<p>Then fill class of this Shape.</p>
-					</div>
-				</div>
-			</section>
 			<section class="member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external" id="indexbuffer">
 				<div><h3 class="member-title tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">index<wbr>Buffer<span>:</span> <span class="tsd-signature-type">WebGLBuffer</span></h3></div>
 				<div class="comment">
@@ -234,6 +232,14 @@
 			<section class="member tsd-kind-property tsd-parent-kind-class tsd-is-overwrite tsd-is-external" id="positions">
 				<div><h3 class="member-title tsd-kind-property tsd-parent-kind-class tsd-is-overwrite tsd-is-external">positions<span>:</span> <span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">Vec2</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Vec2</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Vec2</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Vec2</span><span class="tsd-signature-symbol">]</span><span class="default-value"> =&nbsp;[new Vec2(0, 0), new Vec2(1, 0), new Vec2(0, 1), new Vec2(1, 1)]</span></h3></div>
 			</section>
+			<section class="member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external" id="shader">
+				<div><h3 class="member-title tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">shader<span>:</span> <a href="shader.html" class="tsd-signature-type">Shader</a></h3></div>
+				<div class="comment">
+					<div class="lead">
+						<p>The shader class of this Shape.</p>
+					</div>
+				</div>
+			</section>
 			<section class="member tsd-kind-property tsd-parent-kind-class tsd-is-overwrite tsd-is-external" id="texcoords">
 				<div><h3 class="member-title tsd-kind-property tsd-parent-kind-class tsd-is-overwrite tsd-is-external">tex<wbr>Coords<span>:</span> <span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">Vec2</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Vec2</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Vec2</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Vec2</span><span class="tsd-signature-symbol">]</span><span class="default-value"> =&nbsp;[new Vec2(0, 0), new Vec2(1, 0), new Vec2(0, 1), new Vec2(1, 1)]</span></h3></div>
 			</section>
@@ -249,7 +255,7 @@
 				<div><h3 class="member-title tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">uniforms<span>:</span> <a href="../interfaces/objectmap.html" class="tsd-signature-type">ObjectMap</a><span class="tsd-signature-symbol">&lt;</span><a href="../globals.html#uniformvalue" class="tsd-signature-type">UniformValue</a><span class="tsd-signature-symbol">&gt;</span></h3></div>
 				<div class="comment">
 					<div class="lead">
-						<p>The uniform values passed to the fill.</p>
+						<p>The uniform values passed to the shader.</p>
 					</div>
 				</div>
 			</section>

@@ -26,7 +26,7 @@
 				<a href="../classes/color.html" class="tsd-kind-icon">Color</a>
 			</li>
 			<li class=" tsd-kind-class tsd-is-external">
-				<a href="../classes/colorfill.html" class="tsd-kind-icon">Color<wbr>Fill</a>
+				<a href="../classes/colorshader.html" class="tsd-kind-icon">Color<wbr>Shader</a>
 			</li>
 			<li class=" tsd-kind-class tsd-is-external">
 				<a href="../classes/context.html" class="tsd-kind-icon">Context</a>
@@ -35,16 +35,16 @@
 				<a href="../classes/drawtarget.html" class="tsd-kind-icon">Draw<wbr>Target</a>
 			</li>
 			<li class=" tsd-kind-class tsd-is-external">
-				<a href="../classes/fill.html" class="tsd-kind-icon">Fill</a>
-			</li>
-			<li class=" tsd-kind-class tsd-is-external">
-				<a href="../classes/fillbase.html" class="tsd-kind-icon">Fill<wbr>Base</a>
-			</li>
-			<li class=" tsd-kind-class tsd-is-external">
 				<a href="../classes/quadshape.html" class="tsd-kind-icon">Quad<wbr>Shape</a>
 			</li>
 			<li class=" tsd-kind-class tsd-is-external">
 				<a href="../classes/rectshape.html" class="tsd-kind-icon">Rect<wbr>Shape</a>
+			</li>
+			<li class=" tsd-kind-class tsd-is-external">
+				<a href="../classes/shader.html" class="tsd-kind-icon">Shader</a>
+			</li>
+			<li class=" tsd-kind-class tsd-is-external">
+				<a href="../classes/shaderbase.html" class="tsd-kind-icon">Shader<wbr>Base</a>
 			</li>
 			<li class=" tsd-kind-class tsd-is-external">
 				<a href="../classes/shape.html" class="tsd-kind-icon">Shape</a>
@@ -59,7 +59,7 @@
 				<a href="../classes/texturedrawtarget.html" class="tsd-kind-icon">Texture<wbr>Draw<wbr>Target</a>
 			</li>
 			<li class=" tsd-kind-class tsd-is-external">
-				<a href="../classes/texturefill.html" class="tsd-kind-icon">Texture<wbr>Fill</a>
+				<a href="../classes/textureshader.html" class="tsd-kind-icon">Texture<wbr>Shader</a>
 			</li>
 			<li class=" tsd-kind-interface tsd-is-external">
 				<a href="contextcapabilities.html" class="tsd-kind-icon">Context<wbr>Capabilities</a>
@@ -85,10 +85,13 @@
 						<a href="textureoptions.html#filter" class="tsd-kind-icon">filter</a>
 					</li>
 					<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-						<a href="textureoptions.html#format" class="tsd-kind-icon">format</a>
+						<a href="textureoptions.html#image" class="tsd-kind-icon">image</a>
 					</li>
 					<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-						<a href="textureoptions.html#image" class="tsd-kind-icon">image</a>
+						<a href="textureoptions.html#pixelformat" class="tsd-kind-icon">pixel<wbr>Format</a>
+					</li>
+					<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
+						<a href="textureoptions.html#pixeltype" class="tsd-kind-icon">pixel<wbr>Type</a>
 					</li>
 					<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
 						<a href="textureoptions.html#size" class="tsd-kind-icon">size</a>
@@ -104,13 +107,16 @@
 				<a href="../globals.html#imagesource" class="tsd-kind-icon">Image<wbr>Source</a>
 			</li>
 			<li class=" tsd-kind-type-alias tsd-is-external">
+				<a href="../globals.html#pixelformat" class="tsd-kind-icon">Pixel<wbr>Format</a>
+			</li>
+			<li class=" tsd-kind-type-alias tsd-is-external">
+				<a href="../globals.html#pixeltype" class="tsd-kind-icon">Pixel<wbr>Type</a>
+			</li>
+			<li class=" tsd-kind-type-alias tsd-is-external">
 				<a href="../globals.html#shapeusage" class="tsd-kind-icon">Shape<wbr>Usage</a>
 			</li>
 			<li class=" tsd-kind-type-alias tsd-is-external">
 				<a href="../globals.html#texturefilter" class="tsd-kind-icon">Texture<wbr>Filter</a>
-			</li>
-			<li class=" tsd-kind-type-alias tsd-is-external">
-				<a href="../globals.html#textureformat" class="tsd-kind-icon">Texture<wbr>Format</a>
 			</li>
 			<li class=" tsd-kind-type-alias tsd-is-external">
 				<a href="../globals.html#uniformvalue" class="tsd-kind-icon">Uniform<wbr>Value</a>
@@ -119,7 +125,10 @@
 				<a href="../globals.html#blendfuncs" class="tsd-kind-icon">blend<wbr>Funcs</a>
 			</li>
 			<li class=" tsd-kind-function tsd-is-external tsd-is-not-exported">
-				<a href="../globals.html#gldatatype" class="tsd-kind-icon">gl<wbr>Data<wbr>Type</a>
+				<a href="../globals.html#glformat" class="tsd-kind-icon">gl<wbr>Format</a>
+			</li>
+			<li class=" tsd-kind-function tsd-is-external tsd-is-not-exported">
+				<a href="../globals.html#gltype" class="tsd-kind-icon">gl<wbr>Type</a>
 			</li>
 			<li class=" tsd-kind-function tsd-is-external tsd-is-not-exported">
 				<a href="../globals.html#glusage" class="tsd-kind-icon">gl<wbr>Usage</a>
@@ -139,11 +148,14 @@
 			<section class="member tsd-kind-property tsd-parent-kind-interface tsd-is-external" id="filter">
 				<div><h3 class="member-title tsd-kind-property tsd-parent-kind-interface tsd-is-external">filter<span>:</span> <a href="../globals.html#texturefilter" class="tsd-signature-type">TextureFilter</a></h3></div>
 			</section>
-			<section class="member tsd-kind-property tsd-parent-kind-interface tsd-is-external" id="format">
-				<div><h3 class="member-title tsd-kind-property tsd-parent-kind-interface tsd-is-external">format<span>:</span> <a href="../globals.html#textureformat" class="tsd-signature-type">TextureFormat</a></h3></div>
-			</section>
 			<section class="member tsd-kind-property tsd-parent-kind-interface tsd-is-external" id="image">
 				<div><h3 class="member-title tsd-kind-property tsd-parent-kind-interface tsd-is-external">image<span>:</span> <a href="../globals.html#imagesource" class="tsd-signature-type">ImageSource</a></h3></div>
+			</section>
+			<section class="member tsd-kind-property tsd-parent-kind-interface tsd-is-external" id="pixelformat">
+				<div><h3 class="member-title tsd-kind-property tsd-parent-kind-interface tsd-is-external">pixel<wbr>Format<span>:</span> <a href="../globals.html#pixelformat" class="tsd-signature-type">PixelFormat</a></h3></div>
+			</section>
+			<section class="member tsd-kind-property tsd-parent-kind-interface tsd-is-external" id="pixeltype">
+				<div><h3 class="member-title tsd-kind-property tsd-parent-kind-interface tsd-is-external">pixel<wbr>Type<span>:</span> <a href="../globals.html#pixeltype" class="tsd-signature-type">PixelType</a></h3></div>
 			</section>
 			<section class="member tsd-kind-property tsd-parent-kind-interface tsd-is-external" id="size">
 				<div><h3 class="member-title tsd-kind-property tsd-parent-kind-interface tsd-is-external">size<span>:</span> <span class="tsd-signature-type">Vec2</span></h3></div>

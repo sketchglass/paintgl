@@ -2,7 +2,7 @@
 <html class="default no-js">
 <head>
 	<meta charset="utf-8">
-	<title>TextureFill | paintgl</title>
+	<title>TextureShader | paintgl</title>
 	<meta name="description" content="">
 	<link href="https://fonts.googleapis.com/css?family=Inconsolata:400,700" rel="stylesheet">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
@@ -26,7 +26,7 @@
 				<a href="color.html" class="tsd-kind-icon">Color</a>
 			</li>
 			<li class=" tsd-kind-class tsd-is-external">
-				<a href="colorfill.html" class="tsd-kind-icon">Color<wbr>Fill</a>
+				<a href="colorshader.html" class="tsd-kind-icon">Color<wbr>Shader</a>
 			</li>
 			<li class=" tsd-kind-class tsd-is-external">
 				<a href="context.html" class="tsd-kind-icon">Context</a>
@@ -35,16 +35,16 @@
 				<a href="drawtarget.html" class="tsd-kind-icon">Draw<wbr>Target</a>
 			</li>
 			<li class=" tsd-kind-class tsd-is-external">
-				<a href="fill.html" class="tsd-kind-icon">Fill</a>
-			</li>
-			<li class=" tsd-kind-class tsd-is-external">
-				<a href="fillbase.html" class="tsd-kind-icon">Fill<wbr>Base</a>
-			</li>
-			<li class=" tsd-kind-class tsd-is-external">
 				<a href="quadshape.html" class="tsd-kind-icon">Quad<wbr>Shape</a>
 			</li>
 			<li class=" tsd-kind-class tsd-is-external">
 				<a href="rectshape.html" class="tsd-kind-icon">Rect<wbr>Shape</a>
+			</li>
+			<li class=" tsd-kind-class tsd-is-external">
+				<a href="shader.html" class="tsd-kind-icon">Shader</a>
+			</li>
+			<li class=" tsd-kind-class tsd-is-external">
+				<a href="shaderbase.html" class="tsd-kind-icon">Shader<wbr>Base</a>
 			</li>
 			<li class=" tsd-kind-class tsd-is-external">
 				<a href="shape.html" class="tsd-kind-icon">Shape</a>
@@ -61,34 +61,34 @@
 		</ul>
 		<ul class="current">
 			<li class="current tsd-kind-class tsd-is-external">
-				<a href="texturefill.html" class="tsd-kind-icon">Texture<wbr>Fill</a>
+				<a href="textureshader.html" class="tsd-kind-icon">Texture<wbr>Shader</a>
 				<ul>
 					<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited tsd-is-external">
-						<a href="texturefill.html#constructor" class="tsd-kind-icon">constructor</a>
+						<a href="textureshader.html#constructor" class="tsd-kind-icon">constructor</a>
 					</li>
 					<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
-						<a href="texturefill.html#_texturevalues" class="tsd-kind-icon">_texture<wbr>Values</a>
+						<a href="textureshader.html#_texturevalues" class="tsd-kind-icon">_texture<wbr>Values</a>
 					</li>
 					<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
-						<a href="texturefill.html#context" class="tsd-kind-icon">context</a>
+						<a href="textureshader.html#context" class="tsd-kind-icon">context</a>
 					</li>
 					<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
-						<a href="texturefill.html#program" class="tsd-kind-icon">program</a>
+						<a href="textureshader.html#program" class="tsd-kind-icon">program</a>
 					</li>
 					<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-overwrite tsd-is-external">
-						<a href="texturefill.html#fragmentshader" class="tsd-kind-icon">fragment<wbr>Shader</a>
+						<a href="textureshader.html#fragmentshader" class="tsd-kind-icon">fragment<wbr>Shader</a>
 					</li>
 					<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited tsd-is-external">
-						<a href="texturefill.html#vertexshader" class="tsd-kind-icon">vertex<wbr>Shader</a>
+						<a href="textureshader.html#vertexshader" class="tsd-kind-icon">vertex<wbr>Shader</a>
 					</li>
 					<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
-						<a href="texturefill.html#dispose" class="tsd-kind-icon">dispose</a>
+						<a href="textureshader.html#dispose" class="tsd-kind-icon">dispose</a>
 					</li>
 					<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
-						<a href="texturefill.html#setuniform" class="tsd-kind-icon">set<wbr>Uniform</a>
+						<a href="textureshader.html#setuniform" class="tsd-kind-icon">set<wbr>Uniform</a>
 					</li>
 					<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
-						<a href="texturefill.html#setuniformint" class="tsd-kind-icon">set<wbr>Uniform<wbr>Int</a>
+						<a href="textureshader.html#setuniformint" class="tsd-kind-icon">set<wbr>Uniform<wbr>Int</a>
 					</li>
 				</ul>
 			</li>
@@ -116,13 +116,16 @@
 				<a href="../globals.html#imagesource" class="tsd-kind-icon">Image<wbr>Source</a>
 			</li>
 			<li class=" tsd-kind-type-alias tsd-is-external">
+				<a href="../globals.html#pixelformat" class="tsd-kind-icon">Pixel<wbr>Format</a>
+			</li>
+			<li class=" tsd-kind-type-alias tsd-is-external">
+				<a href="../globals.html#pixeltype" class="tsd-kind-icon">Pixel<wbr>Type</a>
+			</li>
+			<li class=" tsd-kind-type-alias tsd-is-external">
 				<a href="../globals.html#shapeusage" class="tsd-kind-icon">Shape<wbr>Usage</a>
 			</li>
 			<li class=" tsd-kind-type-alias tsd-is-external">
 				<a href="../globals.html#texturefilter" class="tsd-kind-icon">Texture<wbr>Filter</a>
-			</li>
-			<li class=" tsd-kind-type-alias tsd-is-external">
-				<a href="../globals.html#textureformat" class="tsd-kind-icon">Texture<wbr>Format</a>
 			</li>
 			<li class=" tsd-kind-type-alias tsd-is-external">
 				<a href="../globals.html#uniformvalue" class="tsd-kind-icon">Uniform<wbr>Value</a>
@@ -131,7 +134,10 @@
 				<a href="../globals.html#blendfuncs" class="tsd-kind-icon">blend<wbr>Funcs</a>
 			</li>
 			<li class=" tsd-kind-function tsd-is-external tsd-is-not-exported">
-				<a href="../globals.html#gldatatype" class="tsd-kind-icon">gl<wbr>Data<wbr>Type</a>
+				<a href="../globals.html#glformat" class="tsd-kind-icon">gl<wbr>Format</a>
+			</li>
+			<li class=" tsd-kind-function tsd-is-external tsd-is-not-exported">
+				<a href="../globals.html#gltype" class="tsd-kind-icon">gl<wbr>Type</a>
 			</li>
 			<li class=" tsd-kind-function tsd-is-external tsd-is-not-exported">
 				<a href="../globals.html#glusage" class="tsd-kind-icon">gl<wbr>Usage</a>
@@ -139,14 +145,14 @@
 		</ul>
 	</nav>
 	<div class="content">
-		<h1>TextureFill</h1>
+		<h1>TextureShader</h1>
 		<section class="tsd-panel tsd-hierarchy">
 			<h3>Hierarchy</h3>
 		</section>
 		<section class="tsd-panel-group tsd-member-group tsd-is-inherited tsd-is-external">
 			<h2 class="member-group-title">Constructors</h2>
 			<section class="member tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited tsd-is-external" id="constructor">
-				<h3 class="member-title tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited tsd-is-external">new <wbr>Texture<wbr>Fill<span class="tsd-signature-symbol">(</span>context<span class="tsd-signature-symbol">: </span><a href="context.html" class="tsd-signature-type">Context</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="texturefill.html" class="tsd-signature-type">TextureFill</a></h3>
+				<h3 class="member-title tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited tsd-is-external">new <wbr>Texture<wbr>Shader<span class="tsd-signature-symbol">(</span>context<span class="tsd-signature-symbol">: </span><a href="context.html" class="tsd-signature-type">Context</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="textureshader.html" class="tsd-signature-type">TextureShader</a></h3>
 				<ul class="parameters">
 				</ul>
 			</section>
