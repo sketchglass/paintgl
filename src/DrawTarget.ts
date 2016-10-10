@@ -127,19 +127,21 @@ class CanvasDrawTarget extends DrawTarget {
 export
 class TextureDrawTarget extends DrawTarget {
   framebuffer: WebGLFramebuffer
-  private _texture: Texture
+  private _texture: Texture|undefined
 
   get texture() {
     return this._texture
   }
-  set texture(texture: Texture) {
-    const {gl} = this.context
-    gl.bindFramebuffer(gl.FRAMEBUFFER, this.framebuffer)
-    gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture.texture, 0)
+  set texture(texture: Texture|undefined) {
+    if (texture) {
+      const {gl} = this.context
+      gl.bindFramebuffer(gl.FRAMEBUFFER, this.framebuffer)
+      gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture.texture, 0)
+    }
     this._texture = texture
   }
 
-  constructor(public context: Context, texture: Texture) {
+  constructor(public context: Context, texture?: Texture) {
     super(context)
     const {gl} = context
     this.framebuffer = gl.createFramebuffer()!
@@ -147,15 +149,27 @@ class TextureDrawTarget extends DrawTarget {
   }
 
   get size() {
-    return this.texture.size
+    if (this.texture) {
+      return this.texture.size
+    } else {
+      return new Vec2()
+    }
   }
 
-  get pixelType() {
-    return this.texture.pixelType
+  get pixelType(): PixelType {
+    if (this.texture) {
+      return this.texture.pixelType
+    } else {
+      return "byte"
+    }
   }
 
-  get pixelFormat() {
-    return this.texture.pixelFormat
+  get pixelFormat(): PixelFormat {
+    if (this.texture) {
+      return this.texture.pixelFormat
+    } else {
+      return "rgba"
+    }
   }
 
   protected use() {

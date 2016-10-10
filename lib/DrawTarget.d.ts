@@ -30,11 +30,11 @@ export declare class TextureDrawTarget extends DrawTarget {
     context: Context;
     framebuffer: WebGLFramebuffer;
     private _texture;
-    texture: Texture;
-    constructor(context: Context, texture: Texture);
+    texture: Texture | undefined;
+    constructor(context: Context, texture?: Texture);
     readonly size: Vec2;
-    readonly pixelType: "byte" | "half-float" | "float";
-    readonly pixelFormat: "alpha" | "rgb" | "rgba";
+    readonly pixelType: PixelType;
+    readonly pixelFormat: PixelFormat;
     protected use(): void;
     dispose(): void;
 }
