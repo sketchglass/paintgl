@@ -2,7 +2,7 @@ import {Vec2, Transform} from "paintvec"
 import {Color} from "./Color"
 import {Context} from "./Context"
 import {Texture} from "./Texture"
-import {ObjectMap} from "./ObjectMap"
+import {ObjectMap} from "./utils"
 
 export
 type UniformValue = number|Vec2|Color|Transform|Texture

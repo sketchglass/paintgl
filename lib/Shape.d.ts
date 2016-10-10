@@ -1,6 +1,6 @@
 import { Vec2, Rect, Transform } from "paintvec";
 import { Context } from './Context';
-import { ObjectMap } from "./ObjectMap";
+import { ObjectMap } from "./utils";
 import { Shader, UniformValue } from "./Shader";
 import { Drawable } from "./Drawable";
 export declare type ShapeUsage = "static" | "stream" | "dynamic";
