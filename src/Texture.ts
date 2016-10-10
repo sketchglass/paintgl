@@ -19,6 +19,7 @@ export type PixelType = "byte" | "half-float" | "float"
 */
 export type PixelFormat = "alpha" | "rgb" | "rgba"
 
+export
 function glType(context: Context, pixelType: PixelType) {
   switch (pixelType) {
   case "byte":
@@ -31,6 +32,7 @@ function glType(context: Context, pixelType: PixelType) {
   }
 }
 
+export
 function glFormat(gl: WebGLRenderingContext, format: PixelFormat) {
   switch (format) {
   case "alpha":

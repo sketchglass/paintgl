@@ -4,6 +4,8 @@ export declare type ImageSource = ImageData | HTMLVideoElement | HTMLImageElemen
 export declare type TextureFilter = "nearest" | "mipmap-nearest" | "bilinear" | "mipmap-bilinear" | "trilinear";
 export declare type PixelType = "byte" | "half-float" | "float";
 export declare type PixelFormat = "alpha" | "rgb" | "rgba";
+export declare function glType(context: Context, pixelType: PixelType): any;
+export declare function glFormat(gl: WebGLRenderingContext, format: PixelFormat): number;
 export interface TextureOptions {
     filter?: TextureFilter;
     pixelType?: PixelType;

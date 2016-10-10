@@ -2,7 +2,7 @@ import {Vec2, Rect, Transform} from "paintvec"
 import {Drawable} from "./Drawable"
 import {Context} from "./Context"
 import {Color} from "./Color"
-import {Texture} from "./Texture"
+import {Texture, PixelType, PixelFormat, glType, glFormat} from "./Texture"
 import {BlendMode} from "./BlendMode"
 
 export
@@ -10,7 +10,11 @@ abstract class DrawTarget {
   /**
     The size of this DrawTarget.
   */
-  abstract get size(): Vec2
+  abstract size: Vec2
+
+  abstract pixelType: PixelType
+
+  abstract pixelFormat: PixelFormat
 
   /**
     The rectangle that masks draw region.
@@ -75,17 +79,34 @@ abstract class DrawTarget {
     gl.clear(gl.COLOR_BUFFER_BIT)
   }
 
+  readPixels(rect: Rect, data: ArrayBufferView) {
+    this.use()
+    const {gl} = this.context
+    rect = this._flipRect(rect)
+    gl.readPixels(rect.left, rect.top, rect.width, rect.height, glFormat(gl, this.pixelFormat), glType(this.context, this.pixelType), data)
+  }
+
   protected use() {
     const {gl} = this.context
     if (this.scissor) {
       gl.enable(gl.SCISSOR_TEST)
       const drawableRect = new Rect(new Vec2(0), this.size)
-      const rect = this.scissor.intBounding().intersection(drawableRect)
+      const rect = this._flipRect(this.scissor).intBounding().intersection(drawableRect)
       gl.scissor(rect.left, rect.top, rect.width, rect.height)
     } else {
       gl.disable(gl.SCISSOR_TEST)
     }
     gl.viewport(0, 0, this.size.x, this.size.y)
+  }
+
+  private _flipRect(rect: Rect) {
+    if (this.flipY) {
+      let {left, right, top, bottom} = rect
+      top = this.size.height - top
+      bottom = this.size.height - bottom
+      return new Rect(new Vec2(left, top), new Vec2(right, bottom))
+    }
+    return rect
   }
 
   dispose() {
@@ -103,6 +124,9 @@ class CanvasDrawTarget extends DrawTarget {
     const {canvas} = this.context
     return new Vec2(canvas.width, canvas.height)
   }
+
+  pixelType: PixelType = "byte"
+  pixelFormat: PixelFormat = "rgba"
 
   protected use() {
     const {gl} = this.context
@@ -138,6 +162,14 @@ class TextureDrawTarget extends DrawTarget {
 
   get size() {
     return this.texture.size
+  }
+
+  get pixelType() {
+    return this.texture.pixelType
+  }
+
+  get pixelFormat() {
+    return this.texture.pixelFormat
   }
 
   protected use() {
