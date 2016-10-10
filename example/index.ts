@@ -1,11 +1,11 @@
 import {Vec2, Rect, Transform} from "paintvec"
-import {Color, Context, Pixmap, RectShape, ColorFill, PixmapFill, PixmapDrawTarget, CanvasDrawTarget} from "../lib"
+import {Color, Context, Texture, RectShape, ColorFill, TextureFill, TextureDrawTarget, CanvasDrawTarget} from "../lib"
 
 const context = new Context(document.getElementById("canvas") as HTMLCanvasElement)
 
-const pixmap = new Pixmap(context, {size: new Vec2(400, 400)})
+const texture = new Texture(context, {size: new Vec2(400, 400)})
 
-const drawTarget = new PixmapDrawTarget(context, pixmap)
+const drawTarget = new TextureDrawTarget(context, texture)
 drawTarget.clear(new Color(0.9, 0.9, 0.9, 1))
 
 const shape = new RectShape(context)
@@ -20,9 +20,9 @@ drawTarget.draw(shape)
 
 const canvasDrawTarget = new CanvasDrawTarget(context)
 
-const pixmapShape = new RectShape(context)
-pixmapShape.rect = new Rect(new Vec2(0), pixmap.size)
-pixmapShape.fill = PixmapFill
-pixmapShape.uniforms["pixmap"] = pixmap
+const textureShape = new RectShape(context)
+textureShape.rect = new Rect(new Vec2(0), texture.size)
+textureShape.fill = TextureFill
+textureShape.uniforms["texture"] = texture
 
-canvasDrawTarget.draw(pixmapShape)
+canvasDrawTarget.draw(textureShape)

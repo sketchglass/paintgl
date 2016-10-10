@@ -2,7 +2,7 @@
 <html class="default no-js">
 <head>
 	<meta charset="utf-8">
-	<title>PixmapParams | paintgl</title>
+	<title>TextureOptions | paintgl</title>
 	<meta name="description" content="">
 	<link href="https://fonts.googleapis.com/css?family=Inconsolata:400,700" rel="stylesheet">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
@@ -41,15 +41,6 @@
 				<a href="../classes/fillbase.html" class="tsd-kind-icon">Fill<wbr>Base</a>
 			</li>
 			<li class=" tsd-kind-class tsd-is-external">
-				<a href="../classes/pixmap.html" class="tsd-kind-icon">Pixmap</a>
-			</li>
-			<li class=" tsd-kind-class tsd-is-external">
-				<a href="../classes/pixmapdrawtarget.html" class="tsd-kind-icon">Pixmap<wbr>Draw<wbr>Target</a>
-			</li>
-			<li class=" tsd-kind-class tsd-is-external">
-				<a href="../classes/pixmapfill.html" class="tsd-kind-icon">Pixmap<wbr>Fill</a>
-			</li>
-			<li class=" tsd-kind-class tsd-is-external">
 				<a href="../classes/quadshape.html" class="tsd-kind-icon">Quad<wbr>Shape</a>
 			</li>
 			<li class=" tsd-kind-class tsd-is-external">
@@ -60,6 +51,15 @@
 			</li>
 			<li class=" tsd-kind-class tsd-is-external">
 				<a href="../classes/shapebase.html" class="tsd-kind-icon">Shape<wbr>Base</a>
+			</li>
+			<li class=" tsd-kind-class tsd-is-external">
+				<a href="../classes/texture.html" class="tsd-kind-icon">Texture</a>
+			</li>
+			<li class=" tsd-kind-class tsd-is-external">
+				<a href="../classes/texturedrawtarget.html" class="tsd-kind-icon">Texture<wbr>Draw<wbr>Target</a>
+			</li>
+			<li class=" tsd-kind-class tsd-is-external">
+				<a href="../classes/texturefill.html" class="tsd-kind-icon">Texture<wbr>Fill</a>
 			</li>
 			<li class=" tsd-kind-interface tsd-is-external">
 				<a href="contextcapabilities.html" class="tsd-kind-icon">Context<wbr>Capabilities</a>
@@ -76,22 +76,22 @@
 		</ul>
 		<ul class="current">
 			<li class="current tsd-kind-interface tsd-is-external">
-				<a href="pixmapparams.html" class="tsd-kind-icon">Pixmap<wbr>Params</a>
+				<a href="textureoptions.html" class="tsd-kind-icon">Texture<wbr>Options</a>
 				<ul>
 					<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-						<a href="pixmapparams.html#data" class="tsd-kind-icon">data</a>
+						<a href="textureoptions.html#data" class="tsd-kind-icon">data</a>
 					</li>
 					<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-						<a href="pixmapparams.html#filter" class="tsd-kind-icon">filter</a>
+						<a href="textureoptions.html#filter" class="tsd-kind-icon">filter</a>
 					</li>
 					<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-						<a href="pixmapparams.html#format" class="tsd-kind-icon">format</a>
+						<a href="textureoptions.html#format" class="tsd-kind-icon">format</a>
 					</li>
 					<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-						<a href="pixmapparams.html#image" class="tsd-kind-icon">image</a>
+						<a href="textureoptions.html#image" class="tsd-kind-icon">image</a>
 					</li>
 					<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-						<a href="pixmapparams.html#size" class="tsd-kind-icon">size</a>
+						<a href="textureoptions.html#size" class="tsd-kind-icon">size</a>
 					</li>
 				</ul>
 			</li>
@@ -104,13 +104,13 @@
 				<a href="../globals.html#imagesource" class="tsd-kind-icon">Image<wbr>Source</a>
 			</li>
 			<li class=" tsd-kind-type-alias tsd-is-external">
-				<a href="../globals.html#pixmapfilter" class="tsd-kind-icon">Pixmap<wbr>Filter</a>
-			</li>
-			<li class=" tsd-kind-type-alias tsd-is-external">
-				<a href="../globals.html#pixmapformat" class="tsd-kind-icon">Pixmap<wbr>Format</a>
-			</li>
-			<li class=" tsd-kind-type-alias tsd-is-external">
 				<a href="../globals.html#shapeusage" class="tsd-kind-icon">Shape<wbr>Usage</a>
+			</li>
+			<li class=" tsd-kind-type-alias tsd-is-external">
+				<a href="../globals.html#texturefilter" class="tsd-kind-icon">Texture<wbr>Filter</a>
+			</li>
+			<li class=" tsd-kind-type-alias tsd-is-external">
+				<a href="../globals.html#textureformat" class="tsd-kind-icon">Texture<wbr>Format</a>
 			</li>
 			<li class=" tsd-kind-type-alias tsd-is-external">
 				<a href="../globals.html#uniformvalue" class="tsd-kind-icon">Uniform<wbr>Value</a>
@@ -127,7 +127,7 @@
 		</ul>
 	</nav>
 	<div class="content">
-		<h1>PixmapParams</h1>
+		<h1>TextureOptions</h1>
 		<section class="tsd-panel tsd-hierarchy">
 			<h3>Hierarchy</h3>
 		</section>
@@ -137,10 +137,10 @@
 				<div><h3 class="member-title tsd-kind-property tsd-parent-kind-interface tsd-is-external">data<span>:</span> <span class="tsd-signature-type">ArrayBufferView</span></h3></div>
 			</section>
 			<section class="member tsd-kind-property tsd-parent-kind-interface tsd-is-external" id="filter">
-				<div><h3 class="member-title tsd-kind-property tsd-parent-kind-interface tsd-is-external">filter<span>:</span> <a href="../globals.html#pixmapfilter" class="tsd-signature-type">PixmapFilter</a></h3></div>
+				<div><h3 class="member-title tsd-kind-property tsd-parent-kind-interface tsd-is-external">filter<span>:</span> <a href="../globals.html#texturefilter" class="tsd-signature-type">TextureFilter</a></h3></div>
 			</section>
 			<section class="member tsd-kind-property tsd-parent-kind-interface tsd-is-external" id="format">
-				<div><h3 class="member-title tsd-kind-property tsd-parent-kind-interface tsd-is-external">format<span>:</span> <a href="../globals.html#pixmapformat" class="tsd-signature-type">PixmapFormat</a></h3></div>
+				<div><h3 class="member-title tsd-kind-property tsd-parent-kind-interface tsd-is-external">format<span>:</span> <a href="../globals.html#textureformat" class="tsd-signature-type">TextureFormat</a></h3></div>
 			</section>
 			<section class="member tsd-kind-property tsd-parent-kind-interface tsd-is-external" id="image">
 				<div><h3 class="member-title tsd-kind-property tsd-parent-kind-interface tsd-is-external">image<span>:</span> <a href="../globals.html#imagesource" class="tsd-signature-type">ImageSource</a></h3></div>

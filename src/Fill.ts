@@ -1,11 +1,11 @@
 import {Vec2, Transform} from "paintvec"
 import {Color} from "./Color"
 import {Context} from "./Context"
-import {Pixmap} from "./Pixmap"
+import {Texture} from "./Texture"
 import {ObjectMap} from "./ObjectMap"
 
 export
-type UniformValue = number|Vec2|Color|Transform|Pixmap
+type UniformValue = number|Vec2|Color|Transform|Texture
 
 export
 abstract class FillBase {
@@ -16,7 +16,7 @@ abstract class FillBase {
 
   private _uniformValues: ObjectMap<UniformValue> = {}
   private _uniformLocations: ObjectMap<WebGLUniformLocation> = {}
-  _pixmapValues: ObjectMap<Pixmap> = {}
+  _textureValues: ObjectMap<Texture> = {}
 
   constructor(public context: Context) {
     const {gl} = context
@@ -64,8 +64,8 @@ abstract class FillBase {
       gl.uniform4fv(this._uniformLocation(name), value.members())
     } else if (value instanceof Transform) {
       gl.uniformMatrix3fv(this._uniformLocation(name), false, value.members())
-    } else if (value instanceof Pixmap) {
-      this._pixmapValues[name] = value
+    } else if (value instanceof Texture) {
+      this._textureValues[name] = value
     }
     this._uniformValues[name] = value
   }
@@ -126,14 +126,14 @@ class Fill extends FillBase {
 }
 
 export
-class PixmapFill extends Fill {
+class TextureFill extends Fill {
   get fragmentShader() {
     return `
       precision mediump float;
       varying highp vec2 vTexCoord;
-      uniform sampler2D pixmap;
+      uniform sampler2D texture;
       void main(void) {
-        gl_FragColor = texture2D(pixmap, vTexCoord);
+        gl_FragColor = texture2D(texture, vTexCoord);
       }
     `
   }

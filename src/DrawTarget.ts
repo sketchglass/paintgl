@@ -2,7 +2,7 @@ import {Vec2, Rect, Transform} from "paintvec"
 import {Drawable} from "./Drawable"
 import {Context} from "./Context"
 import {Color} from "./Color"
-import {Pixmap} from "./Pixmap"
+import {Texture} from "./Texture"
 import {BlendMode} from "./BlendMode"
 
 export
@@ -112,32 +112,32 @@ class CanvasDrawTarget extends DrawTarget {
 }
 
 /**
-  PixmapDrawTarget represents the draw target that draws into a pixmap.
+  TextureDrawTarget represents the draw target that draws into a texture.
 */
 export
-class PixmapDrawTarget extends DrawTarget {
+class TextureDrawTarget extends DrawTarget {
   framebuffer: WebGLFramebuffer
-  private _pixmap: Pixmap
+  private _texture: Texture
 
-  get pixmap() {
-    return this._pixmap
+  get texture() {
+    return this._texture
   }
-  set pixmap(pixmap: Pixmap) {
+  set texture(texture: Texture) {
     const {gl} = this.context
     gl.bindFramebuffer(gl.FRAMEBUFFER, this.framebuffer)
-    gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, pixmap.texture, 0)
-    this._pixmap = pixmap
+    gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture.texture, 0)
+    this._texture = texture
   }
 
-  constructor(public context: Context, pixmap: Pixmap) {
+  constructor(public context: Context, texture: Texture) {
     super(context)
     const {gl} = context
     this.framebuffer = gl.createFramebuffer()!
-    this.pixmap = pixmap
+    this.texture = texture
   }
 
   get size() {
-    return this.pixmap.size
+    return this.texture.size
   }
 
   protected use() {

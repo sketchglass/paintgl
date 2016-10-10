@@ -5,16 +5,16 @@ import {Vec2} from "paintvec"
 export type ImageSource = ImageData | HTMLVideoElement | HTMLImageElement | HTMLCanvasElement
 
 /**
-  The pixmap filter that is used in scaling.
+  The texture filter that is used in scaling.
 */
-export type PixmapFilter = "nearest" | "mipmap-nearest" | "bilinear" | "mipmap-bilinear" | "trilinear"
+export type TextureFilter = "nearest" | "mipmap-nearest" | "bilinear" | "mipmap-bilinear" | "trilinear"
 
 /**
-  The pixel format of the pixmap.
+  The pixel format of the texture.
 */
-export type PixmapFormat = "byte" | "half-float" | "float"
+export type TextureFormat = "byte" | "half-float" | "float"
 
-function glDataType(context: Context, format: PixmapFormat) {
+function glDataType(context: Context, format: TextureFormat) {
   switch (format) {
   case "byte":
   default:
@@ -27,34 +27,33 @@ function glDataType(context: Context, format: PixmapFormat) {
 }
 
 export
-interface PixmapParams {
-  filter?: PixmapFilter
-  format?: PixmapFormat
+interface TextureOptions{
+  filter?: TextureFilter
+  format?: TextureFormat
   size?: Vec2
   data?: ArrayBufferView
   image?: ImageSource
 }
 
 /**
-  The Pixmap represents the image data on the GPU.
-  It wraps a WebGL texture.
+  The Texture represents the image data on the GPU.
 */
 export
-class Pixmap {
+class Texture {
   /**
-    The WebGL texture of this Pixmap.
+    The WebGL texture of this Texture.
   */
   texture: WebGLTexture
 
   /**
-    The format of this Pixmap.
+    The format of this Texture.
   */
-  readonly format: PixmapFormat
+  readonly format: TextureFormat
 
   private _size: Vec2
 
   /**
-    The size of this Pixmap.
+    The size of this Texture.
   */
   get size() {
     return this._size
@@ -63,15 +62,15 @@ class Pixmap {
     this.setData(this.size)
   }
 
-  private _filter: PixmapFilter
+  private _filter: TextureFilter
 
   /**
-    The filter used in scaling of this Pixmap.
+    The filter used in scaling of this Texture.
   */
   get filter() {
     return this._filter
   }
-  set filter(filter: PixmapFilter) {
+  set filter(filter: TextureFilter) {
     this._filter = filter
     const {gl} = this.context
     gl.bindTexture(gl.TEXTURE_2D, this.texture)
@@ -99,7 +98,7 @@ class Pixmap {
     }
   }
 
-  constructor(public context: Context, params: PixmapParams) {
+  constructor(public context: Context, opts: TextureOptions) {
     const {gl} = context
     this.texture = gl.createTexture()!
 
@@ -107,13 +106,13 @@ class Pixmap {
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE)
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE)
 
-    this.filter = (params.filter != undefined) ? params.filter : "nearest"
-    this.format = (params.format != undefined) ? params.format : "byte"
+    this.filter = (opts.filter != undefined) ? opts.filter : "nearest"
+    this.format = (opts.format != undefined) ? opts.format : "byte"
 
-    if (params.image) {
-      this.setImage(params.image)
+    if (opts.image) {
+      this.setImage(opts.image)
     } else {
-      this.setData(params.size || new Vec2(0), params.data)
+      this.setData(opts.size || new Vec2(0), opts.data)
     }
   }
 

@@ -10,19 +10,19 @@ interface ContextOptions {
 export
 interface ContextCapabilities {
   /**
-    Whether the context support half float pixmaps.
+    Whether the context support half float textures.
   */
   halfFloat: boolean
   /**
-    Whether the context support linear filtering of half float pixmaps.
+    Whether the context support linear filtering of half float textures.
   */
   halfFloatLinearFilter: boolean
   /**
-    Whether the context support float pixmaps.
+    Whether the context support float textures.
   */
   float: boolean
   /**
-    Whether the context support linear filtering of float pixmaps.
+    Whether the context support linear filtering of float textures.
   */
   floatLinearFilter: boolean
 }

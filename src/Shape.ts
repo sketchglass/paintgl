@@ -142,9 +142,9 @@ class ShapeBase implements Drawable {
     gl.useProgram(fill.program)
 
     let texUnit = 0
-    for (const name in fill._pixmapValues) {
+    for (const name in fill._textureValues) {
       gl.activeTexture(gl.TEXTURE0 + texUnit)
-      gl.bindTexture(gl.TEXTURE_2D, fill._pixmapValues[name].texture)
+      gl.bindTexture(gl.TEXTURE_2D, fill._textureValues[name].texture)
       fill.setUniformInt(name, texUnit)
       ++texUnit
     }
