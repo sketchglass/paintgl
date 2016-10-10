@@ -14,26 +14,26 @@ npm install --save github:seanchas116/paintgl
 
 ```js
 import {Vec2, Rect, Transform} from "paintvec"
-import {Color, Context, Pixmap, RectShape, ColorFill, PixmapFill, PixmapDrawTarget, CanvasDrawTarget} from "../lib"
+import {Color, Context, Texture, RectShape, ColorShader, TextureShader, TextureDrawTarget, CanvasDrawTarget} from "paintgl"
 
 // create context
 const context = new Context(document.getElementById("canvas") as HTMLCanvasElement)
 
-// create a pixmap (texture) with size
-const pixmap = new Pixmap(context, {size: new Vec2(400, 400)})
+// create a texture with size
+const texture = new Texture(context, {size: new Vec2(400, 400)})
 
-// create a draw target the draws into the pixmap
-const drawTarget = new PixmapDrawTarget(context, pixmap)
+// create a draw target the draws into the texture
+const drawTarget = new TextureDrawTarget(context, texture)
 
-// clear whole pixmap with color
+// clear whole texture with color
 drawTarget.clear(new Color(0.9, 0.9, 0.9, 1))
 
 // create a shape that is drawn into the draw target
 const shape = new RectShape(context)
 shape.rect = new Rect(new Vec2(100, 100), new Vec2(200, 300))
 
-// specify fill of the shape
-shape.fill = ColorFill
+// specify shader of the shape
+shape.shader = ColorShader
 shape.uniforms["color"] = new Color(0.9, 0.1, 0.2, 1)
 
 // apply some transform
@@ -44,12 +44,12 @@ drawTarget.draw(shape)
 // create a draw target that draws directly into canvas element
 const canvasDrawTarget = new CanvasDrawTarget(context)
 
-// create a shape for pixmap
-const pixmapShape = new RectShape(context)
-pixmapShape.rect = new Rect(new Vec2(0), pixmap.size)
-pixmapShape.fill = PixmapFill
-pixmapShape.uniforms["pixmap"] = pixmap
+// create a shape for texture
+const textureShape = new RectShape(context)
+textureShape.rect = new Rect(new Vec2(0), texture.size)
+textureShape.shader = TextureShader
+textureShape.uniforms["texture"] = texture
 
-// draw pixmap into canvas
-canvasDrawTarget.draw(pixmapShape)
+// draw texture into canvas
+canvasDrawTarget.draw(textureShape)
 ```
