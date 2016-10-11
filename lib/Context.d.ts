@@ -1,3 +1,4 @@
+import { Texture } from "./Texture";
 import { Shader } from "./Shader";
 export interface ContextOptions {
     preserveDrawingBuffer?: boolean;
@@ -36,7 +37,14 @@ export declare class Context {
       The capabilities supported by current browser.
     */
     capabilities: ContextCapabilities;
+    textureUnitManager: TextureUnitManager;
     private _shaders;
     constructor(canvas: HTMLCanvasElement, opts?: ContextOptions);
     getOrCreateShader(klass: typeof Shader): Shader;
+}
+export declare class TextureUnitManager {
+    context: Context;
+    lastCount: number;
+    constructor(context: Context);
+    setTextures(textures: Texture[]): void;
 }

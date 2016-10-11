@@ -4,6 +4,7 @@ import {ObjectMap} from "./utils"
 import {Shader, UniformValue} from "./Shader"
 import {Color} from "./Color"
 import {Drawable} from "./Drawable"
+import {Texture} from "./Texture"
 
 export type ShapeUsage = "static" | "stream" | "dynamic"
 
@@ -186,12 +187,13 @@ class ShapeBase implements Drawable {
     gl.useProgram(shader.program)
 
     let texUnit = 0
+    const textures: Texture[] = []
     for (const name in shader._textureValues) {
-      gl.activeTexture(gl.TEXTURE0 + texUnit)
-      gl.bindTexture(gl.TEXTURE_2D, shader._textureValues[name].texture)
+      textures.push(shader._textureValues[name])
       shader.setUniformInt(name, texUnit)
       ++texUnit
     }
+    this.context.textureUnitManager.setTextures(textures)
 
     // TODO: use vertex array object if possible
     gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer)

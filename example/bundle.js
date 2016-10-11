@@ -60,6 +60,7 @@ exports.Color = Color;
 class Context {
     constructor(canvas, opts) {
         this.canvas = canvas;
+        this.textureUnitManager = new TextureUnitManager(this);
         this._shaders = new WeakMap();
         const glOpts = {
             preserveDrawingBuffer: false,
@@ -96,6 +97,27 @@ class Context {
     }
 }
 exports.Context = Context;
+class TextureUnitManager {
+    constructor(context) {
+        this.context = context;
+        this.lastCount = 0;
+    }
+    setTextures(textures) {
+        const { gl } = this.context;
+        const count = Math.max(textures.length, this.lastCount);
+        for (let i = 0; i < count; ++i) {
+            gl.activeTexture(gl.TEXTURE0 + i);
+            if (i < textures.length) {
+                gl.bindTexture(gl.TEXTURE_2D, textures[i].texture);
+            }
+            else {
+                gl.bindTexture(gl.TEXTURE_2D, null);
+            }
+        }
+        this.lastCount = textures.length;
+    }
+}
+exports.TextureUnitManager = TextureUnitManager;
 
 },{}],4:[function(require,module,exports){
 "use strict";
@@ -573,12 +595,13 @@ class ShapeBase {
         }
         gl.useProgram(shader.program);
         let texUnit = 0;
+        const textures = [];
         for (const name in shader._textureValues) {
-            gl.activeTexture(gl.TEXTURE0 + texUnit);
-            gl.bindTexture(gl.TEXTURE_2D, shader._textureValues[name].texture);
+            textures.push(shader._textureValues[name]);
             shader.setUniformInt(name, texUnit);
             ++texUnit;
         }
+        this.context.textureUnitManager.setTextures(textures);
         // TODO: use vertex array object if possible
         gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);

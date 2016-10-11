@@ -1,3 +1,4 @@
+import {Texture} from "./Texture"
 import {Shader} from "./Shader"
 
 export
@@ -44,6 +45,8 @@ class Context {
   */
   capabilities: ContextCapabilities
 
+  textureUnitManager = new TextureUnitManager(this)
+
   private _shaders = new WeakMap<typeof Shader, Shader>()
 
   constructor(public canvas: HTMLCanvasElement, opts?: ContextOptions) {
@@ -81,5 +84,27 @@ class Context {
       this._shaders.set(klass, shader)
       return shader
     }
+  }
+}
+
+export
+class TextureUnitManager {
+  lastCount = 0
+
+  constructor(public context: Context) {
+  }
+
+  setTextures(textures: Texture[]) {
+    const {gl} = this.context
+    const count = Math.max(textures.length, this.lastCount)
+    for (let i = 0; i < count; ++i) {
+      gl.activeTexture(gl.TEXTURE0 + i)
+      if (i < textures.length) {
+        gl.bindTexture(gl.TEXTURE_2D, textures[i].texture)
+      } else {
+        gl.bindTexture(gl.TEXTURE_2D, null)
+      }
+    }
+    this.lastCount = textures.length
   }
 }
