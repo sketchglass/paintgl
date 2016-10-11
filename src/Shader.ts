@@ -124,13 +124,14 @@ class Shader extends ShaderBase {
   get vertexShader() {
     return `
       precision highp float;
-      ${this.additionalVertexShader}
 
       uniform mat3 transform;
       attribute vec2 aPosition;
       attribute vec2 aTexCoord;
       varying vec2 vPosition;
       varying vec2 vTexCoord;
+
+      ${this.additionalVertexShader}
 
       void main(void) {
         vPosition = aPosition;
