@@ -21,16 +21,31 @@ canvasDrawTarget.draw(textureShape);
 
 },{"../lib":8,"paintvec":9}],2:[function(require,module,exports){
 "use strict";
+/**
+  Color represents the premultiplied RGBA color value.
+*/
 class Color {
+    /**
+      @param r The red value premultiplied by alpha value.
+      @param g The green value premultiplied by alpha value.
+      @param b The blue value premultiplied by alpha value.
+      @param a The alpha value.
+    */
     constructor(r, g, b, a) {
         this.r = r;
         this.g = g;
         this.b = b;
         this.a = a;
     }
+    /**
+      @return The [r, g, b, a] array.
+    */
     members() {
         return [this.r, this.g, this.b, this.a];
     }
+    /**
+      Compares values of this Color with other Color.
+    */
     equals(other) {
         return this.r == other.r && this.g == other.g && this.b == other.b && this.a == other.a;
     }
@@ -39,6 +54,9 @@ exports.Color = Color;
 
 },{}],3:[function(require,module,exports){
 "use strict";
+/**
+  Context contains the WebGL context.
+*/
 class Context {
     constructor(canvas, opts) {
         this.canvas = canvas;
@@ -84,11 +102,23 @@ exports.Context = Context;
 const paintvec_1 = require("paintvec");
 const Texture_1 = require("./Texture");
 class DrawTarget {
+    /**
+      @params context The context this `DrawTarget` belongs to.
+    */
     constructor(context) {
         this.context = context;
+        /**
+          Whether y coordinate is flipped.
+        */
         this.flipY = false;
+        /**
+          The global transform that applies to all drawables.
+        */
         this.transform = new paintvec_1.Transform();
     }
+    /**
+      Draws the `Drawable` into this `DrawTarget`.
+    */
     draw(drawable) {
         const { gl } = this.context;
         this.use();
@@ -101,6 +131,9 @@ class DrawTarget {
         }
         drawable.draw(transform);
     }
+    /**
+      Clear this `DrawTarget` with `color`.
+    */
     clear(color) {
         this.use();
         const { gl } = this.context;
@@ -119,7 +152,12 @@ class DrawTarget {
             gl.enable(gl.SCISSOR_TEST);
             const drawableRect = new paintvec_1.Rect(new paintvec_1.Vec2(0), this.size);
             const rect = this._flipRect(this.scissor).intBounding().intersection(drawableRect);
-            gl.scissor(rect.left, rect.top, rect.width, rect.height);
+            if (rect) {
+                gl.scissor(rect.left, rect.top, rect.width, rect.height);
+            }
+            else {
+                gl.scissor(0, 0, 0, 0);
+            }
         }
         else {
             gl.disable(gl.SCISSOR_TEST);
@@ -139,6 +177,9 @@ class DrawTarget {
     }
 }
 exports.DrawTarget = DrawTarget;
+/**
+  CanvasDrawTarget represents the draw target that draws directly into the context canvas.
+*/
 class CanvasDrawTarget extends DrawTarget {
     constructor(...args) {
         super(...args);
@@ -157,6 +198,9 @@ class CanvasDrawTarget extends DrawTarget {
     }
 }
 exports.CanvasDrawTarget = CanvasDrawTarget;
+/**
+  TextureDrawTarget represents the draw target that draws into a texture.
+*/
 class TextureDrawTarget extends DrawTarget {
     constructor(context, texture) {
         super(context);
@@ -232,7 +276,13 @@ class ShaderBase {
             throw new Error(`Failed to link shader:\n${gl.getProgramInfoLog(this.program)}`);
         }
     }
+    /**
+      The vertex shader.
+    */
     get vertexShader() { }
+    /**
+      The fragment shader.
+    */
     get fragmentShader() { }
     _addShader(type, source) {
         const { gl } = this.context;
@@ -246,12 +296,14 @@ class ShaderBase {
     }
     _uniformLocation(name) {
         const { gl } = this.context;
-        let location = this._uniformLocations[name];
-        if (!location) {
-            location = gl.getUniformLocation(this.program, name);
-            this._uniformLocations[name] = location;
+        if (name in this._uniformLocations) {
+            return this._uniformLocations[name];
         }
-        return location;
+        else {
+            const location = gl.getUniformLocation(this.program, name);
+            this._uniformLocations[name] = location;
+            return location;
+        }
     }
     setUniform(name, value) {
         if (this._uniformValues[name] == value) {
@@ -259,17 +311,21 @@ class ShaderBase {
         }
         const { gl } = this.context;
         gl.useProgram(this.program);
+        const location = this._uniformLocation(name);
+        if (!location) {
+            return;
+        }
         if (typeof value == "number") {
-            gl.uniform1f(this._uniformLocation(name), value);
+            gl.uniform1f(location, value);
         }
         else if (value instanceof paintvec_1.Vec2) {
-            gl.uniform2fv(this._uniformLocation(name), value.members());
+            gl.uniform2fv(location, value.members());
         }
         else if (value instanceof Color_1.Color) {
-            gl.uniform4fv(this._uniformLocation(name), value.members());
+            gl.uniform4fv(location, value.members());
         }
         else if (value instanceof paintvec_1.Transform) {
-            gl.uniformMatrix3fv(this._uniformLocation(name), false, value.members());
+            gl.uniformMatrix3fv(location, false, value.members());
         }
         else if (value instanceof Texture_1.Texture) {
             this._textureValues[name] = value;
@@ -282,11 +338,15 @@ class ShaderBase {
         }
         const { gl } = this.context;
         gl.useProgram(this.program);
+        const location = this._uniformLocation(name);
+        if (!location) {
+            return;
+        }
         if (typeof value == "number") {
-            gl.uniform1i(this._uniformLocation(name), value);
+            gl.uniform1i(location, value);
         }
         else if (value instanceof paintvec_1.Vec2) {
-            gl.uniform2iv(this._uniformLocation(name), value.members());
+            gl.uniform2iv(location, value.members());
         }
         this._uniformValues[name] = value;
     }
@@ -296,7 +356,13 @@ class ShaderBase {
     }
 }
 exports.ShaderBase = ShaderBase;
+/**
+  Shader represents how shapes are placed and how pixels are filled.
+*/
 class Shader extends ShaderBase {
+    /**
+      The additional shader code for vertex shader alongside default one.
+    */
     get additionalVertexShader() {
         return `
       void paintgl_additional() {
@@ -333,6 +399,9 @@ class Shader extends ShaderBase {
     }
 }
 exports.Shader = Shader;
+/**
+  TextureShader fills the shape with specified texture.
+*/
 class TextureShader extends Shader {
     get fragmentShader() {
         return `
@@ -346,6 +415,9 @@ class TextureShader extends Shader {
     }
 }
 exports.TextureShader = TextureShader;
+/**
+  ColorShader fills the shape with specified color.
+*/
 class ColorShader extends Shader {
     get fragmentShader() {
         return `
@@ -398,15 +470,37 @@ function blendFuncs(gl, mode) {
             return [gl.ONE_MINUS_DST_ALPHA, gl.SRC_ALPHA];
     }
 }
+/**
+  The base class of Shape.
+*/
 class ShapeBase {
     constructor(context) {
         this.context = context;
+        /**
+          The usage hint of this Shape.
+        */
         this.usage = "dynamic";
+        /**
+          The indices of each triangles of this Shape.
+        */
         this.indices = [];
+        /**
+          The vertex attributes of this Shape.
+        */
         this.attributes = {};
+        /**
+          Whether the buffer of this Shape should be updated.
+          Set it to true after this shape is changed.
+        */
         this.needsUpdate = true;
+        /**
+          The uniform values passed to the shader.
+        */
         this.uniforms = {};
         this.blendMode = "src-over";
+        /**
+          The transform of this Shape.
+        */
         this.transform = new paintvec_1.Transform();
         const { gl } = context;
         this.vertexBuffer = gl.createBuffer();
@@ -485,6 +579,7 @@ class ShapeBase {
             shader.setUniformInt(name, texUnit);
             ++texUnit;
         }
+        // TODO: use vertex array object if possible
         gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
         const stride = this.attributeStride();
@@ -576,6 +671,9 @@ function glFormat(gl, format) {
     }
 }
 exports.glFormat = glFormat;
+/**
+  The Texture represents the image data on the GPU.
+*/
 class Texture {
     constructor(context, opts) {
         this.context = context;
@@ -594,12 +692,18 @@ class Texture {
             this.setData(opts.size || new paintvec_1.Vec2(0), opts.data);
         }
     }
+    /**
+      The size of this Texture.
+    */
     get size() {
         return this._size;
     }
     set size(size) {
         this.setData(this.size);
     }
+    /**
+      The filter used in scaling of this Texture.
+    */
     get filter() {
         return this._filter;
     }

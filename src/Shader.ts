@@ -22,7 +22,7 @@ abstract class ShaderBase {
   abstract get fragmentShader(): string
 
   private _uniformValues: ObjectMap<UniformValue> = {}
-  private _uniformLocations: ObjectMap<WebGLUniformLocation> = {}
+  private _uniformLocations: ObjectMap<WebGLUniformLocation|null> = {}
   _textureValues: ObjectMap<Texture> = {}
 
   constructor(public context: Context) {
@@ -49,12 +49,13 @@ abstract class ShaderBase {
 
   private _uniformLocation(name: string) {
     const {gl} = this.context
-    let location = this._uniformLocations[name]
-    if (!location) {
-      location = gl.getUniformLocation(this.program, name)!
+    if (name in this._uniformLocations) {
+      return this._uniformLocations[name]
+    } else {
+      const location = gl.getUniformLocation(this.program, name)
       this._uniformLocations[name] = location
+      return location
     }
-    return location
   }
 
   setUniform(name: string, value: UniformValue) {
@@ -63,14 +64,18 @@ abstract class ShaderBase {
     }
     const {gl} = this.context
     gl.useProgram(this.program)
+    const location = this._uniformLocation(name)
+    if (!location) {
+      return
+    }
     if (typeof value == "number") {
-      gl.uniform1f(this._uniformLocation(name), value)
+      gl.uniform1f(location, value)
     } else if (value instanceof Vec2) {
-      gl.uniform2fv(this._uniformLocation(name), value.members())
+      gl.uniform2fv(location, value.members())
     } else if (value instanceof Color) {
-      gl.uniform4fv(this._uniformLocation(name), value.members())
+      gl.uniform4fv(location, value.members())
     } else if (value instanceof Transform) {
-      gl.uniformMatrix3fv(this._uniformLocation(name), false, value.members())
+      gl.uniformMatrix3fv(location, false, value.members())
     } else if (value instanceof Texture) {
       this._textureValues[name] = value
     }
@@ -83,10 +88,14 @@ abstract class ShaderBase {
     }
     const {gl} = this.context
     gl.useProgram(this.program)
+    const location = this._uniformLocation(name)
+    if (!location) {
+      return
+    }
     if (typeof value == "number") {
-      gl.uniform1i(this._uniformLocation(name), value)
+      gl.uniform1i(location, value)
     } else if (value instanceof Vec2) {
-      gl.uniform2iv(this._uniformLocation(name), value.members())
+      gl.uniform2iv(location, value.members())
     }
     this._uniformValues[name] = value
   }
