@@ -8,16 +8,26 @@ drawTarget.clear(new lib_1.Color(0.9, 0.9, 0.9, 1));
 const shape = new lib_1.RectShape(context, {
     rect: new paintvec_1.Rect(new paintvec_1.Vec2(100, 100), new paintvec_1.Vec2(200, 300))
 });
-shape.shader = lib_1.ColorShader;
-shape.uniforms["color"] = new lib_1.Color(0.9, 0.1, 0.2, 1);
-drawTarget.draw(shape);
+const model = new lib_1.Model(context, {
+    shape: shape,
+    shader: lib_1.ColorShader,
+    uniforms: {
+        color: new lib_1.Color(0.9, 0.1, 0.2, 1)
+    }
+});
+drawTarget.draw(model);
 drawTarget.transform = paintvec_1.Transform.rotate(0.1 * Math.PI);
-shape.blendMode = "dst-out";
-drawTarget.draw(shape);
+model.blendMode = "dst-out";
+drawTarget.draw(model);
 const canvasDrawTarget = new lib_1.CanvasDrawTarget(context);
 const textureShape = new lib_1.RectShape(context, {
     rect: new paintvec_1.Rect(new paintvec_1.Vec2(0), texture.size)
 });
-textureShape.shader = lib_1.TextureShader;
-textureShape.uniforms["texture"] = texture;
-canvasDrawTarget.draw(textureShape);
+const textureModel = new lib_1.Model(context, {
+    shape: textureShape,
+    shader: lib_1.TextureShader,
+    uniforms: {
+        texture: texture
+    }
+});
+canvasDrawTarget.draw(textureModel);

@@ -3,16 +3,9 @@ import {Context} from './Context'
 import {ObjectMap} from "./utils"
 import {Shader, UniformValue} from "./Shader"
 import {Color} from "./Color"
-import {Drawable} from "./Drawable"
 import {Texture} from "./Texture"
 
 export type ShapeUsage = "static" | "stream" | "dynamic"
-
-/**
-  BlendMode represents how drawn color and destination color are blended.
-*/
-export type BlendMode = "src" | "src-over" | "src-in" | "src-out" | "src-atop"
-                      | "dst" | "dst-over" | "dst-in" | "dst-out" | "dst-atop"
 
 function glUsage(gl: WebGLRenderingContext, usage: ShapeUsage) {
   switch (usage) {
@@ -26,47 +19,17 @@ function glUsage(gl: WebGLRenderingContext, usage: ShapeUsage) {
   }
 }
 
-function blendFuncs(gl: WebGLRenderingContext, mode: BlendMode) {
-  switch (mode) {
-    case "src":
-      return [gl.ONE, gl.ZERO]
-    default:
-    case "src-over":
-      return [gl.ONE, gl.ONE_MINUS_SRC_ALPHA]
-    case "src-in":
-      return [gl.DST_ALPHA, gl.ZERO]
-    case "src-out":
-      return [gl.ONE_MINUS_DST_ALPHA, gl.ZERO]
-    case "src-atop":
-      return [gl.DST_ALPHA, gl.ONE_MINUS_SRC_ALPHA]
-    case "dst":
-      return [gl.ZERO, gl.ONE]
-    case "dst-over":
-      return [gl.ONE_MINUS_DST_ALPHA, gl.ONE]
-    case "dst-in":
-      return [gl.ZERO, gl.SRC_ALPHA]
-    case "dst-out":
-      return [gl.ZERO, gl.ONE_MINUS_SRC_ALPHA]
-    case "dst-atop":
-      return [gl.ONE_MINUS_DST_ALPHA, gl.SRC_ALPHA]
-  }
-}
-
 export
 interface ShapeBaseOptions {
   usage?: ShapeUsage
   indices?: number[]
-  shader?: typeof Shader
-  uniforms?: ObjectMap<UniformValue>
-  blendMode?: BlendMode
-  transform?: Transform
 }
 
 /**
   The base class of Shape.
 */
 export
-class ShapeBase implements Drawable {
+class ShapeBase {
   /**
     The WebGL vertex buffer for this Shape.
   */
@@ -98,23 +61,6 @@ class ShapeBase implements Drawable {
   */
   needsUpdate = true
 
-  /**
-    The shader class of this Shape.
-  */
-  shader: typeof Shader
-
-  /**
-    The uniform values passed to the shader.
-  */
-  uniforms: ObjectMap<UniformValue>
-
-  blendMode: BlendMode
-
-  /**
-    The transform of this Shape.
-  */
-  transform: Transform
-
   attributeStride() {
     let stride = 0
     for (const name in this.attributes) {
@@ -127,10 +73,6 @@ class ShapeBase implements Drawable {
     const {gl} = context
     this.usage = opts.usage || "dynamic"
     this.indices = opts.indices || []
-    this.shader = opts.shader || Shader
-    this.uniforms = opts.uniforms || {}
-    this.blendMode = opts.blendMode || "src-over"
-    this.transform = opts.transform || new Transform()
 
     this.vertexBuffer = gl.createBuffer()!
     this.indexBuffer = gl.createBuffer()!
@@ -181,51 +123,6 @@ class ShapeBase implements Drawable {
     if (this.needsUpdate) {
       this.update()
     }
-  }
-
-  draw(transform: Transform) {
-    const {gl} = this.context
-    const shader = this.context.getOrCreateShader(this.shader)
-
-    if (this.blendMode == "src") {
-      gl.disable(gl.BLEND)
-    } else {
-      gl.enable(gl.BLEND)
-      const funcs = blendFuncs(gl, this.blendMode)
-      gl.blendFunc(funcs[0], funcs[1])
-    }
-
-    this.updateIfNeeded()
-    shader.setUniform("transform", this.transform.merge(transform))
-    for (const uniform in this.uniforms) {
-      shader.setUniform(uniform, this.uniforms[uniform])
-    }
-
-    gl.useProgram(shader.program)
-
-    let texUnit = 0
-    const textures: Texture[] = []
-    for (const [name, texture] of shader._textureValues) {
-      textures.push(texture)
-      shader.setUniformInt(name, texUnit)
-      ++texUnit
-    }
-    this.context.textureUnitManager.setTextures(textures)
-
-    // TODO: use vertex array object if possible
-    gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer)
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer)
-    const stride = this.attributeStride()
-    let offset = 0
-    for (const name in this.attributes) {
-      const attribute = this.attributes[name]
-      const pos = gl.getAttribLocation(shader.program, name)!
-      gl.enableVertexAttribArray(pos)
-      gl.vertexAttribPointer(pos, attribute.size, gl.FLOAT, false, stride * 4, offset * 4)
-      offset += attribute.size
-    }
-
-    gl.drawElements(gl.TRIANGLES, this.indices.length, gl.UNSIGNED_SHORT, 0)
   }
 
   dispose() {

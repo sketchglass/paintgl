@@ -1,25 +1,15 @@
-import { Vec2, Rect, Transform } from "paintvec";
+import { Vec2, Rect } from "paintvec";
 import { Context } from './Context';
 import { ObjectMap } from "./utils";
-import { Shader, UniformValue } from "./Shader";
-import { Drawable } from "./Drawable";
 export declare type ShapeUsage = "static" | "stream" | "dynamic";
-/**
-  BlendMode represents how drawn color and destination color are blended.
-*/
-export declare type BlendMode = "src" | "src-over" | "src-in" | "src-out" | "src-atop" | "dst" | "dst-over" | "dst-in" | "dst-out" | "dst-atop";
 export interface ShapeBaseOptions {
     usage?: ShapeUsage;
     indices?: number[];
-    shader?: typeof Shader;
-    uniforms?: ObjectMap<UniformValue>;
-    blendMode?: BlendMode;
-    transform?: Transform;
 }
 /**
   The base class of Shape.
 */
-export declare class ShapeBase implements Drawable {
+export declare class ShapeBase {
     context: Context;
     /**
       The WebGL vertex buffer for this Shape.
@@ -49,26 +39,12 @@ export declare class ShapeBase implements Drawable {
       Set it to true after this shape is changed.
     */
     needsUpdate: boolean;
-    /**
-      The shader class of this Shape.
-    */
-    shader: typeof Shader;
-    /**
-      The uniform values passed to the shader.
-    */
-    uniforms: ObjectMap<UniformValue>;
-    blendMode: BlendMode;
-    /**
-      The transform of this Shape.
-    */
-    transform: Transform;
     attributeStride(): number;
     constructor(context: Context, opts?: ShapeBaseOptions);
     setFloatAttributes(name: string, attributes: number[]): void;
     setVec2Attributes(name: string, attributes: Vec2[]): void;
     update(): void;
     updateIfNeeded(): void;
-    draw(transform: Transform): void;
     dispose(): void;
 }
 export interface ShapeOptions extends ShapeBaseOptions {

@@ -40,6 +40,8 @@ class Context {
 
   halfFloatExt: any
 
+  vertexArrayExt: any
+
   /**
     The capabilities supported by current browser.
   */
@@ -67,6 +69,7 @@ class Context {
     const gl = this.gl = canvas.getContext("webgl", glOpts)! as WebGLRenderingContext
 
     this.halfFloatExt = gl.getExtension("OES_texture_half_float")
+    this.vertexArrayExt = gl.getExtension('OES_vertex_array_object')
     this.capabilities = {
       halfFloat: !!this.halfFloatExt,
       halfFloatLinearFilter:  !!gl.getExtension("OES_texture_half_float_linear"),

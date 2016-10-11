@@ -9,21 +9,31 @@ drawTarget.clear(new lib_1.Color(0.9, 0.9, 0.9, 1));
 const shape = new lib_1.RectShape(context, {
     rect: new paintvec_1.Rect(new paintvec_1.Vec2(100, 100), new paintvec_1.Vec2(200, 300))
 });
-shape.shader = lib_1.ColorShader;
-shape.uniforms["color"] = new lib_1.Color(0.9, 0.1, 0.2, 1);
-drawTarget.draw(shape);
+const model = new lib_1.Model(context, {
+    shape: shape,
+    shader: lib_1.ColorShader,
+    uniforms: {
+        color: new lib_1.Color(0.9, 0.1, 0.2, 1)
+    }
+});
+drawTarget.draw(model);
 drawTarget.transform = paintvec_1.Transform.rotate(0.1 * Math.PI);
-shape.blendMode = "dst-out";
-drawTarget.draw(shape);
+model.blendMode = "dst-out";
+drawTarget.draw(model);
 const canvasDrawTarget = new lib_1.CanvasDrawTarget(context);
 const textureShape = new lib_1.RectShape(context, {
     rect: new paintvec_1.Rect(new paintvec_1.Vec2(0), texture.size)
 });
-textureShape.shader = lib_1.TextureShader;
-textureShape.uniforms["texture"] = texture;
-canvasDrawTarget.draw(textureShape);
+const textureModel = new lib_1.Model(context, {
+    shape: textureShape,
+    shader: lib_1.TextureShader,
+    uniforms: {
+        texture: texture
+    }
+});
+canvasDrawTarget.draw(textureModel);
 
-},{"../lib":8,"paintvec":9}],2:[function(require,module,exports){
+},{"../lib":9,"paintvec":10}],2:[function(require,module,exports){
 "use strict";
 /**
   Color represents the premultiplied RGBA color value.
@@ -81,6 +91,7 @@ class Context {
         }
         const gl = this.gl = canvas.getContext("webgl", glOpts);
         this.halfFloatExt = gl.getExtension("OES_texture_half_float");
+        this.vertexArrayExt = gl.getExtension('OES_vertex_array_object');
         this.capabilities = {
             halfFloat: !!this.halfFloatExt,
             halfFloatLinearFilter: !!gl.getExtension("OES_texture_half_float_linear"),
@@ -282,7 +293,101 @@ class TextureDrawTarget extends DrawTarget {
 }
 exports.TextureDrawTarget = TextureDrawTarget;
 
-},{"./Texture":7,"paintvec":9}],5:[function(require,module,exports){
+},{"./Texture":8,"paintvec":10}],5:[function(require,module,exports){
+"use strict";
+const paintvec_1 = require("paintvec");
+const Shader_1 = require("./Shader");
+function blendFuncs(gl, mode) {
+    switch (mode) {
+        case "src":
+            return [gl.ONE, gl.ZERO];
+        default:
+        case "src-over":
+            return [gl.ONE, gl.ONE_MINUS_SRC_ALPHA];
+        case "src-in":
+            return [gl.DST_ALPHA, gl.ZERO];
+        case "src-out":
+            return [gl.ONE_MINUS_DST_ALPHA, gl.ZERO];
+        case "src-atop":
+            return [gl.DST_ALPHA, gl.ONE_MINUS_SRC_ALPHA];
+        case "dst":
+            return [gl.ZERO, gl.ONE];
+        case "dst-over":
+            return [gl.ONE_MINUS_DST_ALPHA, gl.ONE];
+        case "dst-in":
+            return [gl.ZERO, gl.SRC_ALPHA];
+        case "dst-out":
+            return [gl.ZERO, gl.ONE_MINUS_SRC_ALPHA];
+        case "dst-atop":
+            return [gl.ONE_MINUS_DST_ALPHA, gl.SRC_ALPHA];
+    }
+}
+class Model {
+    constructor(context, opts) {
+        this.context = context;
+        const { vertexArrayExt } = context;
+        this.shape = opts.shape;
+        this.shader = context.getOrCreateShader(opts.shader || Shader_1.Shader);
+        this.uniforms = opts.uniforms || {};
+        this.blendMode = opts.blendMode || "src-over";
+        this.transform = opts.transform || new paintvec_1.Transform();
+        this.vertexArray = vertexArrayExt.createVertexArrayOES();
+        this._updateVertexArray();
+    }
+    _updateVertexArray() {
+        const { gl, vertexArrayExt } = this.context;
+        const { shape, shader } = this;
+        vertexArrayExt.bindVertexArrayOES(this.vertexArray);
+        gl.bindBuffer(gl.ARRAY_BUFFER, shape.vertexBuffer);
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, shape.indexBuffer);
+        const stride = shape.attributeStride();
+        let offset = 0;
+        for (const name in shape.attributes) {
+            const attribute = shape.attributes[name];
+            const pos = gl.getAttribLocation(shader.program, name);
+            gl.enableVertexAttribArray(pos);
+            gl.vertexAttribPointer(pos, attribute.size, gl.FLOAT, false, stride * 4, offset * 4);
+            offset += attribute.size;
+        }
+        vertexArrayExt.bindVertexArrayOES(null);
+    }
+    draw(transform) {
+        const { gl, vertexArrayExt } = this.context;
+        const { shape, shader } = this;
+        if (this.blendMode == "src") {
+            gl.disable(gl.BLEND);
+        }
+        else {
+            gl.enable(gl.BLEND);
+            const funcs = blendFuncs(gl, this.blendMode);
+            gl.blendFunc(funcs[0], funcs[1]);
+        }
+        gl.useProgram(shader.program);
+        shape.updateIfNeeded();
+        shader.setUniform("transform", this.transform.merge(transform));
+        for (const uniform in this.uniforms) {
+            shader.setUniform(uniform, this.uniforms[uniform]);
+        }
+        let texUnit = 0;
+        const textures = [];
+        for (const [name, texture] of shader._textureValues) {
+            textures.push(texture);
+            shader.setUniformInt(name, texUnit);
+            ++texUnit;
+        }
+        this.context.textureUnitManager.setTextures(textures);
+        vertexArrayExt.bindVertexArrayOES(this.vertexArray);
+        gl.drawElements(gl.TRIANGLES, shape.indices.length, gl.UNSIGNED_SHORT, 0);
+        vertexArrayExt.bindVertexArrayOES(null);
+    }
+    dispose() {
+        const { vertexArrayExt } = this.context;
+        vertexArrayExt.deleteVertexArrayOES(this.vertexArray);
+    }
+}
+exports.Model = Model;
+
+},{"./Shader":6,"paintvec":10}],6:[function(require,module,exports){
 "use strict";
 const paintvec_1 = require("paintvec");
 const Color_1 = require("./Color");
@@ -499,10 +604,9 @@ class ColorShader extends Shader {
 }
 exports.ColorShader = ColorShader;
 
-},{"./Color":2,"./Texture":7,"paintvec":9}],6:[function(require,module,exports){
+},{"./Color":2,"./Texture":8,"paintvec":10}],7:[function(require,module,exports){
 "use strict";
 const paintvec_1 = require("paintvec");
-const Shader_1 = require("./Shader");
 function glUsage(gl, usage) {
     switch (usage) {
         case "static":
@@ -512,31 +616,6 @@ function glUsage(gl, usage) {
         case "dynamic":
         default:
             return gl.DYNAMIC_DRAW;
-    }
-}
-function blendFuncs(gl, mode) {
-    switch (mode) {
-        case "src":
-            return [gl.ONE, gl.ZERO];
-        default:
-        case "src-over":
-            return [gl.ONE, gl.ONE_MINUS_SRC_ALPHA];
-        case "src-in":
-            return [gl.DST_ALPHA, gl.ZERO];
-        case "src-out":
-            return [gl.ONE_MINUS_DST_ALPHA, gl.ZERO];
-        case "src-atop":
-            return [gl.DST_ALPHA, gl.ONE_MINUS_SRC_ALPHA];
-        case "dst":
-            return [gl.ZERO, gl.ONE];
-        case "dst-over":
-            return [gl.ONE_MINUS_DST_ALPHA, gl.ONE];
-        case "dst-in":
-            return [gl.ZERO, gl.SRC_ALPHA];
-        case "dst-out":
-            return [gl.ZERO, gl.ONE_MINUS_SRC_ALPHA];
-        case "dst-atop":
-            return [gl.ONE_MINUS_DST_ALPHA, gl.SRC_ALPHA];
     }
 }
 /**
@@ -557,10 +636,6 @@ class ShapeBase {
         const { gl } = context;
         this.usage = opts.usage || "dynamic";
         this.indices = opts.indices || [];
-        this.shader = opts.shader || Shader_1.Shader;
-        this.uniforms = opts.uniforms || {};
-        this.blendMode = opts.blendMode || "src-over";
-        this.transform = opts.transform || new paintvec_1.Transform();
         this.vertexBuffer = gl.createBuffer();
         this.indexBuffer = gl.createBuffer();
     }
@@ -613,45 +688,6 @@ class ShapeBase {
             this.update();
         }
     }
-    draw(transform) {
-        const { gl } = this.context;
-        const shader = this.context.getOrCreateShader(this.shader);
-        if (this.blendMode == "src") {
-            gl.disable(gl.BLEND);
-        }
-        else {
-            gl.enable(gl.BLEND);
-            const funcs = blendFuncs(gl, this.blendMode);
-            gl.blendFunc(funcs[0], funcs[1]);
-        }
-        this.updateIfNeeded();
-        shader.setUniform("transform", this.transform.merge(transform));
-        for (const uniform in this.uniforms) {
-            shader.setUniform(uniform, this.uniforms[uniform]);
-        }
-        gl.useProgram(shader.program);
-        let texUnit = 0;
-        const textures = [];
-        for (const [name, texture] of shader._textureValues) {
-            textures.push(texture);
-            shader.setUniformInt(name, texUnit);
-            ++texUnit;
-        }
-        this.context.textureUnitManager.setTextures(textures);
-        // TODO: use vertex array object if possible
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
-        const stride = this.attributeStride();
-        let offset = 0;
-        for (const name in this.attributes) {
-            const attribute = this.attributes[name];
-            const pos = gl.getAttribLocation(shader.program, name);
-            gl.enableVertexAttribArray(pos);
-            gl.vertexAttribPointer(pos, attribute.size, gl.FLOAT, false, stride * 4, offset * 4);
-            offset += attribute.size;
-        }
-        gl.drawElements(gl.TRIANGLES, this.indices.length, gl.UNSIGNED_SHORT, 0);
-    }
     dispose() {
         const { gl } = this.context;
         gl.deleteBuffer(this.vertexBuffer);
@@ -702,7 +738,7 @@ class RectShape extends QuadShape {
 }
 exports.RectShape = RectShape;
 
-},{"./Shader":5,"paintvec":9}],7:[function(require,module,exports){
+},{"paintvec":10}],8:[function(require,module,exports){
 "use strict";
 const paintvec_1 = require("paintvec");
 function glType(context, pixelType) {
@@ -821,7 +857,7 @@ class Texture {
 }
 exports.Texture = Texture;
 
-},{"paintvec":9}],8:[function(require,module,exports){
+},{"paintvec":10}],9:[function(require,module,exports){
 "use strict";
 var Color_1 = require("./Color");
 exports.Color = Color_1.Color;
@@ -841,8 +877,10 @@ var Shape_1 = require("./Shape");
 exports.Shape = Shape_1.Shape;
 exports.QuadShape = Shape_1.QuadShape;
 exports.RectShape = Shape_1.RectShape;
+var Model_1 = require("./Model");
+exports.Model = Model_1.Model;
 
-},{"./Color":2,"./Context":3,"./DrawTarget":4,"./Shader":5,"./Shape":6,"./Texture":7}],9:[function(require,module,exports){
+},{"./Color":2,"./Context":3,"./DrawTarget":4,"./Model":5,"./Shader":6,"./Shape":7,"./Texture":8}],10:[function(require,module,exports){
 "use strict";
 /**
   Vec2 represents 2D vector, point or size.

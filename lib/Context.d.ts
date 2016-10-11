@@ -33,6 +33,7 @@ export declare class Context {
     */
     gl: WebGLRenderingContext;
     halfFloatExt: any;
+    vertexArrayExt: any;
     /**
       The capabilities supported by current browser.
     */
