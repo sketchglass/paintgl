@@ -6,7 +6,9 @@ const context = new lib_1.Context(document.getElementById("canvas"));
 const texture = new lib_1.Texture(context, { size: new paintvec_1.Vec2(400, 400) });
 const drawTarget = new lib_1.TextureDrawTarget(context, texture);
 drawTarget.clear(new lib_1.Color(0.9, 0.9, 0.9, 1));
-const shape = new lib_1.RectShape(context, new paintvec_1.Rect(new paintvec_1.Vec2(100, 100), new paintvec_1.Vec2(200, 300)));
+const shape = new lib_1.RectShape(context, {
+    rect: new paintvec_1.Rect(new paintvec_1.Vec2(100, 100), new paintvec_1.Vec2(200, 300))
+});
 shape.shader = lib_1.ColorShader;
 shape.uniforms["color"] = new lib_1.Color(0.9, 0.1, 0.2, 1);
 drawTarget.draw(shape);
@@ -14,7 +16,9 @@ drawTarget.transform = paintvec_1.Transform.rotate(0.1 * Math.PI);
 shape.blendMode = "dst-out";
 drawTarget.draw(shape);
 const canvasDrawTarget = new lib_1.CanvasDrawTarget(context);
-const textureShape = new lib_1.RectShape(context, new paintvec_1.Rect(new paintvec_1.Vec2(0), texture.size));
+const textureShape = new lib_1.RectShape(context, {
+    rect: new paintvec_1.Rect(new paintvec_1.Vec2(0), texture.size)
+});
 textureShape.shader = lib_1.TextureShader;
 textureShape.uniforms["texture"] = texture;
 canvasDrawTarget.draw(textureShape);
@@ -456,6 +460,7 @@ exports.ColorShader = ColorShader;
 },{"./Color":2,"./Texture":7,"paintvec":9}],6:[function(require,module,exports){
 "use strict";
 const paintvec_1 = require("paintvec");
+const Shader_1 = require("./Shader");
 function glUsage(gl, usage) {
     switch (usage) {
         case "static":
@@ -496,16 +501,8 @@ function blendFuncs(gl, mode) {
   The base class of Shape.
 */
 class ShapeBase {
-    constructor(context) {
+    constructor(context, opts) {
         this.context = context;
-        /**
-          The usage hint of this Shape.
-        */
-        this.usage = "dynamic";
-        /**
-          The indices of each triangles of this Shape.
-        */
-        this.indices = [];
         /**
           The vertex attributes of this Shape.
         */
@@ -515,16 +512,13 @@ class ShapeBase {
           Set it to true after this shape is changed.
         */
         this.needsUpdate = true;
-        /**
-          The uniform values passed to the shader.
-        */
-        this.uniforms = {};
-        this.blendMode = "src-over";
-        /**
-          The transform of this Shape.
-        */
-        this.transform = new paintvec_1.Transform();
         const { gl } = context;
+        this.usage = opts.usage || "dynamic";
+        this.indices = opts.indices || [];
+        this.shader = opts.shader || Shader_1.Shader;
+        this.uniforms = opts.uniforms || {};
+        this.blendMode = opts.blendMode || "src-over";
+        this.transform = opts.transform || new paintvec_1.Transform();
         this.vertexBuffer = gl.createBuffer();
         this.indexBuffer = gl.createBuffer();
     }
@@ -624,12 +618,10 @@ class ShapeBase {
 }
 exports.ShapeBase = ShapeBase;
 class Shape extends ShapeBase {
-    constructor(context, positions, texCoords) {
-        super(context);
-        this._positions = [];
-        this._texCoords = [];
-        this.positions = positions;
-        this.texCoords = texCoords;
+    constructor(context, opts) {
+        super(context, opts);
+        this.positions = opts.positions || [];
+        this.texCoords = opts.texCoords || [];
     }
     get positions() {
         return this._positions;
@@ -646,16 +638,17 @@ class Shape extends ShapeBase {
 }
 exports.Shape = Shape;
 class QuadShape extends Shape {
-    constructor(context, positions) {
-        super(context, positions, new paintvec_1.Rect(new paintvec_1.Vec2(0), new paintvec_1.Vec2(1)).vertices());
+    constructor(context, opts) {
+        super(context, opts);
         this.indices = [0, 1, 2, 1, 2, 3];
+        this.texCoords = new paintvec_1.Rect(new paintvec_1.Vec2(0), new paintvec_1.Vec2(1)).vertices();
     }
 }
 exports.QuadShape = QuadShape;
 class RectShape extends QuadShape {
-    constructor(context, _rect) {
-        super(context, _rect.vertices());
-        this._rect = _rect;
+    constructor(context, opts) {
+        super(context, opts);
+        this.rect = opts.rect || new paintvec_1.Rect();
     }
     get rect() {
         return this._rect;
@@ -667,7 +660,7 @@ class RectShape extends QuadShape {
 }
 exports.RectShape = RectShape;
 
-},{"paintvec":9}],7:[function(require,module,exports){
+},{"./Shader":5,"paintvec":9}],7:[function(require,module,exports){
 "use strict";
 const paintvec_1 = require("paintvec");
 function glType(context, pixelType) {

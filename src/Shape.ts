@@ -52,6 +52,16 @@ function blendFuncs(gl: WebGLRenderingContext, mode: BlendMode) {
   }
 }
 
+export
+interface ShapeBaseOptions {
+  usage?: ShapeUsage
+  indices?: number[]
+  shader?: typeof Shader
+  uniforms?: ObjectMap<UniformValue>
+  blendMode?: BlendMode
+  transform?: Transform
+}
+
 /**
   The base class of Shape.
 */
@@ -70,12 +80,12 @@ class ShapeBase implements Drawable {
   /**
     The usage hint of this Shape.
   */
-  usage: ShapeUsage = "dynamic"
+  usage: ShapeUsage
 
   /**
     The indices of each triangles of this Shape.
   */
-  indices: number[] = []
+  indices: number[]
 
   /**
     The vertex attributes of this Shape.
@@ -96,14 +106,14 @@ class ShapeBase implements Drawable {
   /**
     The uniform values passed to the shader.
   */
-  uniforms: ObjectMap<UniformValue> = {}
+  uniforms: ObjectMap<UniformValue>
 
-  blendMode: BlendMode = "src-over"
+  blendMode: BlendMode
 
   /**
     The transform of this Shape.
   */
-  transform = new Transform()
+  transform: Transform
 
   attributeStride() {
     let stride = 0
@@ -113,8 +123,15 @@ class ShapeBase implements Drawable {
     return stride
   }
 
-  constructor(public context: Context) {
+  constructor(public context: Context, opts: ShapeBaseOptions) {
     const {gl} = context
+    this.usage = opts.usage || "dynamic"
+    this.indices = opts.indices || []
+    this.shader = opts.shader || Shader
+    this.uniforms = opts.uniforms || {}
+    this.blendMode = opts.blendMode || "src-over"
+    this.transform = opts.transform || new Transform()
+
     this.vertexBuffer = gl.createBuffer()!
     this.indexBuffer = gl.createBuffer()!
   }
@@ -219,14 +236,20 @@ class ShapeBase implements Drawable {
 }
 
 export
-class Shape extends ShapeBase {
-  private _positions: Vec2[] = []
-  private _texCoords: Vec2[] = []
+interface ShapeOptions extends ShapeBaseOptions {
+  positions?: Vec2[]
+  texCoords?: Vec2[]
+}
 
-  constructor(context: Context, positions: Vec2[], texCoords: Vec2[]) {
-    super(context)
-    this.positions = positions
-    this.texCoords = texCoords
+export
+class Shape extends ShapeBase {
+  private _positions: Vec2[]
+  private _texCoords: Vec2[]
+
+  constructor(context: Context, opts: ShapeOptions) {
+    super(context, opts)
+    this.positions = opts.positions || []
+    this.texCoords = opts.texCoords || []
   }
 
   get positions() {
@@ -247,9 +270,15 @@ export
 type QuadPolygon = [Vec2, Vec2, Vec2, Vec2]
 
 export
+interface QuadShapeOptions extends ShapeBaseOptions {
+  positions?: QuadPolygon
+}
+
+export
 class QuadShape extends Shape {
-  constructor(context: Context, positions: QuadPolygon) {
-    super(context, positions, new Rect(new Vec2(0), new Vec2(1)).vertices())
+  constructor(context: Context, opts: QuadShapeOptions) {
+    super(context, opts)
+    this.texCoords = new Rect(new Vec2(0), new Vec2(1)).vertices()
   }
   positions: QuadPolygon
   texCoords: QuadPolygon
@@ -257,9 +286,17 @@ class QuadShape extends Shape {
 }
 
 export
+interface RectShapeOptions extends ShapeBaseOptions {
+  rect?: Rect
+}
+
+export
 class RectShape extends QuadShape {
-  constructor(context: Context, private _rect: Rect) {
-    super(context, _rect.vertices())
+  _rect: Rect
+
+  constructor(context: Context, opts: RectShapeOptions) {
+    super(context, opts)
+    this.rect = opts.rect || new Rect()
   }
 
   get rect() {

@@ -8,6 +8,14 @@ export declare type ShapeUsage = "static" | "stream" | "dynamic";
   BlendMode represents how drawn color and destination color are blended.
 */
 export declare type BlendMode = "src" | "src-over" | "src-in" | "src-out" | "src-atop" | "dst" | "dst-over" | "dst-in" | "dst-out" | "dst-atop";
+export interface ShapeBaseOptions {
+    usage?: ShapeUsage;
+    indices?: number[];
+    shader?: typeof Shader;
+    uniforms?: ObjectMap<UniformValue>;
+    blendMode?: BlendMode;
+    transform?: Transform;
+}
 /**
   The base class of Shape.
 */
@@ -55,7 +63,7 @@ export declare class ShapeBase implements Drawable {
     */
     transform: Transform;
     attributeStride(): number;
-    constructor(context: Context);
+    constructor(context: Context, opts: ShapeBaseOptions);
     setFloatAttributes(name: string, attributes: number[]): void;
     setVec2Attributes(name: string, attributes: Vec2[]): void;
     update(): void;
@@ -63,22 +71,32 @@ export declare class ShapeBase implements Drawable {
     draw(transform: Transform): void;
     dispose(): void;
 }
+export interface ShapeOptions extends ShapeBaseOptions {
+    positions?: Vec2[];
+    texCoords?: Vec2[];
+}
 export declare class Shape extends ShapeBase {
     private _positions;
     private _texCoords;
-    constructor(context: Context, positions: Vec2[], texCoords: Vec2[]);
+    constructor(context: Context, opts: ShapeOptions);
     positions: Vec2[];
     texCoords: Vec2[];
 }
 export declare type QuadPolygon = [Vec2, Vec2, Vec2, Vec2];
+export interface QuadShapeOptions extends ShapeBaseOptions {
+    positions?: QuadPolygon;
+}
 export declare class QuadShape extends Shape {
-    constructor(context: Context, positions: QuadPolygon);
+    constructor(context: Context, opts: QuadShapeOptions);
     positions: QuadPolygon;
     texCoords: QuadPolygon;
     indices: number[];
 }
+export interface RectShapeOptions extends ShapeBaseOptions {
+    rect?: Rect;
+}
 export declare class RectShape extends QuadShape {
-    private _rect;
-    constructor(context: Context, _rect: Rect);
+    _rect: Rect;
+    constructor(context: Context, opts: RectShapeOptions);
     rect: Rect;
 }
