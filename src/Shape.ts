@@ -123,7 +123,7 @@ class ShapeBase implements Drawable {
     return stride
   }
 
-  constructor(public context: Context, opts: ShapeBaseOptions) {
+  constructor(public context: Context, opts: ShapeBaseOptions = {}) {
     const {gl} = context
     this.usage = opts.usage || "dynamic"
     this.indices = opts.indices || []
@@ -246,7 +246,7 @@ class Shape extends ShapeBase {
   private _positions: Vec2[]
   private _texCoords: Vec2[]
 
-  constructor(context: Context, opts: ShapeOptions) {
+  constructor(context: Context, opts: ShapeOptions = {}) {
     super(context, opts)
     this.positions = opts.positions || []
     this.texCoords = opts.texCoords || []
@@ -276,7 +276,7 @@ interface QuadShapeOptions extends ShapeBaseOptions {
 
 export
 class QuadShape extends Shape {
-  constructor(context: Context, opts: QuadShapeOptions) {
+  constructor(context: Context, opts: QuadShapeOptions = {}) {
     super(context, opts)
     this.texCoords = new Rect(new Vec2(0), new Vec2(1)).vertices()
   }
@@ -294,7 +294,7 @@ export
 class RectShape extends QuadShape {
   _rect: Rect
 
-  constructor(context: Context, opts: RectShapeOptions) {
+  constructor(context: Context, opts: RectShapeOptions = {}) {
     super(context, opts)
     this.rect = opts.rect || new Rect()
   }

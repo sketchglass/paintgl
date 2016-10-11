@@ -501,7 +501,7 @@ function blendFuncs(gl, mode) {
   The base class of Shape.
 */
 class ShapeBase {
-    constructor(context, opts) {
+    constructor(context, opts = {}) {
         this.context = context;
         /**
           The vertex attributes of this Shape.
@@ -618,7 +618,7 @@ class ShapeBase {
 }
 exports.ShapeBase = ShapeBase;
 class Shape extends ShapeBase {
-    constructor(context, opts) {
+    constructor(context, opts = {}) {
         super(context, opts);
         this.positions = opts.positions || [];
         this.texCoords = opts.texCoords || [];
@@ -638,7 +638,7 @@ class Shape extends ShapeBase {
 }
 exports.Shape = Shape;
 class QuadShape extends Shape {
-    constructor(context, opts) {
+    constructor(context, opts = {}) {
         super(context, opts);
         this.indices = [0, 1, 2, 1, 2, 3];
         this.texCoords = new paintvec_1.Rect(new paintvec_1.Vec2(0), new paintvec_1.Vec2(1)).vertices();
@@ -646,7 +646,7 @@ class QuadShape extends Shape {
 }
 exports.QuadShape = QuadShape;
 class RectShape extends QuadShape {
-    constructor(context, opts) {
+    constructor(context, opts = {}) {
         super(context, opts);
         this.rect = opts.rect || new paintvec_1.Rect();
     }

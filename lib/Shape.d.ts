@@ -63,7 +63,7 @@ export declare class ShapeBase implements Drawable {
     */
     transform: Transform;
     attributeStride(): number;
-    constructor(context: Context, opts: ShapeBaseOptions);
+    constructor(context: Context, opts?: ShapeBaseOptions);
     setFloatAttributes(name: string, attributes: number[]): void;
     setVec2Attributes(name: string, attributes: Vec2[]): void;
     update(): void;
@@ -78,7 +78,7 @@ export interface ShapeOptions extends ShapeBaseOptions {
 export declare class Shape extends ShapeBase {
     private _positions;
     private _texCoords;
-    constructor(context: Context, opts: ShapeOptions);
+    constructor(context: Context, opts?: ShapeOptions);
     positions: Vec2[];
     texCoords: Vec2[];
 }
@@ -87,7 +87,7 @@ export interface QuadShapeOptions extends ShapeBaseOptions {
     positions?: QuadPolygon;
 }
 export declare class QuadShape extends Shape {
-    constructor(context: Context, opts: QuadShapeOptions);
+    constructor(context: Context, opts?: QuadShapeOptions);
     positions: QuadPolygon;
     texCoords: QuadPolygon;
     indices: number[];
@@ -97,6 +97,6 @@ export interface RectShapeOptions extends ShapeBaseOptions {
 }
 export declare class RectShape extends QuadShape {
     _rect: Rect;
-    constructor(context: Context, opts: RectShapeOptions);
+    constructor(context: Context, opts?: RectShapeOptions);
     rect: Rect;
 }
