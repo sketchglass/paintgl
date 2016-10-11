@@ -21,9 +21,12 @@ abstract class ShaderBase {
   */
   abstract get fragmentShader(): string
 
-  private _uniformValues: ObjectMap<UniformValue> = {}
-  private _uniformLocations: ObjectMap<WebGLUniformLocation|null> = {}
-  _textureValues: ObjectMap<Texture> = {}
+  private _uniformNumberValues = new Map<string, number>()
+  private _uniformVec2Values = new Map<string, Vec2>()
+  private _uniformColorValues = new Map<string, Color>()
+  private _uniformTransformValues = new Map<string, Transform>()
+  private _uniformLocations = new Map<string, WebGLUniformLocation|null>()
+  _textureValues = new Map<string, Texture>()
 
   constructor(public context: Context) {
     const {gl} = context
@@ -49,55 +52,100 @@ abstract class ShaderBase {
 
   private _uniformLocation(name: string) {
     const {gl} = this.context
-    if (name in this._uniformLocations) {
-      return this._uniformLocations[name]
+    if (this._uniformLocations.has(name)) {
+      return this._uniformLocations.get(name)
     } else {
       const location = gl.getUniformLocation(this.program, name)
-      this._uniformLocations[name] = location
+      this._uniformLocations.set(name, location)
       return location
     }
   }
 
   setUniform(name: string, value: UniformValue) {
-    if (this._uniformValues[name] == value) {
-      return
-    }
-    const {gl} = this.context
-    gl.useProgram(this.program)
-    const location = this._uniformLocation(name)
-    if (!location) {
-      return
-    }
     if (typeof value == "number") {
-      gl.uniform1f(location, value)
+      this.setUniformFloat(name, value)
     } else if (value instanceof Vec2) {
-      gl.uniform2fv(location, value.members())
+      this.setUniformVec2(name, value)
     } else if (value instanceof Color) {
-      gl.uniform4fv(location, value.members())
+      this.setUniformColor(name, value)
     } else if (value instanceof Transform) {
-      gl.uniformMatrix3fv(location, false, value.members())
+      this.setUniformTransform(name, value)
     } else if (value instanceof Texture) {
-      this._textureValues[name] = value
+      this._textureValues.set(name, value)
     }
-    this._uniformValues[name] = value
   }
 
-  setUniformInt(name: string, value: number|Vec2) {
-    if (this._uniformValues[name] == value) {
-      return
-    }
-    const {gl} = this.context
-    gl.useProgram(this.program)
+  setUniformFloat(name: string, value: number) {
     const location = this._uniformLocation(name)
     if (!location) {
       return
     }
-    if (typeof value == "number") {
-      gl.uniform1i(location, value)
-    } else if (value instanceof Vec2) {
-      gl.uniform2iv(location, value.members())
+    if (this._uniformNumberValues.get(name) == value) {
+      return
     }
-    this._uniformValues[name] = value
+    const {gl} = this.context
+    gl.useProgram(this.program)
+    gl.uniform1f(location, value)
+    this._uniformNumberValues.set(name, value)
+  }
+
+  setUniformVec2(name: string, value: Vec2) {
+    const location = this._uniformLocation(name)
+    if (!location) {
+      return
+    }
+    const oldValue = this._uniformVec2Values.get(name)
+    if (oldValue && oldValue.equals(value)) {
+      return
+    }
+    const {gl} = this.context
+    gl.useProgram(this.program)
+    gl.uniform2fv(location, value.members())
+    this._uniformVec2Values.set(name, value)
+  }
+
+  setUniformColor(name: string, value: Color) {
+    const location = this._uniformLocation(name)
+    if (!location) {
+      return
+    }
+    const oldValue = this._uniformColorValues.get(name)
+    if (oldValue && oldValue.equals(value)) {
+      return
+    }
+    const {gl} = this.context
+    gl.useProgram(this.program)
+    gl.uniform4fv(location, value.members())
+    this._uniformColorValues.set(name, value)
+  }
+
+  setUniformTransform(name: string, value: Transform) {
+    const location = this._uniformLocation(name)
+    if (!location) {
+      return
+    }
+    const oldValue = this._uniformTransformValues.get(name)
+    if (oldValue && oldValue.equals(value)) {
+      return
+    }
+    const {gl} = this.context
+    gl.useProgram(this.program)
+    gl.uniformMatrix3fv(location, false, value.members())
+    this._uniformTransformValues.set(name, value)
+  }
+
+  setUniformInt(name: string, value: number) {
+    const location = this._uniformLocation(name)
+    if (!location) {
+      return
+    }
+    if (this._uniformNumberValues.get(name) == value) {
+      return
+    }
+    const {gl} = this.context
+    gl.useProgram(this.program)
+    gl.uniform1i(location, value)
+    this._uniformNumberValues.set(name, value)
   }
 
   dispose() {

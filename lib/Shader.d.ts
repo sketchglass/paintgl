@@ -2,7 +2,6 @@ import { Vec2, Transform } from "paintvec";
 import { Color } from "./Color";
 import { Context } from "./Context";
 import { Texture } from "./Texture";
-import { ObjectMap } from "./utils";
 export declare type UniformValue = number | Vec2 | Color | Transform | Texture;
 export declare abstract class ShaderBase {
     context: Context;
@@ -15,14 +14,21 @@ export declare abstract class ShaderBase {
       The fragment shader.
     */
     readonly abstract fragmentShader: string;
-    private _uniformValues;
+    private _uniformNumberValues;
+    private _uniformVec2Values;
+    private _uniformColorValues;
+    private _uniformTransformValues;
     private _uniformLocations;
-    _textureValues: ObjectMap<Texture>;
+    _textureValues: Map<string, Texture>;
     constructor(context: Context);
     private _addShader(type, source);
     private _uniformLocation(name);
     setUniform(name: string, value: UniformValue): void;
-    setUniformInt(name: string, value: number | Vec2): void;
+    setUniformFloat(name: string, value: number): void;
+    setUniformVec2(name: string, value: Vec2): void;
+    setUniformColor(name: string, value: Color): void;
+    setUniformTransform(name: string, value: Transform): void;
+    setUniformInt(name: string, value: number): void;
     dispose(): void;
 }
 /**

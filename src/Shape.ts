@@ -205,8 +205,8 @@ class ShapeBase implements Drawable {
 
     let texUnit = 0
     const textures: Texture[] = []
-    for (const name in shader._textureValues) {
-      textures.push(shader._textureValues[name])
+    for (const [name, texture] of shader._textureValues) {
+      textures.push(texture)
       shader.setUniformInt(name, texUnit)
       ++texUnit
     }

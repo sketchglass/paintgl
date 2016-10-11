@@ -192,9 +192,9 @@ class DrawTarget {
     }
     _flipRect(rect) {
         if (this.flipY) {
-            let { left, right, top, bottom } = rect;
-            top = this.size.height - top;
-            bottom = this.size.height - bottom;
+            const { left, right } = rect;
+            const top = this.size.height - rect.bottom;
+            const bottom = this.size.height - rect.top;
             return new paintvec_1.Rect(new paintvec_1.Vec2(left, top), new paintvec_1.Vec2(right, bottom));
         }
         return rect;
@@ -290,9 +290,12 @@ const Texture_1 = require("./Texture");
 class ShaderBase {
     constructor(context) {
         this.context = context;
-        this._uniformValues = {};
-        this._uniformLocations = {};
-        this._textureValues = {};
+        this._uniformNumberValues = new Map();
+        this._uniformVec2Values = new Map();
+        this._uniformColorValues = new Map();
+        this._uniformTransformValues = new Map();
+        this._uniformLocations = new Map();
+        this._textureValues = new Map();
         const { gl } = context;
         this.program = gl.createProgram();
         this._addShader(gl.VERTEX_SHADER, this.vertexShader);
@@ -322,59 +325,99 @@ class ShaderBase {
     }
     _uniformLocation(name) {
         const { gl } = this.context;
-        if (name in this._uniformLocations) {
-            return this._uniformLocations[name];
+        if (this._uniformLocations.has(name)) {
+            return this._uniformLocations.get(name);
         }
         else {
             const location = gl.getUniformLocation(this.program, name);
-            this._uniformLocations[name] = location;
+            this._uniformLocations.set(name, location);
             return location;
         }
     }
     setUniform(name, value) {
-        if (this._uniformValues[name] == value) {
-            return;
-        }
-        const { gl } = this.context;
-        gl.useProgram(this.program);
-        const location = this._uniformLocation(name);
-        if (!location) {
-            return;
-        }
         if (typeof value == "number") {
-            gl.uniform1f(location, value);
+            this.setUniformFloat(name, value);
         }
         else if (value instanceof paintvec_1.Vec2) {
-            gl.uniform2fv(location, value.members());
+            this.setUniformVec2(name, value);
         }
         else if (value instanceof Color_1.Color) {
-            gl.uniform4fv(location, value.members());
+            this.setUniformColor(name, value);
         }
         else if (value instanceof paintvec_1.Transform) {
-            gl.uniformMatrix3fv(location, false, value.members());
+            this.setUniformTransform(name, value);
         }
         else if (value instanceof Texture_1.Texture) {
-            this._textureValues[name] = value;
+            this._textureValues.set(name, value);
         }
-        this._uniformValues[name] = value;
     }
-    setUniformInt(name, value) {
-        if (this._uniformValues[name] == value) {
-            return;
-        }
-        const { gl } = this.context;
-        gl.useProgram(this.program);
+    setUniformFloat(name, value) {
         const location = this._uniformLocation(name);
         if (!location) {
             return;
         }
-        if (typeof value == "number") {
-            gl.uniform1i(location, value);
+        if (this._uniformNumberValues.get(name) == value) {
+            return;
         }
-        else if (value instanceof paintvec_1.Vec2) {
-            gl.uniform2iv(location, value.members());
+        const { gl } = this.context;
+        gl.useProgram(this.program);
+        gl.uniform1f(location, value);
+        this._uniformNumberValues.set(name, value);
+    }
+    setUniformVec2(name, value) {
+        const location = this._uniformLocation(name);
+        if (!location) {
+            return;
         }
-        this._uniformValues[name] = value;
+        const oldValue = this._uniformVec2Values.get(name);
+        if (oldValue && oldValue.equals(value)) {
+            return;
+        }
+        const { gl } = this.context;
+        gl.useProgram(this.program);
+        gl.uniform2fv(location, value.members());
+        this._uniformVec2Values.set(name, value);
+    }
+    setUniformColor(name, value) {
+        const location = this._uniformLocation(name);
+        if (!location) {
+            return;
+        }
+        const oldValue = this._uniformColorValues.get(name);
+        if (oldValue && oldValue.equals(value)) {
+            return;
+        }
+        const { gl } = this.context;
+        gl.useProgram(this.program);
+        gl.uniform4fv(location, value.members());
+        this._uniformColorValues.set(name, value);
+    }
+    setUniformTransform(name, value) {
+        const location = this._uniformLocation(name);
+        if (!location) {
+            return;
+        }
+        const oldValue = this._uniformTransformValues.get(name);
+        if (oldValue && oldValue.equals(value)) {
+            return;
+        }
+        const { gl } = this.context;
+        gl.useProgram(this.program);
+        gl.uniformMatrix3fv(location, false, value.members());
+        this._uniformTransformValues.set(name, value);
+    }
+    setUniformInt(name, value) {
+        const location = this._uniformLocation(name);
+        if (!location) {
+            return;
+        }
+        if (this._uniformNumberValues.get(name) == value) {
+            return;
+        }
+        const { gl } = this.context;
+        gl.useProgram(this.program);
+        gl.uniform1i(location, value);
+        this._uniformNumberValues.set(name, value);
     }
     dispose() {
         const { gl } = this.context;
@@ -398,13 +441,14 @@ class Shader extends ShaderBase {
     get vertexShader() {
         return `
       precision highp float;
-      ${this.additionalVertexShader}
 
       uniform mat3 transform;
       attribute vec2 aPosition;
       attribute vec2 aTexCoord;
       varying vec2 vPosition;
       varying vec2 vTexCoord;
+
+      ${this.additionalVertexShader}
 
       void main(void) {
         vPosition = aPosition;
@@ -590,8 +634,8 @@ class ShapeBase {
         gl.useProgram(shader.program);
         let texUnit = 0;
         const textures = [];
-        for (const name in shader._textureValues) {
-            textures.push(shader._textureValues[name]);
+        for (const [name, texture] of shader._textureValues) {
+            textures.push(texture);
             shader.setUniformInt(name, texUnit);
             ++texUnit;
         }
@@ -715,7 +759,7 @@ class Texture {
         return this._size;
     }
     set size(size) {
-        this.setData(this.size);
+        this.setData(size);
     }
     /**
       The filter used in scaling of this Texture.
