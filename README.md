@@ -29,27 +29,39 @@ const drawTarget = new TextureDrawTarget(context, texture)
 drawTarget.clear(new Color(0.9, 0.9, 0.9, 1))
 
 // create a shape that is drawn into the draw target
-const shape = new RectShape(context)
-shape.rect = new Rect(new Vec2(100, 100), new Vec2(200, 300))
+const shape = new RectShape(context, {
+  rect: new Rect(new Vec2(100, 100), new Vec2(200, 300))
+})
 
-// specify shader of the shape
-shape.shader = ColorShader
-shape.uniforms["color"] = new Color(0.9, 0.1, 0.2, 1)
+// create a model and specify shape and shader
+const model = new Model(context, {
+  shape: shape,
+  shader: ColorShader,
+  uniforms: {
+    color: new Color(0.9, 0.1, 0.2, 1)
+  }
+})
 
 // apply some transform
 drawTarget.transform = Transform.rotate(0.1 * Math.PI)
-// draw shape into draw target
-drawTarget.draw(shape)
+// draw model into draw target
+drawTarget.draw(model)
 
 // create a draw target that draws directly into canvas element
 const canvasDrawTarget = new CanvasDrawTarget(context)
 
 // create a shape for texture
-const textureShape = new RectShape(context)
-textureShape.rect = new Rect(new Vec2(0), texture.size)
-textureShape.shader = TextureShader
-textureShape.uniforms["texture"] = texture
+const textureShape = new RectShape(context, {
+  rect: new Rect(new Vec2(0), texture.size)
+})
+const textureModel = new Model(context, {
+  shape: textureShape,
+  shader: TextureShader,
+  uniforms: {
+    texture: texture
+  }
+})
 
 // draw texture into canvas
-canvasDrawTarget.draw(textureShape)
+canvasDrawTarget.draw(textureModel)
 ```
