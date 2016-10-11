@@ -51,14 +51,13 @@ abstract class ShaderBase {
   }
 
   private _uniformLocation(name: string) {
-    const {gl} = this.context
-    if (this._uniformLocations.has(name)) {
-      return this._uniformLocations.get(name)
-    } else {
-      const location = gl.getUniformLocation(this.program, name)
+    let location = this._uniformLocations.get(name)
+    if (location === undefined) {
+      const {gl} = this.context
+      location = gl.getUniformLocation(this.program, name)
       this._uniformLocations.set(name, location)
-      return location
     }
+    return location
   }
 
   setUniform(name: string, value: UniformValue) {
