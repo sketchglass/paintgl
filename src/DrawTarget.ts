@@ -91,9 +91,9 @@ abstract class DrawTarget {
 
   private _flipRect(rect: Rect) {
     if (this.flipY) {
-      let {left, right, top, bottom} = rect
-      top = this.size.height - top
-      bottom = this.size.height - bottom
+      const {left, right} = rect
+      const top = this.size.height - rect.bottom
+      const bottom = this.size.height - rect.top
       return new Rect(new Vec2(left, top), new Vec2(right, bottom))
     }
     return rect
