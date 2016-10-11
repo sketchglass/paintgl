@@ -84,7 +84,7 @@ class Texture {
     return this._size
   }
   set size(size: Vec2) {
-    this.setData(this.size)
+    this.setData(size)
   }
 
   private _filter: TextureFilter
