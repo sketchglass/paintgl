@@ -1,6 +1,5 @@
 import { Vec2, Rect } from "paintvec";
 import { Context } from './Context';
-import { ObjectMap } from "./utils";
 export declare type ShapeUsage = "static" | "stream" | "dynamic";
 export interface ShapeBaseOptions {
     usage?: ShapeUsage;
@@ -30,10 +29,11 @@ export declare class ShapeBase {
     /**
       The vertex attributes of this Shape.
     */
-    attributes: ObjectMap<{
+    attributes: Map<string, {
         size: number;
         data: number[] | Vec2[];
     }>;
+    length: number;
     /**
       Whether the buffer of this Shape should be updated.
       Set it to true after this shape is changed.

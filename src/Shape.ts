@@ -53,7 +53,9 @@ class ShapeBase {
   /**
     The vertex attributes of this Shape.
   */
-  attributes: ObjectMap<{size: number, data: number[]|Vec2[]}> = {}
+  attributes = new Map<string, {size: number, data: number[]|Vec2[]}>()
+
+  length = 0
 
   /**
     Whether the buffer of this Shape should be updated.
@@ -63,8 +65,8 @@ class ShapeBase {
 
   attributeStride() {
     let stride = 0
-    for (const name in this.attributes) {
-      stride += this.attributes[name].size
+    for (const attribute of this.attributes.values()) {
+      stride += attribute.size
     }
     return stride
   }
@@ -79,31 +81,32 @@ class ShapeBase {
   }
 
   setFloatAttributes(name: string, attributes: number[]) {
-    this.attributes[name] = {size: 1, data: attributes}
+    this.attributes.set(name, {size: 1, data: attributes})
+    this.length = attributes.length
     this.needsUpdate = true
   }
   setVec2Attributes(name: string, attributes: Vec2[]) {
-    this.attributes[name] = {size: 2, data: attributes}
+    this.attributes.set(name, {size: 2, data: attributes})
+    this.length = attributes.length
     this.needsUpdate = true
   }
 
   update() {
     const {gl} = this.context
-    const length = this.attributes[Object.keys(this.attributes)[0]].data.length
+    const {length} = this
     const stride = this.attributeStride()
     const vertexData = new Float32Array(length * stride)
+    let offset = 0
 
     for (let i = 0; i < length; ++i) {
-      let offset = 0
-      for (const name in this.attributes) {
-        const attribute = this.attributes[name]
+      for (const [name, attribute] of this.attributes) {
         if (attribute.size == 1) {
           const value = attribute.data[i] as number
-          vertexData[i * stride + offset] = value
+          vertexData[offset] = value
         } else {
           const value = attribute.data[i] as Vec2
-          vertexData[i * stride + offset] = value.x
-          vertexData[i * stride + offset + 1] = value.y
+          vertexData[offset] = value.x
+          vertexData[offset + 1] = value.y
         }
         offset += attribute.size
       }

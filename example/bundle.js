@@ -342,8 +342,7 @@ class Model {
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, shape.indexBuffer);
         const stride = shape.attributeStride();
         let offset = 0;
-        for (const name in shape.attributes) {
-            const attribute = shape.attributes[name];
+        for (const [name, attribute] of shape.attributes) {
             const pos = gl.getAttribLocation(shader.program, name);
             gl.enableVertexAttribArray(pos);
             gl.vertexAttribPointer(pos, attribute.size, gl.FLOAT, false, stride * 4, offset * 4);
@@ -627,7 +626,8 @@ class ShapeBase {
         /**
           The vertex attributes of this Shape.
         */
-        this.attributes = {};
+        this.attributes = new Map();
+        this.length = 0;
         /**
           Whether the buffer of this Shape should be updated.
           Set it to true after this shape is changed.
@@ -641,36 +641,37 @@ class ShapeBase {
     }
     attributeStride() {
         let stride = 0;
-        for (const name in this.attributes) {
-            stride += this.attributes[name].size;
+        for (const attribute of this.attributes.values()) {
+            stride += attribute.size;
         }
         return stride;
     }
     setFloatAttributes(name, attributes) {
-        this.attributes[name] = { size: 1, data: attributes };
+        this.attributes.set(name, { size: 1, data: attributes });
+        this.length = attributes.length;
         this.needsUpdate = true;
     }
     setVec2Attributes(name, attributes) {
-        this.attributes[name] = { size: 2, data: attributes };
+        this.attributes.set(name, { size: 2, data: attributes });
+        this.length = attributes.length;
         this.needsUpdate = true;
     }
     update() {
         const { gl } = this.context;
-        const length = this.attributes[Object.keys(this.attributes)[0]].data.length;
+        const { length } = this;
         const stride = this.attributeStride();
         const vertexData = new Float32Array(length * stride);
+        let offset = 0;
         for (let i = 0; i < length; ++i) {
-            let offset = 0;
-            for (const name in this.attributes) {
-                const attribute = this.attributes[name];
+            for (const [name, attribute] of this.attributes) {
                 if (attribute.size == 1) {
                     const value = attribute.data[i];
-                    vertexData[i * stride + offset] = value;
+                    vertexData[offset] = value;
                 }
                 else {
                     const value = attribute.data[i];
-                    vertexData[i * stride + offset] = value.x;
-                    vertexData[i * stride + offset + 1] = value.y;
+                    vertexData[offset] = value.x;
+                    vertexData[offset + 1] = value.y;
                 }
                 offset += attribute.size;
             }

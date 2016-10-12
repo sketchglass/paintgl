@@ -93,8 +93,7 @@ class Model implements Drawable {
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, shape.indexBuffer)
     const stride = shape.attributeStride()
     let offset = 0
-    for (const name in shape.attributes) {
-      const attribute = shape.attributes[name]
+    for (const [name, attribute] of shape.attributes) {
       const pos = gl.getAttribLocation(shader.program, name)!
       gl.enableVertexAttribArray(pos)
       gl.vertexAttribPointer(pos, attribute.size, gl.FLOAT, false, stride * 4, offset * 4)
