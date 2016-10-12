@@ -11,19 +11,24 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/seanchas116/paintgl.git"
+    "url": "git+https://github.com/sketchglass/paintgl.git"
   },
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/seanchas116/paintgl/issues"
+    "url": "https://github.com/sketchglass/paintgl/issues"
   },
-  "homepage": "https://github.com/seanchas116/paintgl#readme",
+  "homepage": "https://github.com/sketchglass/paintgl#readme",
   "devDependencies": {
     "browserify": "^13.1.0",
     "typedoc": "github:jasongrout/typedoc#ts2",
     "typedoc-theme-clean": "github:seanchas116/typedoc-theme-clean",
     "typescript": "^2.0.3",
-    "paintvec": "github:seanchas116/paintvec"
-  }
+    "paintvec": "github:sketchglass/paintvec"
+  },
+  "directories": {
+    "doc": "docs",
+    "example": "example"
+  },
+  "dependencies": {}
 }
