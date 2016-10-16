@@ -3,11 +3,11 @@
 
 ## Install
 
-paintgl depends on [paintvec](https://github.com/seanchas116/paintvec).
+paintgl depends on [paintvec](https://github.com/sketchglass/paintvec).
 
 ```
-npm install --save github:seanchas116/paingvec
-npm install --save github:seanchas116/paintgl
+npm install --save github:sketchglass/paingvec
+npm install --save github:sketchglass/paintgl
 ```
 
 ## Usage
