@@ -153,12 +153,14 @@ class Shape extends ShapeBase {
     return this._positions
   }
   set positions(positions: Vec2[]) {
+    this._positions = positions
     this.setVec2Attributes("aPosition", positions)
   }
   get texCoords() {
     return this._texCoords
   }
   set texCoords(texCoords: Vec2[]) {
+    this._texCoords = texCoords
     this.setVec2Attributes("aTexCoord", texCoords)
   }
 }
