@@ -61,9 +61,7 @@ class Context {
       premultipliedAlpha: true,
     }
     if (opts) {
-      for (const key in opts) {
-        glOpts[key] = opts[key]
-      }
+      Object.assign(glOpts, opts)
     }
 
     const gl = this.gl = canvas.getContext("webgl", glOpts)! as WebGLRenderingContext

@@ -1,5 +1,5 @@
 import {Vec2, Rect, Transform} from "paintvec"
-import {Color, Context, Texture, Model, RectShape, ColorShader, TextureShader, TextureDrawTarget, CanvasDrawTarget} from "../lib"
+import {Color, Context, Texture, Model, RectShape, ColorShader, TextureShader, TextureDrawTarget, CanvasDrawTarget} from "../src"
 
 const context = new Context(document.getElementById("canvas") as HTMLCanvasElement)
 
