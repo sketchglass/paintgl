@@ -177,11 +177,12 @@ export
 class QuadShape extends Shape {
   constructor(context: Context, opts: QuadShapeOptions = {}) {
     super(context, opts)
+    this.positions = [new Vec2(), new Vec2(), new Vec2(), new Vec2()]
     this.texCoords = new Rect(new Vec2(0), new Vec2(1)).vertices()
   }
   positions: QuadPolygon
   texCoords: QuadPolygon
-  indices = [0, 1, 2, 1, 2, 3]
+  indices = [0, 1, 2, 2, 3, 0]
 }
 
 export
