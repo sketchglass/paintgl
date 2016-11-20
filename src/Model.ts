@@ -1,7 +1,7 @@
 import {Vec2, Rect, Transform} from "paintvec"
 import {Context} from './Context'
 import {ObjectMap} from "./utils"
-import {Shader, UniformValue} from "./Shader"
+import {Shader, UniformValue, IntUniformValue} from "./Shader"
 import {Color} from "./Color"
 import {Drawable} from "./Drawable"
 import {Texture} from "./Texture"
@@ -64,6 +64,11 @@ class Model implements Drawable {
   */
   uniforms: ObjectMap<UniformValue>
 
+  /**
+    The integer uniform values passed to the shader.
+  */
+  intUniforms: ObjectMap<IntUniformValue>
+
   blendMode: BlendMode
 
   /**
@@ -123,12 +128,15 @@ class Model implements Drawable {
     for (const uniform in this.uniforms) {
       shader.setUniform(uniform, this.uniforms[uniform])
     }
+    for (const uniform in this.intUniforms) {
+      shader.setUniformInt(uniform, this.intUniforms[uniform])
+    }
 
     let texUnit = 0
     const textures: Texture[] = []
     for (const [name, texture] of shader._textureValues) {
       textures.push(texture)
-      shader.setUniformInt(name, texUnit)
+      shader.setUniformIntNumber(name, texUnit)
       ++texUnit
     }
     this.context.textureUnitManager.setTextures(textures)

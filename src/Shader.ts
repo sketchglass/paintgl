@@ -1,11 +1,14 @@
-import {Vec2, Transform} from "paintvec"
+import {Vec2, Rect, Transform} from "paintvec"
 import {Color} from "./Color"
 import {Context} from "./Context"
 import {Texture} from "./Texture"
 import {ObjectMap} from "./utils"
 
 export
-type UniformValue = number|Vec2|Color|Transform|Texture
+type UniformValue = number|Vec2|Rect|Color|Transform|Texture
+
+export
+type IntUniformValue = boolean|number|Vec2|Rect
 
 export
 abstract class ShaderBase {
@@ -23,6 +26,7 @@ abstract class ShaderBase {
 
   private _uniformNumberValues = new Map<string, number>()
   private _uniformVec2Values = new Map<string, Vec2>()
+  private _uniformRectValues = new Map<string, Rect>()
   private _uniformColorValues = new Map<string, Color>()
   private _uniformTransformValues = new Map<string, Transform>()
   private _uniformLocations = new Map<string, WebGLUniformLocation|null>()
@@ -62,9 +66,11 @@ abstract class ShaderBase {
 
   setUniform(name: string, value: UniformValue) {
     if (typeof value == "number") {
-      this.setUniformFloat(name, value)
+      this.setUniformNumber(name, value)
     } else if (value instanceof Vec2) {
       this.setUniformVec2(name, value)
+    } else if (value instanceof Rect) {
+      this.setUniformRect(name, value)
     } else if (value instanceof Color) {
       this.setUniformColor(name, value)
     } else if (value instanceof Transform) {
@@ -74,7 +80,19 @@ abstract class ShaderBase {
     }
   }
 
-  setUniformFloat(name: string, value: number) {
+  setUniformInt(name: string, value: IntUniformValue) {
+    if (typeof value == "boolean") {
+      this.setUniformIntNumber(name, value ? 1 : 0)
+    } else if (typeof value == "number") {
+      this.setUniformIntNumber(name, value)
+    } else if (value instanceof Vec2) {
+      this.setUniformIntVec2(name, value)
+    } else if (value instanceof Rect) {
+      this.setUniformIntRect(name, value)
+    }
+  }
+
+  setUniformNumber(name: string, value: number) {
     const location = this._uniformLocation(name)
     if (!location) {
       return
@@ -101,6 +119,21 @@ abstract class ShaderBase {
     gl.useProgram(this.program)
     gl.uniform2fv(location, value.members())
     this._uniformVec2Values.set(name, value)
+  }
+
+  setUniformRect(name: string, value: Rect) {
+    const location = this._uniformLocation(name)
+    if (!location) {
+      return
+    }
+    const oldValue = this._uniformRectValues.get(name)
+    if (oldValue && oldValue.equals(value)) {
+      return
+    }
+    const {gl} = this.context
+    gl.useProgram(this.program)
+    gl.uniform4fv(location, [value.left, value.top, value.right, value.bottom])
+    this._uniformRectValues.set(name, value)
   }
 
   setUniformColor(name: string, value: Color) {
@@ -133,7 +166,7 @@ abstract class ShaderBase {
     this._uniformTransformValues.set(name, value)
   }
 
-  setUniformInt(name: string, value: number) {
+  setUniformIntNumber(name: string, value: number) {
     const location = this._uniformLocation(name)
     if (!location) {
       return
@@ -145,6 +178,36 @@ abstract class ShaderBase {
     gl.useProgram(this.program)
     gl.uniform1i(location, value)
     this._uniformNumberValues.set(name, value)
+  }
+
+  setUniformIntVec2(name: string, value: Vec2) {
+    const location = this._uniformLocation(name)
+    if (!location) {
+      return
+    }
+    const oldValue = this._uniformVec2Values.get(name)
+    if (oldValue && oldValue.equals(value)) {
+      return
+    }
+    const {gl} = this.context
+    gl.useProgram(this.program)
+    gl.uniform2iv(location, value.members())
+    this._uniformVec2Values.set(name, value)
+  }
+
+  setUniformIntRect(name: string, value: Rect) {
+    const location = this._uniformLocation(name)
+    if (!location) {
+      return
+    }
+    const oldValue = this._uniformRectValues.get(name)
+    if (oldValue && oldValue.equals(value)) {
+      return
+    }
+    const {gl} = this.context
+    gl.useProgram(this.program)
+    gl.uniform4iv(location, [value.left, value.top, value.right, value.bottom])
+    this._uniformRectValues.set(name, value)
   }
 
   dispose() {
