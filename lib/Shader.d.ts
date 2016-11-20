@@ -1,8 +1,8 @@
-import { Vec2, Transform } from "paintvec";
+import { Vec2, Rect, Transform } from "paintvec";
 import { Color } from "./Color";
 import { Context } from "./Context";
 import { Texture } from "./Texture";
-export declare type UniformValue = number | Vec2 | Color | Transform | Texture;
+export declare type UniformValue = boolean | number | Vec2 | Rect | Color | Transform | Texture;
 export declare abstract class ShaderBase {
     context: Context;
     readonly program: WebGLProgram;
@@ -16,6 +16,7 @@ export declare abstract class ShaderBase {
     readonly abstract fragmentShader: string;
     private _uniformNumberValues;
     private _uniformVec2Values;
+    private _uniformRectValues;
     private _uniformColorValues;
     private _uniformTransformValues;
     private _uniformLocations;
@@ -27,6 +28,7 @@ export declare abstract class ShaderBase {
     setUniformFloat(name: string, value: number): void;
     setUniformVec2(name: string, value: Vec2): void;
     setUniformColor(name: string, value: Color): void;
+    setUniformRect(name: string, value: Rect): void;
     setUniformTransform(name: string, value: Transform): void;
     setUniformInt(name: string, value: number): void;
     dispose(): void;
