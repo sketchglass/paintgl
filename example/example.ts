@@ -1,40 +1,28 @@
-import {Vec2, Rect, Transform} from "paintvec"
-import {Color, Context, Texture, Model, RectShape, ColorShader, TextureShader, TextureDrawTarget, CanvasDrawTarget} from "../src"
+import simpleExample from "./examples/simple"
+import shapeExample from "./examples/shape"
+const select = document.getElementById("example-select")!
+const root = document.getElementById("root")!
 
-const context = new Context(document.getElementById("canvas") as HTMLCanvasElement)
+const examples = new Map<string, (elem: HTMLCanvasElement) => void>()
+examples.set("simple", simpleExample)
+examples.set("shape", shapeExample)
 
-const texture = new Texture(context, {size: new Vec2(400, 400)})
-
-const drawTarget = new TextureDrawTarget(context, texture)
-drawTarget.clear(new Color(0.9, 0.9, 0.9, 1))
-
-const shape = new RectShape(context, {
-  rect: new Rect(new Vec2(100, 100), new Vec2(200, 300))
-})
-const model = new Model(context, {
-  shape: shape,
-  shader: ColorShader,
-  uniforms: {
-    color: new Color(0.9, 0.1, 0.2, 1)
+function loadExample(name: string) {
+  const example = examples.get(name)
+  if (example) {
+    while (root.firstChild) {
+      root.removeChild(root.firstChild)
+    }
+    const canvas = document.createElement("canvas")
+    canvas.width = 400
+    canvas.height = 400
+    root.appendChild(canvas)
+    example(canvas)
   }
+}
+
+select.addEventListener("change", e => {
+  loadExample((e.target as HTMLSelectElement).value)
 })
 
-drawTarget.draw(model)
-drawTarget.transform = Transform.rotate(0.1 * Math.PI)
-model.blendMode = "dst-out"
-drawTarget.draw(model)
-
-const canvasDrawTarget = new CanvasDrawTarget(context)
-
-const textureShape = new RectShape(context, {
-  rect: new Rect(new Vec2(0), texture.size)
-})
-const textureModel = new Model(context, {
-  shape: textureShape,
-  shader: TextureShader,
-  uniforms: {
-    texture: texture
-  }
-})
-
-canvasDrawTarget.draw(textureModel)
+loadExample("simple")
