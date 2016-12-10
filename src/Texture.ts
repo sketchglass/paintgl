@@ -148,6 +148,7 @@ class Texture {
     gl.bindTexture(gl.TEXTURE_2D, this.texture)
     const format = glFormat(gl, this.pixelFormat)
     const type = glType(this.context, this.pixelType)
+    gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, 0)
     gl.texImage2D(gl.TEXTURE_2D, 0, format, size.x, size.y, 0, format, type, data ? data : null as any)
   }
 
@@ -158,6 +159,7 @@ class Texture {
     gl.bindTexture(gl.TEXTURE_2D, this.texture)
     const format = glFormat(gl, this.pixelFormat)
     const type = glType(this.context, this.pixelType)
+    gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, 1)
     gl.texImage2D(gl.TEXTURE_2D, 0, format, format, type, image)
   }
 
