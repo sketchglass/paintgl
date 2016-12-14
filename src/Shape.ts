@@ -45,10 +45,19 @@ class ShapeBase {
   */
   usage: ShapeUsage
 
+  _indices: number[]
+
   /**
     The indices of each triangles of this Shape.
   */
-  indices: number[]
+  get indices() {
+    return this._indices
+  }
+
+  set indices(indices: number[]) {
+    this._indices = indices
+    this.needsIndicesUpdate = true
+  }
 
   /**
     The vertex attributes of this Shape.
@@ -56,10 +65,12 @@ class ShapeBase {
   attributes: ObjectMap<{size: number, data: number[]|Vec2[]}> = {}
 
   /**
-    Whether the buffer of this Shape should be updated.
+    Whether the vertex buffer of this Shape should be updated.
     Set it to true after this shape is changed.
   */
-  needsUpdate = true
+  needsVerticesUpdate = true
+
+  needsIndicesUpdate = true
 
   attributeStride() {
     let stride = 0
@@ -80,14 +91,22 @@ class ShapeBase {
 
   setFloatAttributes(name: string, attributes: number[]) {
     this.attributes[name] = {size: 1, data: attributes}
-    this.needsUpdate = true
+    this.needsVerticesUpdate = true
   }
   setVec2Attributes(name: string, attributes: Vec2[]) {
     this.attributes[name] = {size: 2, data: attributes}
-    this.needsUpdate = true
+    this.needsVerticesUpdate = true
   }
 
-  update() {
+  updateIndices() {
+    const {gl} = this.context
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer)
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(this.indices), glUsage(gl, this.usage))
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null)
+    this.needsIndicesUpdate = false
+  }
+
+  updateVertices() {
     const {gl} = this.context
     const length = this.attributes[Object.keys(this.attributes)[0]].data.length
     const stride = this.attributeStride()
@@ -112,16 +131,15 @@ class ShapeBase {
     gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer)
     gl.bufferData(gl.ARRAY_BUFFER, vertexData, glUsage(gl, this.usage))
     gl.bindBuffer(gl.ARRAY_BUFFER, null)
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer)
-    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(this.indices), glUsage(gl, this.usage))
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null)
-
-    this.needsUpdate = false
+    this.needsVerticesUpdate = false
   }
 
   updateIfNeeded() {
-    if (this.needsUpdate) {
-      this.update()
+    if (this.needsVerticesUpdate) {
+      this.updateVertices()
+    }
+    if (this.needsIndicesUpdate) {
+      this.updateIndices()
     }
   }
 
