@@ -23,6 +23,7 @@ export declare class ShapeBase {
       The usage hint of this Shape.
     */
     usage: ShapeUsage;
+    _indices: number[];
     /**
       The indices of each triangles of this Shape.
     */
@@ -35,15 +36,17 @@ export declare class ShapeBase {
         data: number[] | Vec2[];
     }>;
     /**
-      Whether the buffer of this Shape should be updated.
+      Whether the vertex buffer of this Shape should be updated.
       Set it to true after this shape is changed.
     */
-    needsUpdate: boolean;
+    needsVerticesUpdate: boolean;
+    needsIndicesUpdate: boolean;
     attributeStride(): number;
     constructor(context: Context, opts?: ShapeBaseOptions);
     setFloatAttributes(name: string, attributes: number[]): void;
     setVec2Attributes(name: string, attributes: Vec2[]): void;
-    update(): void;
+    updateIndices(): void;
+    updateVertices(): void;
     updateIfNeeded(): void;
     dispose(): void;
 }
