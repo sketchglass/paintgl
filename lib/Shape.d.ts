@@ -35,6 +35,7 @@ export declare class ShapeBase {
         size: number;
         data: number[] | Vec2[];
     }>;
+    length: number;
     /**
       Whether the vertex buffer of this Shape should be updated.
       Set it to true after this shape is changed.

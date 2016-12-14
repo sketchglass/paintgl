@@ -64,6 +64,8 @@ class ShapeBase {
   */
   attributes: ObjectMap<{size: number, data: number[]|Vec2[]}> = {}
 
+  length = 0
+
   /**
     Whether the vertex buffer of this Shape should be updated.
     Set it to true after this shape is changed.
@@ -91,10 +93,12 @@ class ShapeBase {
 
   setFloatAttributes(name: string, attributes: number[]) {
     this.attributes[name] = {size: 1, data: attributes}
+    this.length = attributes.length
     this.needsVerticesUpdate = true
   }
   setVec2Attributes(name: string, attributes: Vec2[]) {
     this.attributes[name] = {size: 2, data: attributes}
+    this.length = attributes.length
     this.needsVerticesUpdate = true
   }
 
@@ -108,7 +112,7 @@ class ShapeBase {
 
   updateVertices() {
     const {gl} = this.context
-    const length = this.attributes[Object.keys(this.attributes)[0]].data.length
+    const {length} = this
     const stride = this.attributeStride()
     const vertexData = new Float32Array(length * stride)
 
