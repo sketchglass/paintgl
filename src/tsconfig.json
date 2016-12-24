@@ -5,7 +5,7 @@
         "noImplicitAny": true,
         "strictNullChecks": true,
         "sourceMap": false,
-        "outDir": "../lib",
+        "outDir": "../tsc-out",
         "rootDir": ".",
         "declaration": true,
         "removeComments": false

@@ -4,6 +4,7 @@ import {Context} from "./Context"
 import {Texture} from "./Texture"
 import {ObjectMap} from "./utils"
 import {Shader} from "./Shader"
+const glsl = require("glslify")
 
 export
 type UniformValue = boolean|number|Vec2|Rect|Color|Transform|Texture
@@ -23,7 +24,7 @@ class Program {
   constructor(public context: Context, public shader: Shader) {
     const {gl} = context
     this.program = gl.createProgram()!
-    this._addShader(gl.VERTEX_SHADER, shader.vertex || require("../shaders/default.vert"))
+    this._addShader(gl.VERTEX_SHADER, shader.vertex || glsl("../shaders/default.vert"))
     this._addShader(gl.FRAGMENT_SHADER, shader.fragment)
     gl.linkProgram(this.program)
     if (!gl.getProgramParameter(this.program, gl.LINK_STATUS)) {

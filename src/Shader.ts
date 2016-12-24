@@ -1,3 +1,5 @@
+const glsl = require("glslify")
+
 export
 interface Shader {
   vertex?: string
@@ -5,9 +7,9 @@ interface Shader {
 }
 
 export const colorShader: Shader = {
-  fragment: require("../shaders/color.frag")
+  fragment: glsl("../shaders/color.frag")
 }
 
 export const textureShader: Shader = {
-  fragment: require("../shaders/texture.frag")
+  fragment: glsl("../shaders/texture.frag")
 }

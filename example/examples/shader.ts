@@ -1,9 +1,10 @@
 import {Rect, Vec2} from "paintvec"
 import {Context, CanvasDrawTarget, RectShape, ShapeModel, Color} from "../../src"
+const glsl = require("glslify")
 
 const shader = {
-  vertex: require("./shader.vert"),
-  fragment: require("./shader.frag"),
+  vertex: glsl("./shader.vert"),
+  fragment: glsl("./shader.frag"),
 }
 
 export default (canvas: HTMLCanvasElement) => {

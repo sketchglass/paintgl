@@ -1,5 +1,5 @@
 import { Vec2, Rect, Transform } from "paintvec";
-import { Drawable } from "./Drawable";
+import { Model } from "./Model";
 import { Context } from "./Context";
 import { Color } from "./Color";
 import { Texture, PixelType, PixelFormat } from "./Texture";
@@ -28,9 +28,9 @@ export declare abstract class DrawTarget {
     */
     constructor(context: Context);
     /**
-      Draws the `Drawable` into this `DrawTarget`.
+      Draws the `model` into this `DrawTarget`.
     */
-    draw(drawable: Drawable): void;
+    draw(model: Model): void;
     /**
       Clear this `DrawTarget` with `color`.
     */
