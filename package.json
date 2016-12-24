@@ -1,6 +1,6 @@
 {
   "name": "paintgl",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "[WIP] WebGL wrapper for 2D painting",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
