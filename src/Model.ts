@@ -163,7 +163,7 @@ class ShapeModel implements Model {
 
 export
 interface TextureModelOptions {
-  texture: Texture
+  texture?: Texture
 }
 
 export
@@ -173,13 +173,16 @@ class TextureModel implements Model {
     shape: this.shape,
     shader: textureShader
   })
-  _texture: Texture
+  _texture: Texture|undefined
 
   get texture() {
     return this._texture
   }
-  set texture(texture: Texture) {
+  set texture(texture: Texture|undefined) {
     this._texture = texture
+    if (!texture) {
+      return
+    }
     const rect = new Rect(new Vec2(), texture.size)
     if (!this.shape.rect.equals(rect)) {
       this.shape.rect = rect
@@ -187,7 +190,7 @@ class TextureModel implements Model {
     this.shapeModel.uniforms = {texture}
   }
 
-  constructor(public context: Context, opts: TextureModelOptions) {
+  constructor(public context: Context, opts: TextureModelOptions = {}) {
     this.texture = opts.texture
   }
 
