@@ -32,11 +32,11 @@
     "npm-run-all": "^3.1.2",
     "paintvec": "github:sketchglass/paintvec",
     "raw-loader": "^0.5.1",
-    "ts-loader": "^0.9.5",
+    "ts-loader": "^1.3.3",
     "typedoc": "github:jasongrout/typedoc#ts2",
     "typedoc-theme-clean": "github:seanchas116/typedoc-theme-clean",
-    "typescript": "^2.0.3",
-    "webpack": "^1.13.2",
+    "typescript": "^2.1.4",
+    "webpack": "^1.14.0",
     "webpack-dev-server": "^1.16.2"
   },
   "directories": {
