@@ -1,16 +1,18 @@
 import {Vec2, Rect, Transform} from "paintvec"
 import {Context} from './Context'
 import {ObjectMap} from "./utils"
-import {Shader, UniformValue} from "./Shader"
+import {Shader, UniformValue, TextureShader} from "./Shader"
 import {Color} from "./Color"
 import {Texture} from "./Texture"
-import {Shape} from "./Shape"
+import {Shape, RectShape} from "./Shape"
 
+/**
+  Model represents the element renderable in `DrawTarget`.
+*/
 export
 interface Model {
   draw(transform: Transform): void
 }
-
 
 /**
   BlendMode represents how drawn color and destination color are blended.
@@ -156,5 +158,45 @@ class ShapeModel implements Model {
   dispose() {
     const {vertexArrayExt} = this.context
     vertexArrayExt.deleteVertexArrayOES(this.vertexArray)
+  }
+}
+
+export
+interface TextureModelOptions {
+  texture: Texture
+}
+
+export
+class TextureModel implements Model {
+  shape = new RectShape(this.context)
+  shapeModel = new ShapeModel(this.context, {
+    shape: this.shape,
+    shader: TextureShader
+  })
+  _texture: Texture
+
+  get texture() {
+    return this._texture
+  }
+  set texture(texture: Texture) {
+    this._texture = texture
+    const rect = new Rect(new Vec2(), texture.size)
+    if (!this.shape.rect.equals(rect)) {
+      this.shape.rect = rect
+    }
+    this.shapeModel.uniforms = {texture}
+  }
+
+  constructor(public context: Context, opts: TextureModelOptions) {
+    this.texture = opts.texture
+  }
+
+  draw(transform: Transform) {
+    this.shapeModel.draw(transform)
+  }
+
+  dispose() {
+    this.shapeModel.dispose()
+    this.shape.dispose()
   }
 }
