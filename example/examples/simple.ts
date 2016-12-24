@@ -1,5 +1,5 @@
 import {Vec2, Rect, Transform} from "paintvec"
-import {Color, Context, Texture, Model, RectShape, ColorShader, TextureShader, TextureDrawTarget, CanvasDrawTarget} from "../../src"
+import {Color, Context, Texture, ShapeModel, RectShape, ColorShader, TextureShader, TextureDrawTarget, CanvasDrawTarget} from "../../src"
 
 export default (canvas: HTMLCanvasElement) => {
   const context = new Context(canvas)
@@ -12,7 +12,7 @@ export default (canvas: HTMLCanvasElement) => {
   const shape = new RectShape(context, {
     rect: new Rect(new Vec2(100, 100), new Vec2(200, 300))
   })
-  const model = new Model(context, {
+  const model = new ShapeModel(context, {
     shape: shape,
     shader: ColorShader,
     uniforms: {
@@ -30,7 +30,7 @@ export default (canvas: HTMLCanvasElement) => {
   const textureShape = new RectShape(context, {
     rect: new Rect(new Vec2(0), texture.size)
   })
-  const textureModel = new Model(context, {
+  const textureModel = new ShapeModel(context, {
     shape: textureShape,
     shader: TextureShader,
     uniforms: {

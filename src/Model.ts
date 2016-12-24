@@ -3,9 +3,14 @@ import {Context} from './Context'
 import {ObjectMap} from "./utils"
 import {Shader, UniformValue} from "./Shader"
 import {Color} from "./Color"
-import {Drawable} from "./Drawable"
 import {Texture} from "./Texture"
 import {Shape} from "./Shape"
+
+export
+interface Model {
+  draw(transform: Transform): void
+}
+
 
 /**
   BlendMode represents how drawn color and destination color are blended.
@@ -40,16 +45,19 @@ function blendFuncs(gl: WebGLRenderingContext, mode: BlendMode) {
 }
 
 export
-interface ModelOptions {
+interface ShapeModelOptions {
   shape: Shape
   shader?: typeof Shader
   uniforms?: ObjectMap<UniformValue>
   blendMode?: BlendMode
   transform?: Transform
+  mode?: ShapeModelMode
 }
 
+export type ShapeModelMode = "polygon"|"points"
+
 export
-class Model implements Drawable {
+class ShapeModel implements Model {
   shape: Shape
 
   vertexArray: any
@@ -71,13 +79,16 @@ class Model implements Drawable {
   */
   transform: Transform
 
-  constructor(public context: Context, opts: ModelOptions) {
+  mode: ShapeModelMode
+
+  constructor(public context: Context, opts: ShapeModelOptions) {
     const {vertexArrayExt} = context
     this.shape = opts.shape
     this.shader = context.getOrCreateShader(opts.shader || Shader)
     this.uniforms = opts.uniforms || {}
     this.blendMode = opts.blendMode || "src-over"
     this.transform = opts.transform || new Transform()
+    this.mode = opts.mode || "polygon"
 
     this.vertexArray = vertexArrayExt.createVertexArrayOES()
     this._updateVertexArray()
@@ -134,7 +145,11 @@ class Model implements Drawable {
     this.context.textureUnitManager.setTextures(textures)
 
     vertexArrayExt.bindVertexArrayOES(this.vertexArray)
-    gl.drawElements(gl.TRIANGLES, shape.indices.length, gl.UNSIGNED_SHORT, 0)
+    if (this.mode == "polygon") {
+      gl.drawElements(gl.TRIANGLES, shape.indices.length, gl.UNSIGNED_SHORT, 0)
+    } else {
+      gl.drawArrays(gl.POINTS, 0, shape.length)
+    }
     vertexArrayExt.bindVertexArrayOES(null)
   }
 
