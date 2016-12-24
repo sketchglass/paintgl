@@ -1,8 +1,5 @@
-precision highp float;
-
-varying highp vec2 vTexCoord;
 uniform sampler2D texture;
 
-void main(void) {
-  gl_FragColor = texture2D(texture, vTexCoord);
+void fragmentMain(vec2 position, vec2 texCoord, out vec4 colorOut) {
+  colorOut = texture2D(texture, texCoord);
 }

@@ -1,10 +1,9 @@
 precision highp float;
 #pragma glslify: noise = require(glsl-noise/simplex/2d)
-
-varying vec2 vTexCoord;
 uniform vec4 color;
+varying vec2 vRandomPos;
 
-void main(void) {
-  float level = noise(vTexCoord);
-  gl_FragColor = color * level;
+void fragmentMain(vec2 pos, vec2 texCoord, out vec4 outColor) {
+  float level = noise(vRandomPos);
+  outColor = color * level;
 }

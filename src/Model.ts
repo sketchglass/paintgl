@@ -132,7 +132,7 @@ class ShapeModel implements Model {
     gl.useProgram(program.program)
 
     shape.updateIfNeeded()
-    program.setUniform("transform", this.transform.merge(transform))
+    program.setUniform("paintgl_transform", this.transform.merge(transform))
     for (const uniform in this.uniforms) {
       program.setUniform(uniform, this.uniforms[uniform])
     }
