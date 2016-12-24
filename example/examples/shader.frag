@@ -1,4 +1,3 @@
-precision highp float;
 #pragma glslify: noise = require(glsl-noise/simplex/2d)
 uniform vec4 color;
 varying vec2 vRandomPos;
