@@ -21,7 +21,5 @@ export default (canvas: HTMLCanvasElement) => {
     }
   })
 
-  const drawTarget = new CanvasDrawTarget(context)
-
-  drawTarget.draw(model)
+  context.drawTarget.draw(model)
 }

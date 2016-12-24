@@ -1,6 +1,7 @@
 import {Texture} from "./Texture"
 import {Shader} from "./Shader"
 import {Program} from "./Program"
+import {CanvasDrawTarget} from "./DrawTarget"
 
 export
 interface ContextOptions {
@@ -50,6 +51,8 @@ class Context {
 
   textureUnitManager = new TextureUnitManager(this)
 
+  drawTarget: CanvasDrawTarget
+
   private shaderPrograms = new WeakMap<Shader, Program>()
 
   constructor(public canvas: HTMLCanvasElement, opts?: ContextOptions) {
@@ -75,6 +78,8 @@ class Context {
       float: !!gl.getExtension("OES_texture_float"),
       floatLinearFilter: !!gl.getExtension("OES_texture_float_linear"),
     }
+
+    this.drawTarget = new CanvasDrawTarget(this)
   }
 
   getOrCreateProgram(shader: Shader) {

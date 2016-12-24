@@ -1,5 +1,5 @@
 import {Vec2, Rect, Transform} from "paintvec"
-import {Color, Context, Texture, ShapeModel, TextureModel, RectShape, colorShader, TextureDrawTarget, CanvasDrawTarget} from "../../src"
+import {Color, Context, Texture, ShapeModel, TextureModel, RectShape, colorShader, TextureDrawTarget} from "../../src"
 
 export default (canvas: HTMLCanvasElement) => {
   const context = new Context(canvas)
@@ -25,11 +25,9 @@ export default (canvas: HTMLCanvasElement) => {
   model.blendMode = "dst-out"
   drawTarget.draw(model)
 
-  const canvasDrawTarget = new CanvasDrawTarget(context)
-
   const textureModel = new TextureModel(context, {
     texture: texture
   })
 
-  canvasDrawTarget.draw(textureModel)
+  context.drawTarget.draw(textureModel)
 }
