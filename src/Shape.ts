@@ -1,9 +1,6 @@
-import {Vec2, Rect, Transform} from "paintvec"
+import {Vec2, Rect} from "paintvec"
 import {Context} from './Context'
 import {ObjectMap} from "./utils"
-import {Shader, UniformValue} from "./Shader"
-import {Color} from "./Color"
-import {Texture} from "./Texture"
 
 export type ShapeUsage = "static" | "stream" | "dynamic"
 

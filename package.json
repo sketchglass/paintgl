@@ -7,7 +7,9 @@
   "scripts": {
     "docs": "typedoc --theme node_modules/typedoc-theme-clean/bin --mode file --target ES6 --module commonjs --out docs src/index.ts",
     "example": "cd example && webpack-dev-server",
-    "build": "cd src && tsc",
+    "tsc": "cd src && tsc",
+    "babel": "$(npm bin)/babel tsc-out --out-dir lib --copy-files",
+    "build": "npm-run-all tsc babel",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -21,7 +23,15 @@
   },
   "homepage": "https://github.com/sketchglass/paintgl#readme",
   "devDependencies": {
+    "@types/node": "^6.0.53",
+    "babel-cli": "^6.18.0",
+    "babel-loader": "^6.2.10",
+    "babel-plugin-glslify": "^2.0.0",
+    "glsl-noise": "0.0.0",
+    "glslify-loader": "^1.0.2",
+    "npm-run-all": "^3.1.2",
     "paintvec": "github:sketchglass/paintvec",
+    "raw-loader": "^0.5.1",
     "ts-loader": "^0.9.5",
     "typedoc": "github:jasongrout/typedoc#ts2",
     "typedoc-theme-clean": "github:seanchas116/typedoc-theme-clean",
@@ -33,5 +43,7 @@
     "doc": "docs",
     "example": "example"
   },
-  "dependencies": {}
+  "dependencies": {
+    "glslify": "^6.0.1"
+  }
 }

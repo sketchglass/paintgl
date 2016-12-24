@@ -1,5 +1,5 @@
 import {Vec2, Rect, Transform} from "paintvec"
-import {Drawable} from "./Drawable"
+import {Model} from "./Model"
 import {Context} from "./Context"
 import {Color} from "./Color"
 import {Texture, PixelType, PixelFormat, glType, glFormat} from "./Texture"
@@ -37,11 +37,9 @@ abstract class DrawTarget {
   }
 
   /**
-    Draws the `Drawable` into this `DrawTarget`.
+    Draws the `model` into this `DrawTarget`.
   */
-  draw(drawable: Drawable) {
-    const {gl} = this.context
-
+  draw(model: Model) {
     this.use()
 
     const {size} = this
@@ -52,7 +50,7 @@ abstract class DrawTarget {
       transform = transform.merge(Transform.scale(new Vec2(1, -1)))
     }
 
-    drawable.draw(transform)
+    model.draw(transform)
   }
 
   /**

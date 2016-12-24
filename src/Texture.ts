@@ -143,7 +143,7 @@ class Texture {
   }
 
   setData(size: Vec2, data?: ArrayBufferView) {
-    const {gl, halfFloatExt} = this.context
+    const {gl} = this.context
     this._size = size
     gl.bindTexture(gl.TEXTURE_2D, this.texture)
     const format = glFormat(gl, this.pixelFormat)

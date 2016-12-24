@@ -3,9 +3,10 @@
         "module": "commonjs",
         "target": "es6",
         "noImplicitAny": true,
+        "noUnusedLocals": true,
         "strictNullChecks": true,
         "sourceMap": false,
-        "outDir": "../lib",
+        "outDir": "../tsc-out",
         "rootDir": ".",
         "declaration": true,
         "removeComments": false
