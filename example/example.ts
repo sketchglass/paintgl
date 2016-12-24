@@ -1,11 +1,13 @@
 import simpleExample from "./examples/simple"
 import shapeExample from "./examples/shape"
+import shaderExample from "./examples/shader"
 const select = document.getElementById("example-select")!
 const root = document.getElementById("root")!
 
 const examples = new Map<string, (elem: HTMLCanvasElement) => void>()
 examples.set("simple", simpleExample)
 examples.set("shape", shapeExample)
+examples.set("shader", shaderExample)
 
 function loadExample(name: string) {
   const example = examples.get(name)

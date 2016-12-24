@@ -1,5 +1,6 @@
 import {Texture} from "./Texture"
 import {Shader} from "./Shader"
+import {Program} from "./Program"
 
 export
 interface ContextOptions {
@@ -49,7 +50,7 @@ class Context {
 
   textureUnitManager = new TextureUnitManager(this)
 
-  private _shaders = new WeakMap<typeof Shader, Shader>()
+  private shaderPrograms = new WeakMap<Shader, Program>()
 
   constructor(public canvas: HTMLCanvasElement, opts?: ContextOptions) {
     const glOpts = {
@@ -76,14 +77,14 @@ class Context {
     }
   }
 
-  getOrCreateShader(klass: typeof Shader) {
-    let shader = this._shaders.get(klass)
-    if (shader) {
-      return shader
+  getOrCreateProgram(shader: Shader) {
+    let program = this.shaderPrograms.get(shader)
+    if (program) {
+      return program
     } else {
-      shader = new klass(this)
-      this._shaders.set(klass, shader)
-      return shader
+      program = new Program(this, shader)
+      this.shaderPrograms.set(shader, program)
+      return program
     }
   }
 }

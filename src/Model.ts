@@ -1,7 +1,8 @@
 import {Vec2, Rect, Transform} from "paintvec"
 import {Context} from './Context'
 import {ObjectMap} from "./utils"
-import {Shader, UniformValue, TextureShader} from "./Shader"
+import {Shader, textureShader} from "./Shader"
+import {Program, UniformValue} from "./Program"
 import {Color} from "./Color"
 import {Texture} from "./Texture"
 import {Shape, RectShape} from "./Shape"
@@ -49,7 +50,7 @@ function blendFuncs(gl: WebGLRenderingContext, mode: BlendMode) {
 export
 interface ShapeModelOptions {
   shape: Shape
-  shader?: typeof Shader
+  shader: Shader
   uniforms?: ObjectMap<UniformValue>
   blendMode?: BlendMode
   transform?: Transform
@@ -65,9 +66,9 @@ class ShapeModel implements Model {
   vertexArray: any
 
   /**
-    The shader of this Shape.
+    The shader program of this Shape.
   */
-  shader: Shader
+  readonly program: Program
 
   /**
     The uniform values passed to the shader.
@@ -86,7 +87,7 @@ class ShapeModel implements Model {
   constructor(public context: Context, opts: ShapeModelOptions) {
     const {vertexArrayExt} = context
     this.shape = opts.shape
-    this.shader = context.getOrCreateShader(opts.shader || Shader)
+    this.program = context.getOrCreateProgram(opts.shader)
     this.uniforms = opts.uniforms || {}
     this.blendMode = opts.blendMode || "src-over"
     this.transform = opts.transform || new Transform()
@@ -98,7 +99,7 @@ class ShapeModel implements Model {
 
   private _updateVertexArray() {
     const {gl, vertexArrayExt} = this.context
-    const {shape, shader} = this
+    const {shape, program} = this
 
     vertexArrayExt.bindVertexArrayOES(this.vertexArray)
 
@@ -108,7 +109,7 @@ class ShapeModel implements Model {
     let offset = 0
     for (const name in shape.attributes) {
       const attribute = shape.attributes[name]
-      const pos = gl.getAttribLocation(shader.program, name)!
+      const pos = gl.getAttribLocation(program.program, name)!
       gl.enableVertexAttribArray(pos)
       gl.vertexAttribPointer(pos, attribute.size, gl.FLOAT, false, stride * 4, offset * 4)
       offset += attribute.size
@@ -119,7 +120,7 @@ class ShapeModel implements Model {
 
   draw(transform: Transform) {
     const {gl, vertexArrayExt} = this.context
-    const {shape, shader} = this
+    const {shape, program} = this
 
     if (this.blendMode == "src") {
       gl.disable(gl.BLEND)
@@ -129,19 +130,19 @@ class ShapeModel implements Model {
       gl.blendFunc(funcs[0], funcs[1])
     }
 
-    gl.useProgram(shader.program)
+    gl.useProgram(program.program)
 
     shape.updateIfNeeded()
-    shader.setUniform("transform", this.transform.merge(transform))
+    program.setUniform("transform", this.transform.merge(transform))
     for (const uniform in this.uniforms) {
-      shader.setUniform(uniform, this.uniforms[uniform])
+      program.setUniform(uniform, this.uniforms[uniform])
     }
 
     let texUnit = 0
     const textures: Texture[] = []
-    for (const [name, texture] of shader._textureValues) {
+    for (const [name, texture] of program._textureValues) {
       textures.push(texture)
-      shader.setUniformInt(name, texUnit)
+      program.setUniformInt(name, texUnit)
       ++texUnit
     }
     this.context.textureUnitManager.setTextures(textures)
@@ -171,7 +172,7 @@ class TextureModel implements Model {
   shape = new RectShape(this.context)
   shapeModel = new ShapeModel(this.context, {
     shape: this.shape,
-    shader: TextureShader
+    shader: textureShader
   })
   _texture: Texture
 

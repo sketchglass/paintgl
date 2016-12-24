@@ -12,7 +12,9 @@ module.exports = {
   },
   module: {
     loaders: [
-      { test: /\.ts$/, loader: "ts-loader", },
+      {test: /\.ts$/, loader: "ts-loader"},
+      {test: /\.(glsl|frag|vert)$/, loader: 'raw', exclude: /node_modules/},
+      {test: /\.(glsl|frag|vert)$/, loader: 'glslify', exclude: /node_modules/}
     ],
   },
   devServer: {

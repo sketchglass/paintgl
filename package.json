@@ -21,7 +21,11 @@
   },
   "homepage": "https://github.com/sketchglass/paintgl#readme",
   "devDependencies": {
+    "@types/node": "^6.0.53",
+    "glsl-noise": "0.0.0",
+    "glslify-loader": "^1.0.2",
     "paintvec": "github:sketchglass/paintvec",
+    "raw-loader": "^0.5.1",
     "ts-loader": "^0.9.5",
     "typedoc": "github:jasongrout/typedoc#ts2",
     "typedoc-theme-clean": "github:seanchas116/typedoc-theme-clean",
