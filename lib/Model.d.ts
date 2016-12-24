@@ -48,15 +48,15 @@ export declare class ShapeModel implements Model {
     dispose(): void;
 }
 export interface TextureModelOptions {
-    texture: Texture;
+    texture?: Texture;
 }
 export declare class TextureModel implements Model {
     context: Context;
     shape: RectShape;
     shapeModel: ShapeModel;
-    _texture: Texture;
-    texture: Texture;
-    constructor(context: Context, opts: TextureModelOptions);
+    _texture: Texture | undefined;
+    texture: Texture | undefined;
+    constructor(context: Context, opts?: TextureModelOptions);
     draw(transform: Transform): void;
     dispose(): void;
 }
