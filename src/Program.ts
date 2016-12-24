@@ -2,7 +2,6 @@ import {Vec2, Rect, Transform} from "paintvec"
 import {Color} from "./Color"
 import {Context} from "./Context"
 import {Texture} from "./Texture"
-import {ObjectMap} from "./utils"
 import {Shader} from "./Shader"
 const glsl = require("glslify")
 

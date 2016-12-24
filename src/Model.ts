@@ -3,7 +3,6 @@ import {Context} from './Context'
 import {ObjectMap} from "./utils"
 import {Shader, textureShader} from "./Shader"
 import {Program, UniformValue} from "./Program"
-import {Color} from "./Color"
 import {Texture} from "./Texture"
 import {Shape, RectShape} from "./Shape"
 

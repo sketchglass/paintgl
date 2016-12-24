@@ -1,5 +1,5 @@
 import {Rect, Vec2} from "paintvec"
-import {Context, CanvasDrawTarget, RectShape, ShapeModel, Color} from "../../src"
+import {Context, RectShape, ShapeModel, Color} from "../../src"
 const glsl = require("glslify")
 
 const shader = {

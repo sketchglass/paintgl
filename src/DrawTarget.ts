@@ -40,8 +40,6 @@ abstract class DrawTarget {
     Draws the `model` into this `DrawTarget`.
   */
   draw(model: Model) {
-    const {gl} = this.context
-
     this.use()
 
     const {size} = this

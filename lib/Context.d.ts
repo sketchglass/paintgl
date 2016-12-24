@@ -1,6 +1,7 @@
 import { Texture } from "./Texture";
 import { Shader } from "./Shader";
 import { Program } from "./Program";
+import { CanvasDrawTarget } from "./DrawTarget";
 export interface ContextOptions {
     preserveDrawingBuffer?: boolean;
     alpha?: boolean;
@@ -40,6 +41,7 @@ export declare class Context {
     */
     capabilities: ContextCapabilities;
     textureUnitManager: TextureUnitManager;
+    drawTarget: CanvasDrawTarget;
     private shaderPrograms;
     constructor(canvas: HTMLCanvasElement, opts?: ContextOptions);
     getOrCreateProgram(shader: Shader): Program;
