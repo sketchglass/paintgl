@@ -5,6 +5,9 @@
         "noImplicitAny": true,
         "noUnusedLocals": true,
         "strictNullChecks": true,
-        "sourceMap": false
+        "sourceMap": false,
+        "typeRoots": [
+            "../node_modules/@types"
+        ]
     }
 }
