@@ -6,7 +6,7 @@
         "noUnusedLocals": true,
         "strictNullChecks": true,
         "sourceMap": false,
-        "outDir": "../tsc-out",
+        "outDir": "../lib",
         "rootDir": ".",
         "declaration": true,
         "removeComments": false
