@@ -4,7 +4,7 @@ import {ObjectMap} from "./utils"
 import {Shader, textureShader} from "./Shader"
 import {Program, UniformValue} from "./Program"
 import {Texture} from "./Texture"
-import {Shape, RectShape} from "./Shape"
+import {Shape, RectShape, ShapeUsage} from "./Shape"
 
 /**
   Model represents the element renderable in `DrawTarget`.
@@ -164,16 +164,14 @@ class ShapeModel implements Model {
 export
 interface TextureModelOptions {
   texture?: Texture
+  shapeUsage?: ShapeUsage
 }
 
 export
 class TextureModel implements Model {
-  shape = new RectShape(this.context)
-  shapeModel = new ShapeModel(this.context, {
-    shape: this.shape,
-    shader: textureShader
-  })
-  _texture: Texture|undefined
+  shape: RectShape
+  shapeModel: ShapeModel
+  private _texture: Texture|undefined
 
   get texture() {
     return this._texture
@@ -191,6 +189,11 @@ class TextureModel implements Model {
   }
 
   constructor(public context: Context, opts: TextureModelOptions = {}) {
+    this.shape = new RectShape(this.context, {usage: opts.shapeUsage})
+    this.shapeModel = new ShapeModel(this.context, {
+      shape: this.shape,
+      shader: textureShader
+    })
     this.texture = opts.texture
   }
 
