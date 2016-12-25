@@ -12,7 +12,7 @@ module.exports = {
   },
   module: {
     loaders: [
-      {test: /\.ts$/, loader: "babel-loader?plugins=babel-plugin-glslify!ts-loader"},
+      {test: /\.ts$/, loader: "transform-loader/cacheable?glslify/transform!ts-loader"},
     ],
   },
   devServer: {
