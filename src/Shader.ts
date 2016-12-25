@@ -1,5 +1,3 @@
-const glsl = require("glslify")
-
 export
 interface Shader {
   vertex?: string
@@ -7,9 +5,19 @@ interface Shader {
 }
 
 export const colorShader: Shader = {
-  fragment: glsl("../shaders/color.frag")
+  fragment: `
+    uniform vec4 color;
+    void fragmentMain(vec2 position, vec2 texCoord, out vec4 colorOut) {
+      colorOut = color;
+    }
+  `
 }
 
 export const textureShader: Shader = {
-  fragment: glsl("../shaders/texture.frag")
+  fragment: `
+    uniform sampler2D texture;
+    void fragmentMain(vec2 position, vec2 texCoord, out vec4 colorOut) {
+      colorOut = texture2D(texture, texCoord);
+    }
+  `
 }
