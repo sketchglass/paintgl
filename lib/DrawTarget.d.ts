@@ -35,7 +35,10 @@ export declare abstract class DrawTarget {
       Clear this `DrawTarget` with `color`.
     */
     clear(color: Color): void;
-    readPixels(rect: Rect, data: ArrayBufferView): void;
+    readPixels(rect: Rect, data: ArrayBufferView, opts?: {
+        format?: PixelFormat;
+        type?: PixelType;
+    }): void;
     protected use(): void;
     private _flipRect(rect);
     dispose(): void;

@@ -63,11 +63,11 @@ abstract class DrawTarget {
     gl.clear(gl.COLOR_BUFFER_BIT)
   }
 
-  readPixels(rect: Rect, data: ArrayBufferView) {
+  readPixels(rect: Rect, data: ArrayBufferView, opts: {format?: PixelFormat, type?: PixelType} = {}) {
     this.use()
     const {gl} = this.context
     rect = this._flipRect(rect)
-    gl.readPixels(rect.left, rect.top, rect.width, rect.height, glFormat(gl, this.pixelFormat), glType(this.context, this.pixelType), data)
+    gl.readPixels(rect.left, rect.top, rect.width, rect.height, glFormat(gl, opts.format || this.pixelFormat), glType(this.context, opts.type || this.pixelType), data)
   }
 
   protected use() {

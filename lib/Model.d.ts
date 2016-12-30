@@ -4,7 +4,7 @@ import { ObjectMap } from "./utils";
 import { Shader } from "./Shader";
 import { Program, UniformValue } from "./Program";
 import { Texture } from "./Texture";
-import { Shape, RectShape } from "./Shape";
+import { Shape, RectShape, ShapeUsage } from "./Shape";
 /**
   Model represents the element renderable in `DrawTarget`.
 */
@@ -49,12 +49,13 @@ export declare class ShapeModel implements Model {
 }
 export interface TextureModelOptions {
     texture?: Texture;
+    shapeUsage?: ShapeUsage;
 }
 export declare class TextureModel implements Model {
     context: Context;
     shape: RectShape;
     shapeModel: ShapeModel;
-    _texture: Texture | undefined;
+    private _texture;
     texture: Texture | undefined;
     constructor(context: Context, opts?: TextureModelOptions);
     draw(transform: Transform): void;
